@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from numpy import asanyarray as ana
+import myOwnLibrary
 """ 
 gstreamer_pipeline returns a GStreamer pipeline for capturing from the CSI camera
 Flip the image by setting the flip_method (most common values: 0 and 2)
@@ -36,7 +37,7 @@ def gstreamer_pipeline(
     )
 def show_camera():
     window_title = "CSI Camera"
-    previous = np.zeros((540,960,3))
+    previous = np.zeros((540,960,1))
 
 
     # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
@@ -47,7 +48,7 @@ def show_camera():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                frame = ana(frame)
+                frame = myOwnLibrary.rgb2gray(ana(frame))
                 display = ((255-frame + previous)*0.5).astype(np.uint8)
 # Check to see if the user closed the window
                 # Under GTK+ (Jetson Default), WND_PROP_VISIBLE does not work correctly. Under Qt it does
