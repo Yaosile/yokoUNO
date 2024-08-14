@@ -37,7 +37,7 @@ def gstreamer_pipeline(
     )
 def show_camera():
     window_title = "CSI Camera"
-    previous = np.zeros((540,960,1))
+    previous = np.zeros((540,960))
 
 
     # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
