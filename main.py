@@ -34,7 +34,7 @@ def gstreamer_pipeline(
             display_height,
         )
     )
-
+previous = np.zeros((1920,1080,3))
 def show_camera():
     window_title = "CSI Camera"
 
@@ -51,13 +51,14 @@ def show_camera():
                 # Under GTK+ (Jetson Default), WND_PROP_VISIBLE does not work correctly. Under Qt it does
                 # GTK - Substitute WND_PROP_AUTOSIZE to detect if window has been closed by user
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title, frame)
+                    cv2.imshow(window_title, previous)
                 else:
                     break 
                 keyCode = cv2.waitKey(10) & 0xFF
                 # Stop the program on the ESC key or 'q'
                 if keyCode == 27 or keyCode == ord('q'):
                     break
+                previous = frame.copy()
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
