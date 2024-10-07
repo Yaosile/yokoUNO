@@ -13,8 +13,8 @@ def gstreamer_pipeline(
     sensor_id=0,
     capture_width=3280,
     capture_height=2464,
-    display_width=3280//4,
-    display_height=2464//4,
+    display_width=3280,
+    display_height=2464,
     framerate=10,
     flip_method=0,
 ):
@@ -37,9 +37,6 @@ def gstreamer_pipeline(
     )
 def show_camera():
     window_title = "CSI Camera"
-    previous = np.zeros((540,960))
-
-
     # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
     print(gstreamer_pipeline(flip_method=0))
     video_capture = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
@@ -57,7 +54,7 @@ def show_camera():
                 # Under GTK+ (Jetson Default), WND_PROP_VISIBLE does not work correctly. Under Qt it does
                 # GTK - Substitute WND_PROP_AUTOSIZE to detect if window has been closed by user
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title, frame)
+                    cv2.imshow(window_title, frame[::2,::2,:])
                 else:
                     break 
                 keyCode = cv2.waitKey(10) & 0xFF
