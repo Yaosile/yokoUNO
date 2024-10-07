@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from PIL import Image
 from numpy import asanyarray as ana
 import myOwnLibrary
 """ 
@@ -63,9 +64,8 @@ def show_camera():
                 # Stop the program on the ESC key or 'q'
                 if keyCode == 27 or keyCode == ord('q'):
                     break
-                else:
-                    print('Hello')
-                    print(keyCode)
+                elif keyCode == 97:
+                    print('Kachow')
                 previous = frame.copy()
         finally:
             video_capture.release()
