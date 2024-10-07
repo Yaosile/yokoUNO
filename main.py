@@ -64,7 +64,7 @@ def show_camera():
                     break
                 elif keyCode == 97:
                     print('Kachow')
-                    cv2.imwrite('test.jpg',frame)
+                    cv2.imwrite(f'{np.random.random()}.png',frame)
                 previous = frame.copy()
         finally:
             video_capture.release()
