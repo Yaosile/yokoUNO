@@ -48,6 +48,7 @@ def show_camera():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
+                print(frame.shape)
                 # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 # frame = ana(frame)
 
