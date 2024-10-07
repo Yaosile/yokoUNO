@@ -9,13 +9,6 @@ display_width and display_height determine the size of each camera pane in the w
 Default 1920x1080 displayd in a 1/4 size window
 """
 # dist = [k1, k2, p1, p2, k3]
-dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
-mtx = ana([
-    [1.734239392051136E3,0,1.667798059392088E3],
-    [0,1.729637617052701E3,1.195682065165660E3],
-    [0,0,1],
-])
-optimalMtx = cv2.getOptimalNewCameraMatrix(mtx,dist,(3280,2464),1,(3280,2464))
 def gstreamer_pipeline(
     sensor_id=0,
     capture_width=3280,
@@ -43,6 +36,13 @@ def gstreamer_pipeline(
         )
     )
 def show_camera():
+    dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
+    mtx = ana([
+        [1.734239392051136E3,0,1.667798059392088E3],
+        [0,1.729637617052701E3,1.195682065165660E3],
+        [0,0,1],
+    ])
+    optimalMtx = cv2.getOptimalNewCameraMatrix(mtx,dist,(3280,2464),1,(3280,2464))
     t = 0
     window_title = "CSI Camera"
     # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
