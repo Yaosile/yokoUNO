@@ -16,7 +16,6 @@ mtx = ana([
     [0,0,1],
 ])
 optimalMtx = cv2.getOptimalNewCameraMatrix(mtx,dist,(3280,2464),1,(3280,2464))
-t = 0
 def gstreamer_pipeline(
     sensor_id=0,
     capture_width=3280,
@@ -44,6 +43,7 @@ def gstreamer_pipeline(
         )
     )
 def show_camera():
+    t = 0
     window_title = "CSI Camera"
     # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
     print(gstreamer_pipeline(flip_method=0))
