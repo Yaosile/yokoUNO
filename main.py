@@ -11,10 +11,10 @@ Default 1920x1080 displayd in a 1/4 size window
 
 def gstreamer_pipeline(
     sensor_id=0,
-    capture_width=1920,
-    capture_height=1080,
-    display_width=960,
-    display_height=540,
+    capture_width=3280,
+    capture_height=2464,
+    display_width=3280,
+    display_height=2464,
     framerate=30,
     flip_method=0,
 ):
@@ -65,7 +65,7 @@ def show_camera():
                     break
                 elif keyCode == 97:
                     print('Kachow')
-                    cv2.imwrite(f'{np.random.random()}.png',frame)
+                    cv2.imwrite('test.jpg',frame)
                 previous = frame.copy()
         finally:
             video_capture.release()
