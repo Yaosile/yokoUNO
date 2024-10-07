@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from PIL import Image
 from numpy import asanyarray as ana
 import myOwnLibrary
 """ 
@@ -66,6 +65,7 @@ def show_camera():
                     break
                 elif keyCode == 97:
                     print('Kachow')
+                    cv2.imwrite(f'{np.random.random()}.png',frame)
                 previous = frame.copy()
         finally:
             video_capture.release()
