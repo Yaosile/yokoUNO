@@ -64,6 +64,7 @@ def show_camera():
                 if keyCode == 27 or keyCode == ord('q'):
                     break
                 else:
+                    print('Hello')
                     print(keyCode)
                 previous = frame.copy()
         finally:
