@@ -42,7 +42,7 @@ def show_camera():
         [0,1.729637617052701E3,1.195682065165660E3],
         [0,0,1],
     ])
-    optimalMtx = cv2.getOptimalNewCameraMatrix(mtx,dist,(3280,2464),1,(3280,2464))
+    optimalMtx, roi = cv2.getOptimalNewCameraMatrix(mtx,dist,(3280,2464),1,(3280,2464))
     t = 0
     window_title = "CSI Camera"
     # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
@@ -54,7 +54,7 @@ def show_camera():
             while True:
                 ret_val, frame = video_capture.read()
                 if t:
-                    dst = cv2.undistort(mtx, dist, frame, None, optimalMtx)
+                    frame = cv2.undistort(mtx, dist, frame, None, optimalMtx)
                 # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 # frame = ana(frame)
 
