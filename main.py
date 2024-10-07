@@ -8,7 +8,15 @@ Flip the image by setting the flip_method (most common values: 0 and 2)
 display_width and display_height determine the size of each camera pane in the window on the screen
 Default 1920x1080 displayd in a 1/4 size window
 """
-
+# dist = [k1, k2, p1, p2, k3]
+dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
+mtx = ana([
+    [1.734239392051136E3,0,1.667798059392088E3],
+    [0,1.729637617052701E3,1.195682065165660E3],
+    [0,0,1],
+])
+optimalMtx = cv2.getOptimalNewCameraMatrix(mtx,dist,(3280,2464),1,(3280,2464))
+t = 0
 def gstreamer_pipeline(
     sensor_id=0,
     capture_width=3280,
@@ -45,6 +53,8 @@ def show_camera():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
+                if t:
+                    frame = cv2.undistort(mtx, dist, frame, None, optimalMtx)
                 # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 # frame = ana(frame)
 
@@ -53,8 +63,6 @@ def show_camera():
                 # Under GTK+ (Jetson Default), WND_PROP_VISIBLE does not work correctly. Under Qt it does
                 # GTK - Substitute WND_PROP_AUTOSIZE to detect if window has been closed by user
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    print(frame[::2,::2,:].shape)
-
                     cv2.imshow(window_title, frame[::4,::4,:])
                 else:
                     break 
@@ -64,7 +72,8 @@ def show_camera():
                     break
                 elif keyCode == 97:
                     print('Kachow')
-                    cv2.imwrite(f'{np.random.random()}.png',frame)
+                    t = not t
+                    # cv2.imwrite(f'{np.random.random()}.png',frame)
                 previous = frame.copy()
         finally:
             video_capture.release()

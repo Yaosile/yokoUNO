@@ -92,8 +92,3 @@ def IFFT(X: np.ndarray):
         terms = np.exp(1j * np.pi * np.arange(X.shape[0])/X.shape[0])[:, np.newaxis]
         X = np.vstack([X_even + terms * X_odd, X_even - terms * X_odd])
     return X.ravel()
-
-
-
-x = np.arange(16)
-print(IFFT(FFT(x)))
