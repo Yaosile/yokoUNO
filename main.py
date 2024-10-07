@@ -54,7 +54,7 @@ def show_camera():
             while True:
                 ret_val, frame = video_capture.read()
                 if t:
-                    dst = cv2.undistort(mtx, dist, frame, None, optimalMtx)
+                    frame = cv2.undistort(mtx, dist, frame, None, optimalMtx)
                 # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 # frame = ana(frame)
 
