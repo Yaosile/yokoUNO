@@ -55,7 +55,7 @@ def show_camera():
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
                     print(frame[::2,::2,:].shape)
 
-                    cv2.imshow(window_title, frame[::2,::2,:])
+                    cv2.imshow(window_title, frame[::4,::4,:])
                 else:
                     break 
                 keyCode = cv2.waitKey(10) & 0xFF
