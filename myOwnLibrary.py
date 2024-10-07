@@ -2,7 +2,7 @@ import numpy as np
 def rgb2gray(image):
     return np.dot(image[..., :3], [0.2989, 0.5870, 0.1140])
 
-def threshHold(arrayLike: np.ndarray, hold):
+def threshHold(arrayLike, hold):
     temp = np.zeros(arrayLike.shape)
     threshHeld = np.where(arrayLike > hold)
     temp[threshHeld] = 255
