@@ -43,6 +43,7 @@ def show_camera():
         [0,0,1],
     ])
     optimalMtx, roi = cv2.getOptimalNewCameraMatrix(mtx,dist,(3280,2464),1,(3280,2464))
+    cv2.initUndistortRectifyMap(mtx, dist, None, optimalMtx, (3280,2464), cv2.CV_32FC1)
     t = 0
     window_title = "CSI Camera"
     # To flip the image, modify the flip_method parameter (0 and 2 are the most common)
