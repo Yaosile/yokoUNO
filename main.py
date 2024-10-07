@@ -56,6 +56,7 @@ def show_camera():
                 # Under GTK+ (Jetson Default), WND_PROP_VISIBLE does not work correctly. Under Qt it does
                 # GTK - Substitute WND_PROP_AUTOSIZE to detect if window has been closed by user
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
+                    cv2.resizeWindow(window_title, 960, 540)
                     cv2.imshow(window_title, frame)
                 else:
                     break 
