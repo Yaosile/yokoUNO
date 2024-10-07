@@ -63,6 +63,8 @@ def show_camera():
                 # Stop the program on the ESC key or 'q'
                 if keyCode == 27 or keyCode == ord('q'):
                     break
+                else:
+                    print(keyCode)
                 previous = frame.copy()
         finally:
             video_capture.release()
