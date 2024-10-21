@@ -8,7 +8,7 @@ cameraWidth = 3264
 cameraHeight = 2464
 
 def gstreamer_pipeline(
-    sensor_id=1,
+    sensor_id=0,
     capture_width=cameraWidth,
     capture_height=cameraHeight,
     display_width=cameraWidth,
