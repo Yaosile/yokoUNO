@@ -1,6 +1,7 @@
 import numpy as np
 import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
+from PIL import Image
 import cv2
 
 cameraWidth = 3264
@@ -61,6 +62,9 @@ def cameraCalibration():
                 key = cv2.waitKey(10) & 0xFF
                 if key == ord('q'):
                     break
+                elif key == ord('w'):
+                    Image.fromarray(output.astype(np.uint8)).save('Images/Screenshot.png')
+                    print('Kachow')
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
