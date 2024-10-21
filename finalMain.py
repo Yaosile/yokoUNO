@@ -56,13 +56,13 @@ src = [
 
 boardSize = (517*2, 605*2)
 def cameraCalibration():
-    print('now with numba')
-    print('calculating distortion map')
-    yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
-    print('calculating perspective map')
-    yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
-    print('calculating final transform')
-    yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
+    # print('now with numba')
+    # print('calculating distortion map')
+    # yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
+    # print('calculating perspective map')
+    # yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
+    # print('calculating final transform')
+    # yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
 
     output = np.zeros((*boardSize,))
     window_title = "CSI Camera"
