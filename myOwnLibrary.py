@@ -189,8 +189,8 @@ def gaussianKernelGenerator(size, sigma = 2):
 def generateGrid(width, height):
     xd = np.zeros_like((height, width))
     yd = np.zeros_like((height, width))
-    for i in range(width):
-        for j in range(height):
+    for i in np.arange(width):
+        for j in np.arange(height):
             xd[j, i] = i
             yd[j, i] = j
     return xd,yd
