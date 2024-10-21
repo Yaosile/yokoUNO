@@ -62,7 +62,7 @@ def cameraCalibration():
     print('calculating final transform')
     yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
 
-    output = np.zeros((*boardSize, 3))
+    output = np.zeros((*boardSize,))
     window_title = "CSI Camera"
 
     print(gstreamer_pipeline(flip_method=0))
@@ -73,8 +73,8 @@ def cameraCalibration():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame.astype(float)
-                output = myJazz.rgb2hsv(frame,Calculations='SV')
                 output = frame[yuw,xuw]
+                output = myJazz.rgb2hsv(output,Calculations='SV')
                 output = (output[:,:,1])*output[:,:,2]*255
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
