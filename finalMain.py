@@ -3,7 +3,6 @@ import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
 from PIL import Image
 import cv2
-# import numba
 
 cameraWidth = 3264
 cameraHeight = 2464

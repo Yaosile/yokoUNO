@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import asanyarray as ana
-import numba
+# import numba
 
 def normalise(array, minOut = 0, maxOut = 255):
     array = array.copy()
@@ -185,7 +185,7 @@ def gaussianKernelGenerator(size, sigma = 2):
     output /= output.sum()
     return output
 
-@numba.jit(nopython = True)
+# @numba.jit(nopython = True)
 def generateGrid(width, height):
     xd = np.empty(shape = (height, width), dtype=int)
     yd = np.empty(shape = (height, width), dtype=int)
@@ -195,7 +195,7 @@ def generateGrid(width, height):
             yd[j, i] = j
     return xd,yd
 
-@numba.jit(nopython = True)
+# @numba.jit(nopython = True)
 def distortionMap(distotionCoefficients, mtx, width, height):
     K1 = distotionCoefficients[0]
     K2 = distotionCoefficients[1]
