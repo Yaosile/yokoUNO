@@ -12,7 +12,7 @@ def gstreamer_pipeline(
     capture_height=cameraHeight,
     display_width=cameraWidth,
     display_height=cameraHeight,
-    framerate=10,
+    framerate=1,
     flip_method=0,
 ):
     return (
