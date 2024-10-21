@@ -4,8 +4,8 @@ from numpy import asanyarray as ana
 from PIL import Image
 import cv2
 
-cameraWidth = 3264
-cameraHeight = 2464
+cameraWidth = 3264//2
+cameraHeight = 2464//2
 
 def gstreamer_pipeline(
     sensor_id=0,
@@ -86,7 +86,7 @@ def cameraCalibration():
                 if key == ord('q'):
                     break
                 elif key == ord('w'):
-                    Image.fromarray(frame[::4,::4,:].astype(np.uint8)).save('Images/Screenshot.png')
+                    Image.fromarray(frame[::2,::2,:].astype(np.uint8)).save('Images/Screenshot.png')
                     print('Kachow')
         finally:
             video_capture.release()
