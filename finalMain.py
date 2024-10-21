@@ -3,7 +3,7 @@ import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
 from PIL import Image
 import cv2
-import numba
+# import numba
 
 cameraWidth = 3264
 cameraHeight = 2464
@@ -18,7 +18,7 @@ def gstreamer_pipeline(
     flip_method=0,
 ):
     return (
-        "nvarguscamerasrc sensor-id=%d !"
+        "nvarguscamerasrc sensor-id=%d ! "
         "video/x-raw(memory:NVMM), width=(int)%d, height=(int)%d, framerate=(fraction)%d/1 ! "
         "nvvidconv flip-method=%d ! "
         "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
