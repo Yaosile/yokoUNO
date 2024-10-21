@@ -13,7 +13,7 @@ def gstreamer_pipeline(
     capture_height=cameraHeight,
     display_width=cameraWidth,
     display_height=cameraHeight,
-    framerate=1,
+    framerate=21,
     flip_method=0,
 ):
     return (
@@ -72,7 +72,7 @@ def cameraCalibration():
                 ret_val, frame = video_capture.read()
                 output = frame[yuw,xuw]
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title, output)
+                    cv2.imshow(window_title,output)
                 else:
                     break
 
