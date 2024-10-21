@@ -185,6 +185,14 @@ def gaussianKernelGenerator(size, sigma = 2):
     output /= output.sum()
     return output
 
+def generateGrid(width, height):
+    xd,yd = np.zeros_like((height, width)), np.zeros_like((height, width))
+    for i in range(width):
+        xd[:, i] = i
+    for i in range(height):
+        yd[i, :] = i
+    return xd,yd
+
 @numba.jit(nopython = True)
 def distortionMap(distotionCoefficients, mtx, width, height):
     K1 = distotionCoefficients[0]
@@ -195,7 +203,7 @@ def distortionMap(distotionCoefficients, mtx, width, height):
     yc = mtx[1][2]
     fx = mtx[0][0]
     fy = mtx[1][1]
-    xd,yd = np.meshgrid(np.arange(width), np.arange(height))
+    xd,yd = generateGrid(width, height)
 
     xu = (xd - xc) / fx
     yu = (yd - yc) / fy
