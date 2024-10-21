@@ -55,9 +55,11 @@ src = [
 
 boardSize = (517*2, 605*2)
 def cameraCalibration():
-
+    print('calculating distortion map')
     yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
+    print('calculating perspective map')
     yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
+    print('calculating final transform')
     yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
 
     output = np.zeros((*boardSize, 3))
@@ -70,9 +72,13 @@ def cameraCalibration():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
+
+                output = myJazz.rgb2hsv(frame,Calculations='SV')
                 output = frame[yuw,xuw]
+                output = (output[:,:,1])*output[:,:,2]*255
+                
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,output[::2, ::2, :])
+                    cv2.imshow(window_title,output[::2, ::2])
                 else:
                     break
 
