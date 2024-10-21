@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import asanyarray as ana
+import numba
 
 def normalise(array, minOut = 0, maxOut = 255):
     array = array.copy()
@@ -184,6 +185,7 @@ def gaussianKernelGenerator(size, sigma = 2):
     output /= output.sum()
     return output
 
+@numba.jit(nopython = True)
 def distortionMap(distotionCoefficients, mtx, width, height):
     K1 = distotionCoefficients[0]
     K2 = distotionCoefficients[1]
