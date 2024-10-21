@@ -53,7 +53,7 @@ src = [
     [2115, 609],
 ]
 
-boardSize = (500, 500)
+boardSize = (605*2, 517*2)
 def cameraCalibration():
 
     yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
@@ -72,7 +72,7 @@ def cameraCalibration():
                 ret_val, frame = video_capture.read()
                 output = frame[yuw,xuw]
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,output)
+                    cv2.imshow(window_title,output[::2, ::2, :])
                 else:
                     break
 
