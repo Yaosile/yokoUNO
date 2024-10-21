@@ -1,4 +1,6 @@
-print('hello world')
+import numpy as np
+
+print(np.version.version)
 
 # import cv2
 # import numpy as np
