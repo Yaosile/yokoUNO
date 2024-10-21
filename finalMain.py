@@ -53,7 +53,7 @@ src = [
     [2115, 609],
 ]
 
-boardSize = (605*2, 517*2)
+boardSize = (517*2, 605*2)
 def cameraCalibration():
 
     yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
