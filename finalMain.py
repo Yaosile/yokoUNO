@@ -3,9 +3,9 @@ import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
 from PIL import Image
 import cv2
-
-cameraWidth = 3264//2
-cameraHeight = 2464//2
+scaling = 4
+cameraWidth = 3264//scaling
+cameraHeight = 2464//scaling
 
 def gstreamer_pipeline(
     sensor_id=0,
@@ -45,7 +45,7 @@ mtx = ana([
     [1.734239392051136E3,0,1.667798059392088E3],
     [0,1.729637617052701E3,1.195682065165660E3],
     [0,0,1],
-])/2
+])/scaling
 src = [
     [1219, 616],
     [1072, 1851],
@@ -78,7 +78,7 @@ def cameraCalibration():
                 # output = (output[:,:,1])*output[:,:,2]*255
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,frame[::2, ::2].astype(np.uint8))
+                    cv2.imshow(window_title,frame.astype(np.uint8))
                 else:
                     break
 
