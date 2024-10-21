@@ -55,7 +55,6 @@ src = [
 
 boardSize = (517*2, 605*2)
 def cameraCalibration():
-    # print('now with numba')
     # print('calculating distortion map')
     # yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
     # print('calculating perspective map')
@@ -73,7 +72,7 @@ def cameraCalibration():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                # frame = frame.astype(float)
+                frame = frame.astype(float)
                 # output = frame[yuw,xuw]
                 # output = myJazz.rgb2hsv(output,Calculations='SV')
                 # output = (output[:,:,1])*output[:,:,2]*255
