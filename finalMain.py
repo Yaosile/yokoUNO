@@ -29,8 +29,30 @@ def gstreamer_pipeline(
     )
 
 def cameraCalibration():
-    print(gstreamer_pipeline(flip_method=0))
+    window_title = "CSI Camera"
 
+    print(gstreamer_pipeline(flip_method=0))
+    video_capture = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    if video_capture.isOpened():
+        try:
+            window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
+            while True:
+                ret_val, frame = video_capture.read()
+
+                if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
+                    cv2.imshow(window_title, frame[::4, ::4, :])
+                else:
+                    break
+
+                key = cv2.waitKey(10) & 0xFF
+                if key == ord('q'):
+                    break
+        finally:
+            video_capture.release()
+            cv2.destroyAllWindows()
+    else:
+        print("Error: Unable to open camera")
 
 if __name__ == '__main__':
     cameraCalibration()
+    
