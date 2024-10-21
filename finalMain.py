@@ -56,7 +56,7 @@ src = [
 boardSize = (517*2, 605*2)
 def cameraCalibration():
     # print('calculating distortion map')
-    # yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
+    yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
     # print('calculating perspective map')
     # yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
     # print('calculating final transform')
@@ -72,13 +72,13 @@ def cameraCalibration():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                frame = frame.astype(float)
-                # output = frame[yuw,xuw]
+                # frame = frame.astype(float)
+                frame = frame[yu,xu]
                 # output = myJazz.rgb2hsv(output,Calculations='SV')
                 # output = (output[:,:,1])*output[:,:,2]*255
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,frame[::4, ::4].astype(np.uint8))
+                    cv2.imshow(window_title,frame[::2, ::2].astype(np.uint8))
                 else:
                     break
 
@@ -86,7 +86,7 @@ def cameraCalibration():
                 if key == ord('q'):
                     break
                 elif key == ord('w'):
-                    Image.fromarray(frame[::2,::2,:].astype(np.uint8)).save('Images/Screenshot.png')
+                    Image.fromarray(frame.astype(np.uint8)).save('Images/Screenshot.png')
                     print('Kachow')
         finally:
             video_capture.release()
