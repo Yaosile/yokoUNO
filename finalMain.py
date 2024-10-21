@@ -34,16 +34,33 @@ def gstreamer_pipeline(
         )
     )
 
+"""
+1219, 616
+1072, 1851
+2276, 1851
+2115, 609
+"""
+dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
+mtx = ana([
+    [1.734239392051136E3,0,1.667798059392088E3],
+    [0,1.729637617052701E3,1.195682065165660E3],
+    [0,0,1],
+])
+src = [
+    [1219, 616],
+    [1072, 1851],
+    [2276, 1851],
+    [2115, 609],
+]
+
+boardSize = (500, 500)
 def cameraCalibration():
-    dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
-    mtx = ana([
-        [1.734239392051136E3,0,1.667798059392088E3],
-        [0,1.729637617052701E3,1.195682065165660E3],
-        [0,0,1],
-    ])
 
     yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
-    output = np.zeros((cameraHeight, cameraWidth, 3))
+    yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
+    yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
+
+    output = np.zeros((*boardSize, 3))
     window_title = "CSI Camera"
 
     print(gstreamer_pipeline(flip_method=0))
@@ -53,7 +70,7 @@ def cameraCalibration():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                output = frame[yu,xu]
+                output = frame[yuw,xuw]
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(window_title, output[::4, ::4, :])
                 else:
