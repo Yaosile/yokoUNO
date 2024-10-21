@@ -187,8 +187,8 @@ def gaussianKernelGenerator(size, sigma = 2):
 
 @numba.jit(nopython = True)
 def generateGrid(width, height):
-    xd = np.zeros_like((height, width))
-    yd = np.zeros_like((height, width))
+    xd = np.empty(shape = (height, width), dtype=int)
+    yd = np.empty(shape = (height, width), dtype=int)
     for i in np.arange(width):
         for j in np.arange(height):
             xd[j, i] = i
