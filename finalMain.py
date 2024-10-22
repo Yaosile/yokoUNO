@@ -3,7 +3,7 @@ import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
 from PIL import Image
 import cv2
-scaling = 4
+scaling = 1
 cameraWidth = 3264//scaling
 cameraHeight = 2464//scaling
 
@@ -73,12 +73,12 @@ def cameraCalibration():
             while True:
                 ret_val, frame = video_capture.read()
                 # frame = frame.astype(float)
-                frame = frame[yu,xu]
+                # frame = frame[yu,xu]
                 # output = myJazz.rgb2hsv(output,Calculations='SV')
                 # output = (output[:,:,1])*output[:,:,2]*255
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,frame.astype(np.uint8))
+                    cv2.imshow(window_title,frame)
                 else:
                     break
 
