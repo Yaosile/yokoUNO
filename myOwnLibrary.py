@@ -2,7 +2,55 @@ import numpy as np
 from numpy import asanyarray as ana
 # import numba
 
+def pixelToCartesian(px,py,imageWidth,imageHeight): 
+    '''MY OWN'''
+    boardDimensions = (605, 517) #height, width in mm
+    y = (imageHeight - py)*(boardDimensions[0]/imageHeight)
+    x = (px - imageWidth/2)*(boardDimensions[1]/imageWidth)
+    return x,y
+
+def cartesianToScara(x,y):
+    '''MY OWN'''
+    #Right side dimensions
+    xOffset = 150
+    L1 = 250+14+14
+    L2 = xOffset + L1
+
+    #Right Motor
+    d = np.sqrt((x-xOffset)**2 + y**2) #calculating the distance from the motor to point
+    a = (L2**2-L1**2+d**2)/(2*d)
+    h = np.sqrt(L2**2-a**2)
+    if False:
+        xr = x + a*(xOffset-x)/d + h*(-y)/d
+        yr = y + a*(-y)/d + h*(x-xOffset)/d
+    else:
+        xr = x + a*(xOffset-x)/d - h*(-y)/d
+        yr = y + a*(-y)/d - h*(x-xOffset)/d
+    theta1r = np.arctan2(yr, xr-xOffset)
+    theta2r = np.arctan2(y-yr, x-xr)
+
+    #Left side dimensions
+    xOffset = 150
+    L1 = 250+14+14
+    L2 = xOffset + L1
+    #Left Motor
+    xOffset = -xOffset
+    d = np.sqrt((x-xOffset)**2 + y**2)
+    a = (L2**2-L1**2+d**2)/(2*d)
+    h = np.sqrt(L2**2-a**2)
+    if True:
+        xl = x + a*(xOffset-x)/d + h*(-y)/d
+        yl = y + a*(-y)/d + h*(x-xOffset)/d
+    else:
+        xl = x + a*(xOffset-x)/d - h*(-y)/d
+        yl = y + a*(-y)/d - h*(x-xOffset)/d
+    theta1l = np.arctan2(yl, xl-xOffset)
+    theta2l = np.arctan2(y-yl, x-xl)
+
+    return theta1l, theta1r
+
 def normalise(array, minOut = 0, maxOut = 255):
+    '''MY OWN but insignificant'''
     array = array.copy()
     minIn = np.min(array)
     maxIn = np.max(array)
@@ -13,9 +61,11 @@ def normalise(array, minOut = 0, maxOut = 255):
     return array
 
 def rgb2gray(image):
+    '''Standard'''
     return np.dot(image[..., :3], [0.2989, 0.5870, 0.1140])
 
 def rgb2hsv(image, Calculations = 'HSV'):
+    '''Standard'''
     output = np.zeros_like(image).astype(float)
     Cmax = np.max(image, axis = 2) #not normalised
     Cmin = np.min(image, axis = 2) #not normalised
@@ -38,12 +88,14 @@ def rgb2hsv(image, Calculations = 'HSV'):
     return output
 
 def threshHold(arrayLike, hold):
+    '''Standard'''
     temp = np.zeros(arrayLike.shape)
     threshHeld = np.where(arrayLike > hold)
     temp[threshHeld] = 255
     return temp
 
 def onCardLines(frame: np.ndarray):
+    '''MY OWN'''
     x_middle = np.mean(frame, axis=0)
     y_middle = np.mean(frame, axis=1)
     x_middle = np.argmax(x_middle)
@@ -57,6 +109,7 @@ def onCardLines(frame: np.ndarray):
 #     right = np.mean(frame[:,x:],axis=0)
 
 def boundingBox(frame):
+    '''MY OWN'''
     valid = np.where(frame > 254)
     t = valid[0][0]
     b = valid[0][-1]
@@ -66,6 +119,7 @@ def boundingBox(frame):
     return t,b,l,r
 
 def getRadius(frame, centreX, centreY):
+    '''MY OWN'''
     x,y = np.meshgrid(np.arange(frame.shape[1])-centreX, np.arange(frame.shape[0])-centreY)
     r,b = (x**2 + y**2)**0.5, np.atan2(y,x)
     values = []
@@ -78,6 +132,7 @@ def getRadius(frame, centreX, centreY):
     return i
 
 def rotate(frame, theta):
+    '''MY OWN'''
     "Rotates an image, but only a square one"
     radius = frame.shape[0]/2
     xo,yo = np.meshgrid(np.arange(radius*2)-radius, np.arange(radius*2)-radius)
@@ -93,6 +148,7 @@ def rotate(frame, theta):
     return rotated
 
 def isolateCard(frame):
+    '''MY OWN'''
     t,b,l,r = boundingBox(frame)
     cx,cy = midPoint(t,b,l,r)
     r = getRadius(frame, cx,cy)
@@ -100,6 +156,7 @@ def isolateCard(frame):
     return rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
 
 def getRotation(frame, centreX, centreY, radius):
+    '''MY OWN'''
     radius += 10
     temp = frame[-radius+centreY:radius+centreY, -radius+centreX:radius+centreX]
     xo,yo = np.meshgrid(np.arange(radius*2)-radius, np.arange(radius*2)-radius)
@@ -130,6 +187,7 @@ def getRotation(frame, centreX, centreY, radius):
 
 
 def scanLines(frame: np.ndarray,x,y,thresholdAmount):
+    '''MY OWN'''
     top = np.mean(frame[:y,:],axis=1)
     bot = np.mean(frame[y:,:],axis=1)
     left = np.mean(frame[:,:x],axis=0)
@@ -150,6 +208,7 @@ def scanLines(frame: np.ndarray,x,y,thresholdAmount):
     return top,bot,left,right
 
 def largestConsecutiveSet(array:np.ndarray):
+    '''MY OWN'''
     array = array[0].copy()
     maxLength = 0
     currentLength = 1
@@ -172,14 +231,17 @@ def largestConsecutiveSet(array:np.ndarray):
     return array[maxStartIndex:maxStartIndex+maxLength]
 
 def midPoint(top,bottom,left,right):
+    '''Insignificant'''
     midX = (left+right)//2
     midY = (top+bottom)//2
     return midX, midY
 
 def closestValueInSet(value, setOfValues):
+    '''MY OWN but insignificant'''
     return np.argmin(np.abs(setOfValues - value))
 
 def gaussianKernelGenerator(size, sigma = 2):
+    '''Standard'''
     x,y = np.meshgrid(np.arange(size)-size/2+0.5, np.arange(size)-size/2+0.5)
     output = np.exp(-((x**2 + y**2)**0.5)/(2*(sigma**2)))
     output /= output.sum()
@@ -187,6 +249,7 @@ def gaussianKernelGenerator(size, sigma = 2):
 
 # @numba.jit(nopython = True)
 def generateGrid(width, height):
+    '''MY OWN'''
     xd = np.empty(shape = (height, width), dtype=int)
     yd = np.empty(shape = (height, width), dtype=int)
     for i in np.arange(width):
@@ -197,6 +260,7 @@ def generateGrid(width, height):
 
 # @numba.jit(nopython = True)
 def distortionMap(distotionCoefficients, mtx, width, height):
+    '''MY OWN and standard'''
     K1 = distotionCoefficients[0]
     K2 = distotionCoefficients[1]
     K3 = distotionCoefficients[4]
@@ -205,7 +269,7 @@ def distortionMap(distotionCoefficients, mtx, width, height):
     yc = mtx[1][2]
     fx = mtx[0][0]
     fy = mtx[1][1]
-    xd,yd = generateGrid(width, height)
+    xd,yd = np.meshgrid(np.arange(width), np.arange(height))
 
     xu = (xd - xc) / fx
     yu = (yd - yc) / fy
@@ -239,24 +303,61 @@ def distortionMap(distotionCoefficients, mtx, width, height):
 
     return yu, xu
 
+# def unwarpMap(src, dstWidth, dstHeight, imageWidth, imageHeight):
+#     '''MY OWN and standard'''
+#     if type(src) != np.ndarray:
+#         src = ana(src)
+#     dst = np.array([[0, 0], [0, dstHeight-1], [dstWidth-1, dstHeight-1], [dstWidth-1,0]])
+#     H = find_homography(src, dst)
+#     H_inv = np.linalg.inv(H)
+#     boundBox = [imageWidth, imageHeight]
+
+#     xd, yd = np.meshgrid(np.arange(boundBox[0]), np.arange(boundBox[1]))
+#     coordinateMatrix = np.stack((yd, xd), axis=-1)
+#     output = np.zeros((dstHeight, dstWidth, 2), dtype=int)
+#     for i in range(output.shape[1]):
+#         for j in range(output.shape[0]):
+#             x, y, z = np.dot(H_inv, ana([i, j, 1]))
+#             x, y = x/z, y/z
+#             if 0 <= x and x < boundBox[0] and 0 <= y and y < boundBox[1]:
+#                 output[j, i] = coordinateMatrix[int(y), int(x)]
+#     return output[:,:,0], output[:,:,1]
+
 def unwarpMap(src, dstWidth, dstHeight, imageWidth, imageHeight):
+    '''MY OWN/REFINED BY GPT'''
     if type(src) != np.ndarray:
         src = ana(src)
-    dst = np.array([[0, 0], [0, dstHeight-1], [dstWidth-1, dstHeight-1], [dstWidth-1,0]])
+        
+    # Destination points (corners of the output image)
+    dst = np.array([[0, 0], [0, dstHeight-1], [dstWidth-1, dstHeight-1], [dstWidth-1, 0]])
+    
+    # Compute homography matrix
     H = find_homography(src, dst)
     H_inv = np.linalg.inv(H)
-    boundBox = [imageWidth, imageHeight]
-
-    xd, yd = np.meshgrid(np.arange(boundBox[0]), np.arange(boundBox[1]))
-    coordinateMatrix = np.stack((yd, xd), axis=-1)
-    output = np.zeros((dstHeight, dstWidth, 2), dtype=int)
-    for i in range(output.shape[1]):
-        for j in range(output.shape[0]):
-            x, y, z = np.dot(H_inv, ana([i, j, 1]))
-            x, y = x/z, y/z
-            if 0 <= x and x < boundBox[0] and 0 <= y and y < boundBox[1]:
-                output[j, i] = coordinateMatrix[int(y), int(x)]
-    return output[:,:,0], output[:,:,1]
+    
+    # Generate grid of destination image coordinates
+    xd, yd = np.meshgrid(np.arange(dstWidth), np.arange(dstHeight))
+    
+    # Convert the grid into homogeneous coordinates (flatten the arrays)
+    ones = np.ones_like(xd)
+    dst_points = np.stack([xd.ravel(), yd.ravel(), ones.ravel()], axis=0)
+    
+    # Apply the inverse homography to the entire grid
+    transformed_points = np.dot(H_inv, dst_points)
+    
+    # Normalize by the third (homogeneous) coordinate
+    transformed_points /= transformed_points[2, :]
+    
+    # Get the transformed (x, y) coordinates
+    x_transformed = transformed_points[0].reshape(dstHeight, dstWidth)
+    y_transformed = transformed_points[1].reshape(dstHeight, dstWidth)
+    
+    # Clip the coordinates to be within the image bounds
+    x_transformed = np.clip(x_transformed, 0, imageWidth - 1).astype(int)
+    y_transformed = np.clip(y_transformed, 0, imageHeight - 1).astype(int)
+    
+    # Return the mapping of destination image coordinates to source image coordinates
+    return y_transformed, x_transformed
 
 # def unwarpMap3D(src, dstWidth, dstHeight, imageWidth, imageHeight, zOffset=0):
 #     if type(src) != np.ndarray:
@@ -280,6 +381,7 @@ def unwarpMap(src, dstWidth, dstHeight, imageWidth, imageHeight):
 #     return output[:,:,0], output[:,:,1]
 
 def find_homography(src_pts, dst_pts):
+    '''STANDARD'''
     A = []
     for i in range(4):
         x, y = src_pts[i][0], src_pts[i][1]
@@ -312,12 +414,14 @@ def find_homography(src_pts, dst_pts):
 #     return H / H[3,3]  # Normalize so that h44 = 1
 
 def getFinalTransform(yw,xw,yu,xu):
+    '''MY OWN'''
     temp = np.stack((yu, xu), axis=-1)
     temp = temp[yw, xw]
     y,x = temp[:,:,0],temp[:,:,1]
     return y,x
 
 def FFT(x: np.ndarray):
+    '''MY OWN'''
     N = x.shape[0]
     if np.log2(N) % 1 > 0:
         raise ValueError('Must be a power of 2')
@@ -334,10 +438,12 @@ def FFT(x: np.ndarray):
     return X.ravel()
 
 def rollRight(array: np.ndarray, n=1):
+    '''INSIGNIFICANT'''
     array = list(array)
     return array[-n:] + array[:-n]
 
 def convolveMultiplication(frame: np.ndarray, kernel: np.ndarray, mode='full'):
+    '''MY OWN'''
     if type(frame) == list:
         frame = np.array(frame)
     if type(kernel) == list:
@@ -368,12 +474,14 @@ def convolveMultiplication(frame: np.ndarray, kernel: np.ndarray, mode='full'):
     return output
 
 def positive(array):
+    '''MY OWN'''
     array = array.copy()
     condition = array < 0
     array[condition] = 0
     return array
 
 def IFFT(X: np.ndarray):
+    '''MY OWN'''
     N = X.shape[0]
     if np.log2(N) % 1 > 0:
         raise ValueError('Must be a power of 2')

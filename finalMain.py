@@ -55,7 +55,7 @@ src = [
 
 boardSize = (517*2, 605*2)
 def cameraCalibration():
-    # print('calculating distortion map')
+    print('calculating distortion map')
     yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
     # print('calculating perspective map')
     # yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
