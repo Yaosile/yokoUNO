@@ -113,7 +113,7 @@ def cameraCalibration():
                     output[y,:] = 255
                     output[:,x] = 255
                     x,y = myJazz.pixelToCartesian(x,y,517,605)
-                    l,r = myJazz.cartesianToScara(x,y+60)
+                    l,r = myJazz.cartesianToScara(x,y)
                     print('snap')
                     print(l*180/np.pi + 45, r*180/np.pi + 45)
         finally:
