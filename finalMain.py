@@ -108,6 +108,10 @@ def cameraCalibration():
                     output = myJazz.threshHold(output, thresh)
                     output = myJazz.convolveMultiplication(output, blur)
                     output = myJazz.threshHold(output, 254)
+                    t,b,l,r = myJazz.boundingBox(output)
+                    x,y = myJazz.midPoint(t,b,l,r)
+                    output[y,:] = 255
+                    output[:,x] = 255
                     print('snap')
         finally:
             video_capture.release()
