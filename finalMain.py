@@ -59,6 +59,7 @@ thresh = 0
 blur = np.ones((5,5))
 blur /= blur.sum()
 boardSize = (517, 605)
+output = np.zeros((605, 517))
 def cameraCalibration():
     key = input('enter a number: ')
     if key == '1':
@@ -85,19 +86,12 @@ def cameraCalibration():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                frame = frame[yuw,xuw]
-                frame = frame.astype(float)
-                output = myJazz.rgb2hsv(frame,Calculations='SV')
-                output = (output[:,:,1])*output[:,:,2]*255
-                output = myJazz.threshHold(output, thresh)
-                output = myJazz.convolveMultiplication(output, blur)
-                output = myJazz.threshHold(output, 254)
-
-
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(window_title,output.astype(np.uint8))
                 else:
                     break
+
+
 
                 key = cv2.waitKey(10) & 0xFF
                 if key == ord('q'):
@@ -106,6 +100,15 @@ def cameraCalibration():
                     Image.fromarray(frame.astype(np.uint8)).save('Images/Screenshot.png')
                     print('Kachow')
                     break
+                elif key == ord(' '):
+                    frame = frame[yuw,xuw]
+                    frame = frame.astype(float)
+                    output = myJazz.rgb2hsv(frame,Calculations='SV')
+                    output = (output[:,:,1])*output[:,:,2]*255
+                    output = myJazz.threshHold(output, thresh)
+                    output = myJazz.convolveMultiplication(output, blur)
+                    output = myJazz.threshHold(output, 254)
+                    print('snap')
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
