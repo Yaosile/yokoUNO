@@ -56,7 +56,7 @@ src = [
 ]
 
 thresh = 0
-
+blur = np.ones((3,3))/9
 boardSize = (517, 605)
 def cameraCalibration():
     key = input('enter a number: ')
@@ -89,6 +89,7 @@ def cameraCalibration():
                 output = myJazz.rgb2hsv(frame,Calculations='SV')
                 output = (output[:,:,1])*output[:,:,2]*255
                 output = myJazz.threshHold(output, thresh)
+                output = myJazz.convolveMultiplication(output, blur)
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(window_title,output.astype(np.uint8))
