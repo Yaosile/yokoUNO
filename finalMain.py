@@ -88,6 +88,7 @@ def cameraCalibration():
                 elif key == ord('w'):
                     Image.fromarray(frame.astype(np.uint8)).save('Images/Screenshot.png')
                     print('Kachow')
+                    break
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
