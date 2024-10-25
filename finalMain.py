@@ -49,20 +49,20 @@ mtx = ana([
     [0,0,1],
 ])/scaling
 src = [
-    [1219, 616],
-    [1072, 1851],
-    [2276, 1851],
-    [2115, 609],
+    [1177, 656],
+    [1059, 1823],
+    [2147, 1794],
+    [2010, 678],
 ]
 
 boardSize = (517*2, 605*2)
 def cameraCalibration():
     print('calculating distortion map')
     yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
-    # print('calculating perspective map')
-    # yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
-    # print('calculating final transform')
-    # yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
+    print('calculating perspective map')
+    yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
+    print('calculating final transform')
+    yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
 
     # output = np.zeros((*boardSize,))
     window_title = "CSI Camera"
@@ -75,7 +75,7 @@ def cameraCalibration():
             while True:
                 ret_val, frame = video_capture.read()
                 # frame = frame.astype(float)
-                frame = frame[yu,xu]
+                frame = frame[yuw,xuw]
                 # output = myJazz.rgb2hsv(output,Calculations='SV')
                 # output = (output[:,:,1])*output[:,:,2]*255
 
