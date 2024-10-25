@@ -73,7 +73,7 @@ def cameraCalibration():
             while True:
                 ret_val, frame = video_capture.read()
                 # frame = frame.astype(float)
-                # frame = frame[yu,xu]
+                frame = frame[yu,xu]
                 # output = myJazz.rgb2hsv(output,Calculations='SV')
                 # output = (output[:,:,1])*output[:,:,2]*255
 
