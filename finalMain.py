@@ -1,5 +1,4 @@
-# test
-
+import serial
 import numpy as np
 import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
@@ -116,7 +115,11 @@ def cameraCalibration():
                     x,y = myJazz.pixelToCartesian(x,y,517,605)
                     l,r = myJazz.cartesianToScara(x,y)
                     print('snap')
-                    print((l*180/np.pi + 45)*1000, (r*180/np.pi + 45)*1000)
+                    print(int((l*180/np.pi + 45)*1000), int((r*180/np.pi + 45)*1000))
+                    ser = serial.Serial('/dev/ttyUSB0', 115200)
+                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)}'
+                    ser.write(test.encode())
+                    ser.close()
                     # card = myJazz.isolateCard(output)
         finally:
             video_capture.release()
