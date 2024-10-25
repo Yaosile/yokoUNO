@@ -57,14 +57,15 @@ src = [
 
 boardSize = (517, 605)
 def cameraCalibration():
-    # print('calculating distortion map')
-    # yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
-    # print('calculating perspective map')
-    # yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
-    # print('calculating final transform')
-    # yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
-    # np.save('mapY.npy', yuw)
-    # np.save('mapX.npy', xuw)
+    if input('enter a number') == '1':
+        print('calculating distortion map')
+        yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
+        print('calculating perspective map')
+        yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
+        print('calculating final transform')
+        yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
+        np.save('mapY.npy', yuw)
+        np.save('mapX.npy', xuw)
     yuw = np.load('mapY.npy')
     xuw = np.load('mapX.npy')
 
