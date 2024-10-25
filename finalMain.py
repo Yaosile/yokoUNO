@@ -1,5 +1,3 @@
-# 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
-
 import numpy as np
 import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
