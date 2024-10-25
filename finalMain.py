@@ -79,22 +79,16 @@ def cameraCalibration():
 
     # output = np.zeros((*boardSize,))
     boardFrame = "Board Camera"
-    cardFrame = "Card Camera"
 
     print(gstreamer_pipeline(flip_method=0))
     video_capture = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     if video_capture.isOpened():
         try:
             window_handle = cv2.namedWindow(boardFrame, cv2.WINDOW_AUTOSIZE)
-            window_handle = cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,output.astype(np.uint8))
-                else:
-                    break
-                if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(boardFrame,card.astype(np.uint8))
                 else:
                     break
 
@@ -123,7 +117,7 @@ def cameraCalibration():
                     l,r = myJazz.cartesianToScara(x,y)
                     print('snap')
                     print(l*180/np.pi + 45, r*180/np.pi + 45)
-                    card = myJazz.isolateCard(output)
+                    # card = myJazz.isolateCard(output)
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
