@@ -116,7 +116,7 @@ def cameraCalibration():
                     x,y = myJazz.pixelToCartesian(x,y,517,605)
                     l,r = myJazz.cartesianToScara(x,y)
                     print('snap')
-                    print(l*180/np.pi + 45, r*180/np.pi + 45)
+                    print((l*180/np.pi + 45)*1000, (r*180/np.pi + 45)*1000)
                     # card = myJazz.isolateCard(output)
         finally:
             video_capture.release()
