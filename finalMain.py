@@ -88,7 +88,7 @@ def cameraCalibration():
                 frame = frame.astype(float)
                 output = myJazz.rgb2hsv(frame,Calculations='SV')
                 output = (output[:,:,1])*output[:,:,2]*255
-                output = myJazz.threshHold(output, threshHold)
+                output = myJazz.threshHold(output, thresh)
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(window_title,output.astype(np.uint8))
