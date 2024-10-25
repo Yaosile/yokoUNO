@@ -55,12 +55,12 @@ src = [
     [2182, 594],
 ]
 
-thresh = 0
 blur = np.ones((5,5))
 blur /= blur.sum()
 boardSize = (517, 605)
-output = np.zeros((605, 517))
 def cameraCalibration():
+    output = np.zeros((605, 517))
+    thresh = 50
     key = input('enter a number: ')
     if key == '1':
         print('calculating distortion map')
