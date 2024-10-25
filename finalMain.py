@@ -78,13 +78,13 @@ def cameraCalibration():
             window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                # frame = frame.astype(float)
                 frame = frame[yuw,xuw]
-                # output = myJazz.rgb2hsv(output,Calculations='SV')
-                # output = (output[:,:,1])*output[:,:,2]*255
+                frame = frame.astype(float)
+                output = myJazz.rgb2hsv(output,Calculations='SV')
+                output = (output[:,:,1])*output[:,:,2]*255
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,frame[::2, ::2])
+                    cv2.imshow(window_title,output[::2, ::2])
                 else:
                     break
 
