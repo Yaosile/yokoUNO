@@ -112,7 +112,10 @@ def cameraCalibration():
                     x,y = myJazz.midPoint(t,b,l,r)
                     output[y,:] = 255
                     output[:,x] = 255
+                    x,y = myJazz.pixelToCartesian(x,y,517,605)
+                    l,r = myJazz.cartesianToScara(x,y)
                     print('snap')
+                    print(l*180/np.pi + 45, r*180/np.pi + 45)
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
