@@ -55,7 +55,7 @@ src = [
     [2010, 678],
 ]
 
-threshHold = 0
+thresh = 0
 
 boardSize = (517, 605)
 def cameraCalibration():
@@ -70,7 +70,7 @@ def cameraCalibration():
         np.save('mapY.npy', yuw)
         np.save('mapX.npy', xuw)
     elif key == '2':
-        threshHold = input('enter a threshold: ')
+        thresh = int(input('enter a threshold: '))
     yuw = np.load('mapY.npy')
     xuw = np.load('mapX.npy')
 
