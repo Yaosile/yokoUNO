@@ -59,7 +59,7 @@ threshHold = 0
 
 boardSize = (517, 605)
 def cameraCalibration():
-    key = input('enter a numbe: ')
+    key = input('enter a number: ')
     if key == '1':
         print('calculating distortion map')
         yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
@@ -69,7 +69,7 @@ def cameraCalibration():
         yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
         np.save('mapY.npy', yuw)
         np.save('mapX.npy', xuw)
-    elif key == 2:
+    elif key == '2':
         threshHold = input('enter a threshold: ')
     yuw = np.load('mapY.npy')
     xuw = np.load('mapX.npy')
