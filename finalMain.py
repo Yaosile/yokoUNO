@@ -56,7 +56,8 @@ src = [
 ]
 
 thresh = 0
-blur = np.ones((3,3))/9
+blur = np.ones((5,5))
+blur /= blur.sum()
 boardSize = (517, 605)
 def cameraCalibration():
     key = input('enter a number: ')
