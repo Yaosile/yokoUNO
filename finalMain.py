@@ -1,3 +1,5 @@
+# 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
+
 import numpy as np
 import myOwnLibrary as myJazz
 from numpy import asanyarray as ana
@@ -13,7 +15,7 @@ def gstreamer_pipeline(
     capture_height=cameraHeight,
     display_width=cameraWidth,
     display_height=cameraHeight,
-    framerate=21,
+    framerate=1,
     flip_method=0,
 ):
     return (
