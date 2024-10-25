@@ -63,6 +63,8 @@ def cameraCalibration():
     yw, xw = myJazz.unwarpMap(src, *boardSize, cameraHeight, cameraHeight)
     print('calculating final transform')
     yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
+    np.save('mapY.npy', yuw)
+    np.save('mapX.npy', xuw)
 
     # output = np.zeros((*boardSize,))
     window_title = "CSI Camera"
