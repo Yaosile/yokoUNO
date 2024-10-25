@@ -55,9 +55,12 @@ src = [
     [2010, 678],
 ]
 
+threshHold = 0
+
 boardSize = (517, 605)
 def cameraCalibration():
-    if input('enter a number') == '1':
+    key = input('enter a numbe: ')
+    if key == '1':
         print('calculating distortion map')
         yu, xu = myJazz.distortionMap(dist, mtx, cameraWidth, cameraHeight)
         print('calculating perspective map')
@@ -66,6 +69,8 @@ def cameraCalibration():
         yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
         np.save('mapY.npy', yuw)
         np.save('mapX.npy', xuw)
+    elif key == 2:
+        threshHold = input('enter a threshold: ')
     yuw = np.load('mapY.npy')
     xuw = np.load('mapX.npy')
 
@@ -83,6 +88,7 @@ def cameraCalibration():
                 frame = frame.astype(float)
                 output = myJazz.rgb2hsv(frame,Calculations='SV')
                 output = (output[:,:,1])*output[:,:,2]*255
+                output = myJazz.threshHold(output, threshHold)
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(window_title,output.astype(np.uint8))
