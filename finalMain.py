@@ -84,7 +84,7 @@ def cameraCalibration():
                 # output = (output[:,:,1])*output[:,:,2]*255
 
                 if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,frame)
+                    cv2.imshow(window_title,frame[::2, ::2])
                 else:
                     break
 
