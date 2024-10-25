@@ -60,6 +60,7 @@ blur /= blur.sum()
 boardSize = (517, 605)
 def cameraCalibration():
     output = np.zeros((605, 517))
+    card = np.zeros((1,1,3))
     thresh = 50
     key = input('enter a number: ')
     if key == '1':
@@ -77,17 +78,23 @@ def cameraCalibration():
     xuw = np.load('mapX.npy')
 
     # output = np.zeros((*boardSize,))
-    window_title = "CSI Camera"
+    boardFrame = "Board Camera"
+    cardFrame = "Card Camera"
 
     print(gstreamer_pipeline(flip_method=0))
     video_capture = cv2.VideoCapture(gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     if video_capture.isOpened():
         try:
-            window_handle = cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
+            window_handle = cv2.namedWindow(boardFrame, cv2.WINDOW_AUTOSIZE)
+            window_handle = cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                if cv2.getWindowProperty(window_title, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(window_title,output.astype(np.uint8))
+                if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
+                    cv2.imshow(boardFrame,output.astype(np.uint8))
+                else:
+                    break
+                if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
+                    cv2.imshow(boardFrame,card.astype(np.uint8))
                 else:
                     break
 
@@ -116,6 +123,7 @@ def cameraCalibration():
                     l,r = myJazz.cartesianToScara(x,y)
                     print('snap')
                     print(l*180/np.pi + 45, r*180/np.pi + 45)
+                    card = myJazz.isolateCard(output)
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
