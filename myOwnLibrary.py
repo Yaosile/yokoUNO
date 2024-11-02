@@ -2,6 +2,93 @@ import numpy as np
 from numpy import asanyarray as ana
 # import numba
 
+def linear_interpolate(v1, v2, fraction):
+    return (1 - fraction) * v1 + fraction * v2
+
+def bilinear_interpolation(image, x, y):
+    x1 = min(int(x), image.shape[1]-1)  # floor of x
+    y1 = min(int(y), image.shape[0]-1)  # floor of y
+    x2 = min(x1 + 1, image.shape[1] - 1)  # ensure it stays within bounds
+    y2 = min(y1 + 1, image.shape[0] - 1)
+
+    # Calculate the fractional part of x and y
+    x_frac = x - x1
+    y_frac = y - y1
+
+    # Get pixel values at the corners
+    Q11 = image[y1, x1]
+    Q12 = image[y2, x1]
+    Q21 = image[y1, x2]
+    Q22 = image[y2, x2]
+
+    # Perform linear interpolation in the x direction
+    R1 = linear_interpolate(Q11, Q21, x_frac)
+    R2 = linear_interpolate(Q12, Q22, x_frac)
+
+    # Perform linear interpolation in the y direction
+    P = linear_interpolate(R1, R2, y_frac)
+
+    return P
+
+def scaleImage(image, width, height):
+    if image.shape[2] > 1:
+        temp = np.zeros((height, width, image.shape[2]))
+    else:
+        temp = np.zeros((height,width))
+    xScale = image.shape[1]/width
+    yScale = image.shape[0]/height
+    for i in range(width):
+        for j in range(height):
+            x = i*xScale
+            y = j*yScale
+            temp[j,i] = bilinear_interpolation(image, x, y)
+
+    return temp
+
+def UVGrid(frame: np.ndarray):
+    x,y = np.linspace(0,frame.shape[0]-1,frame.shape[0]), np.linspace(0,frame.shape[1]-1,frame.shape[1])
+    u,v = np.meshgrid(x,y)
+    return u,v
+
+def rot90(x: np.ndarray, n=1):
+    n = n%4
+    if n == 0:
+        return x
+    if n>1:
+        x = rot90(x, n-1)
+    dim = len(x), len(x[0])
+    rotated = np.zeros((dim[1], dim[0]))
+    for i in range(dim[0]):
+        for j in range(dim[1]):
+            rotated[dim[1]-j-1, i] = x[i, j]
+    return rotated
+
+def arucoCorners(frame: np.ndarray):
+    '''MY OWN'''
+    shape = frame.shape
+    u,v = UVGrid(frame)
+    max = int(np.max(u+v))
+    original = 255-frame.copy()
+    # final = np.zeros_like(original)
+    positions = []
+    for j in range(4):
+        output = rot90(original, j)
+        multiply = np.ones_like(frame)
+        prev = np.average(output)
+        for i in range(max//2):
+            multiply[u+v < i] = 0
+            output = output * multiply
+            if np.average(output) != prev:
+                multiply[u+v > i] = 0
+                output = output * multiply
+                positions.append((np.argmax(output)%frame.shape[1], np.argmax(output)//frame.shape[1]))
+                break
+    positions[1] = shape[0]-positions[1][1], positions[1][0]
+    positions[2] = shape[0]-positions[2][0], shape[1]-positions[2][1]
+    positions[3] = positions[3][1], shape[1]-positions[3][0]
+    return positions
+
+
 def pixelToCartesian(px,py,imageWidth,imageHeight): 
     '''MY OWN'''
     boardDimensions = (605, 517) #height, width in mm
@@ -110,6 +197,7 @@ def onCardLines(frame: np.ndarray):
 
 def boundingBox(frame):
     '''MY OWN'''
+    frame = frame.copy()
     valid = np.where(frame > 254)
     t = valid[0][0]
     b = valid[0][-1]
@@ -147,13 +235,27 @@ def rotate(frame, theta):
     rotated = frame[yd,xd]
     return rotated
 
-def isolateCard(frame):
+def isolateCard(frame, originalImage):
     '''MY OWN'''
-    t,b,l,r = boundingBox(frame)
-    cx,cy = midPoint(t,b,l,r)
+    # frame = frame.copy()
+    # originalImage = originalImage.copy()
+    t,b,l,right = boundingBox(frame)
+    cx,cy = midPoint(t,b,l,right)
     r = getRadius(frame, cx,cy)
     theta = getRotation(frame, cx,cy,r)
-    return rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
+    temp = rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
+    t,b,l,right = boundingBox(temp)
+    temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
+    # temp[t,:] = [255,0,0]
+    # temp[b,:] = [255,0,0]
+    # temp[:,l] = [255,0,0]
+    # temp[:,r] = [255,0,0]
+    # temp[t,:] = 255
+    # temp[b,:] = 255
+    # temp[:,l] = 255
+    # temp[:,r] = 255
+    # return temp[t-4:b-4,l-4:right-4]
+    return temp[t:b,l:right]
 
 def getRotation(frame, centreX, centreY, radius):
     '''MY OWN'''
@@ -161,10 +263,10 @@ def getRotation(frame, centreX, centreY, radius):
     temp = frame[-radius+centreY:radius+centreY, -radius+centreX:radius+centreX]
     xo,yo = np.meshgrid(np.arange(radius*2)-radius, np.arange(radius*2)-radius)
     r,b = (xo**2 + yo**2)**0.5, np.atan2(yo,xo)
-    change = np.pi/4
+    change = np.pi/6
     sumChange = change
     rotated = temp.copy()
-    for i in range(50):
+    for i in range(30):
         top,bot,left,right = boundingBox(rotated)
         diff = (right-left)/(bot-top)
         xd,yd = ((r*np.cos(b+sumChange))+radius), ((r*np.sin(b+sumChange))+radius)
@@ -442,6 +544,73 @@ def rollRight(array: np.ndarray, n=1):
     array = list(array)
     return array[-n:] + array[:-n]
 
+def overlayImage(bottom: np.ndarray, top:np.ndarray, rot=0, centre=-1):
+    rot = np.deg2rad(rot)
+    bot = bottom.copy()
+    if centre == -1:
+        centre = (bot.shape[0]//2, bot.shape[1]//2)
+    alpha = False
+    if top.shape[2] == 4:
+        alpha = True
+    t = []
+    k = []
+    for x in range(bot.shape[1]):
+        x -= centre[1]
+        for y in range(bot.shape[0]):
+            y -= centre[0]
+            r = (x**2 + y**2)**0.5
+            theta = np.atan2(y,x)
+            if r < np.abs(top.shape[1]/(2*np.cos(theta + rot))) and r < np.abs(top.shape[0]/(2*np.sin(theta + rot))):
+                oldX = r*np.cos(theta + rot) + top.shape[1]//2
+                oldY = r*np.sin(theta + rot) + top.shape[0]//2
+                if alpha:
+                    colour = bilinear_interpolation(top, oldX, oldY)
+                    bot[y + centre[0], x + centre[1]] = (colour[:3]*(colour[3]/255)) + (bot[y + centre[0], x + centre[1]] * (1 - colour[3]/255))
+
+    # bot[yDest, xDest] = [255,0,0]
+
+
+    return bot
+
+def rotatePoints(xs,ys,phi):
+    x = xs.copy()
+    y = ys.copy()
+    r = (x**2 + y**2)**0.5
+    theta = np.atan2(y,x)
+    x = r*np.cos(theta - phi)
+    y = r*np.sin(theta - phi)
+    return x,y
+
+
+# def overlayImage(bottom: np.ndarray, top:np.ndarray, rot=0, centre=-1):
+#     rot = np.deg2rad(rot)
+#     bot = bottom.copy()
+#     if centre == -1:
+#         centre = (bot.shape[0]//2, bot.shape[1]//2)
+#     alpha = False
+#     if top.shape[2] == 4:
+#         alpha = True
+
+#     centreTop = (top.shape[0]//2, top.shape[1]//2)
+#     x,y = np.meshgrid(np.arange(bot.shape[1])-centre[1], np.arange(bot.shape[0])-centre[0])
+#     theta = np.atan2(y,x)
+#     r = (x**2 + y**2)**0.5
+#     mask = np.where((r < np.abs(top.shape[1]/(2*np.cos(theta + rot)))) & (r < np.abs(top.shape[0]/(2*np.sin(theta + rot)))))
+#     y,x = mask
+#     y -= centre[0]
+#     x -= centre[1]
+#     oldX,oldY = rotatePoints(x,y,-rot)
+#     y += centre[0]
+#     x += centre[1]
+#     oldX = oldX.astype(int) + centreTop[1]
+#     oldY = oldY.astype(int) + centreTop[0]
+#     alpha = top[...,3] > 0
+#     top = top[...,:3]
+#     top[alpha] = [255,0,0]
+#     bot[y,x] = top[oldY, oldX,:3]
+#     return bot
+    
+
 def convolveMultiplication(frame: np.ndarray, kernel: np.ndarray, mode='full'):
     '''MY OWN'''
     if type(frame) == list:
@@ -480,19 +649,19 @@ def positive(array):
     array[condition] = 0
     return array
 
-def IFFT(X: np.ndarray):
-    '''MY OWN'''
-    N = X.shape[0]
-    if np.log2(N) % 1 > 0:
-        raise ValueError('Must be a power of 2')
-    N_min = min(N, 2)
-    n = np.arange(N_min)
-    k = n[:, np.newaxis]
-    M = np.exp(2j * np.pi * n * k / N_min)
-    X = np.dot(M, x.reshape((N_min, -1)))
-    while X.shape[0] < N:
-        X_even = X[:, :int(X.shape[1]//2)]
-        X_odd = X[:, int(X.shape[1]//2):]
-        terms = np.exp(1j * np.pi * np.arange(X.shape[0])/X.shape[0])[:, np.newaxis]
-        X = np.vstack([X_even + terms * X_odd, X_even - terms * X_odd])
-    return X.ravel()
+# def IFFT(X: np.ndarray):
+#     '''MY OWN'''
+#     N = X.shape[0]
+#     if np.log2(N) % 1 > 0:
+#         raise ValueError('Must be a power of 2')
+#     N_min = min(N, 2)
+#     n = np.arange(N_min)
+#     k = n[:, np.newaxis]
+#     M = np.exp(2j * np.pi * n * k / N_min)
+#     X = np.dot(M, x.reshape((N_min, -1)))
+#     while X.shape[0] < N:
+#         X_even = X[:, :int(X.shape[1]//2)]
+#         X_odd = X[:, int(X.shape[1]//2):]
+#         terms = np.exp(1j * np.pi * np.arange(X.shape[0])/X.shape[0])[:, np.newaxis]
+#         X = np.vstack([X_even + terms * X_odd, X_even - terms * X_odd])
+#     return X.ravel()
