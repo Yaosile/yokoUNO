@@ -16,6 +16,8 @@ RATE = 44100              # 44.1kHz sample rate
 CHUNK = 1024              # 1024 samples per frame
 RECORD_SECONDS = 1        # Duration to record
 
+LAYERS = 4
+
 WORDS = ['r', 'y', 'g', 'b', 'u']
 
 freq2mel = np.vectorize(lambda x: 2595.0 * np.log10(1.0 + x / 700.0))
@@ -89,7 +91,7 @@ def convertToMFCC(audio, hop=15, sampleRate = 44100, filterN = 10, coeff=40):
     final = np.dot(dctcoefficients, filteredOutput)
     return final[:coeff//2,:]
 
-def trainCNN(layersN):
+def trainCNN(layersN, epochs = 500, lr=0.01):
     files = os.listdir('AudioRecordings')
     data = []
     correct = []
@@ -104,9 +106,9 @@ def trainCNN(layersN):
     for i in range(layersN-1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
 
-    # weights = cnn.generateWeights(len(audioSample), len(audioSample), len(WORDS), layers=layersN)
+    # weights = cnn.generateWeights(len(audioSample), int(len(audioSample)*1.15), len(WORDS), layers=layersN)
 
-    L2, weights = cnn.backProp(data, correct, weights, 0.01, 500, 0.01, 1)
+    L2, weights = cnn.backProp(data, correct, weights, lr, epochs, 0.01, 1, randomCount=-1)
     for i, weight in enumerate(weights):
         np.save(f'audioWeights/{i}.npy', weight)
     np.save('error.npy', L2)
@@ -141,7 +143,7 @@ def getAudioRecording():
 
 def doOnline():
     weights = []
-    for i in range(3):
+    for i in range(LAYERS - 1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
     files = os.listdir('AudioRecordings')
     data = []
@@ -171,7 +173,7 @@ def doOnline():
 
 def classify():
     weights = []
-    for i in range(3):
+    for i in range(LAYERS - 1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
     while True:
         print()
@@ -182,9 +184,8 @@ def classify():
 
 def checkHealth():
     weights = []
-    for i in range(3):
+    for i in range(LAYERS-1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
-    # weights = cnn.generateWeights(1340, 1340, 5, 4)
     files = os.listdir('AudioRecordings')
     data = []
     correct = []
@@ -204,30 +205,55 @@ def checkHealth():
             tallycorrect[WORDS[np.argmax(j)]] += 1
         tally[WORDS[np.argmax(j)]] += 1
     
+    totDone = 0
+    totCorrect = 0
     for i in WORDS:
-        print(i, tallycorrect[i],tally[i])
+        totDone += tally[i]
+        totCorrect += tallycorrect[i]
+        print(i, tallycorrect[i],tally[i], f'{tallycorrect[i]/tally[i]*100}%', sep='\t')
+    print('Total:', totCorrect, totDone, f'{totCorrect/totDone*100}%', sep='\t')
+    
+def generateConfusion():
+    files = os.listdir('AudioRecordings')
+    correct = []
+    data = []
+    for f in files:
+        data.append(np.load(f'AudioRecordings/{f}'))
+        t = [0 for i in range(len(WORDS))]
+        t[WORDS.index(f[0])] = 1
+        correct.append(t)
+    weights = []
+    for i in range(5):
+        weights.append(np.load(f'audioWeights/{i}.npy'))
+    predict = cnn.feedForward(data, weights)
+    correct = np.argmax(correct,axis=1)
+    predict = np.argmax(predict,axis=1)
+    output = ana([[0.0 for i in range(len(WORDS))] for j in range(len(WORDS))])
+    for i,j in zip(correct, predict):
+        output[j,i] +=1
+    totalSpoken = np.sum(output, axis=0)
+    for i in range(len(WORDS)):
+        output[i,:] = np.round((output[i,:]/totalSpoken)*100,2)
+    
+    graph = plt.imshow(output, cmap='Greens', origin='lower')
+    plt.colorbar(graph)
+    for i in range(len(WORDS)):
+        for j in range(len(WORDS)):
+            plt.text(i,j, output[j,i], va = 'center', ha='center')
+    plt.xlabel('True value')
+    plt.ylabel('Predicted value')
+    Axis = ['Red', 'Yellow', 'Green', 'Blue', 'UNO']
+    plt.xticks(ticks=range(len(WORDS)), labels=Axis)
+    plt.yticks(ticks=range(len(WORDS)), labels=Axis)
+    plt.show()
+
 
 
 if __name__ == '__main__':
-    # data = []
-    # for i in WORDS:
-    #     sr, audio = wavfile.read(f'AudioRecordings/{i}.wav')
-    #     final = convertToMFCC(audio, sampleRate=sr)
-    #     data.append(final.reshape(-1))
-    # trainCNN(data, 5)
-    # test = getAudioRecording()
-    # np.save('AudioRecordings/r0.npy', test)
-    # doOnline()
-    # trainCNN(4)
+    # generateConfusion()
     # classify()
-    # green = np.load('AudioRecordings/g48.npy').reshape(20,-1)
-    # blue = np.load('AudioRecordings/b33.npy').reshape(20,-1)
-    # plt.imshow(blue)
-    # plt.show()
-
-    # classify()
-    # doOnline()
-    trainCNN(4)
+    trainCNN(epochs=500, layersN=LAYERS, lr = 0.01)
     error = np.load('error.npy')
     plt.plot(error)
     plt.show()
+    checkHealth()
