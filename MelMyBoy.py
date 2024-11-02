@@ -7,6 +7,7 @@ import wave
 import os
 
 import myOwnLibrary as myJazz
+import time
 
 from matplotlib import pyplot as plt
 
@@ -16,7 +17,7 @@ RATE = 44100              # 44.1kHz sample rate
 CHUNK = 1024              # 1024 samples per frame
 RECORD_SECONDS = 1        # Duration to record
 
-LAYERS = 4
+LAYERS = 3
 
 WORDS = ['r', 'y', 'g', 'b', 'u']
 
@@ -96,11 +97,10 @@ def trainCNN(layersN, epochs = 500, lr=0.01):
     data = []
     correct = []
     for f in files:
-        data.append(np.load(f'AudioRecordings/{f}'))
+        data.append(cnn.convolutionalSection(np.load(f'AudioRecordings/{f}').reshape(20,-1)))
         t = [0 for i in range(len(WORDS))]
         t[WORDS.index(f[0])] = 1
         correct.append(t)
-
     audioSample = data[0]
     weights = []
     for i in range(layersN-1):
@@ -108,7 +108,7 @@ def trainCNN(layersN, epochs = 500, lr=0.01):
 
     # weights = cnn.generateWeights(len(audioSample), int(len(audioSample)*1.15), len(WORDS), layers=layersN)
 
-    L2, weights = cnn.backProp(data, correct, weights, lr, epochs, 0.01, 1, randomCount=-1)
+    L2, weights = cnn.backProp(ana(data), ana(correct), weights, lr, epochs, 1, randomCount=10)
     for i, weight in enumerate(weights):
         np.save(f'audioWeights/{i}.npy', weight)
     np.save('error.npy', L2)
@@ -156,7 +156,7 @@ def doOnline():
     while True:
         print()
         now = getAudioRecording()
-        guess = np.round(cnn.feedForward([now], weights), 4)
+        guess = np.round(cnn.feedForward([cnn.convolutionalSection(now.reshape(20,-1))], weights), 4)
         print(guess)
         print(f'Guessed: {WORDS[np.argmax(guess)]}')
         word = input('please enter the correct word: ').lower()[0]
@@ -177,9 +177,10 @@ def classify():
         weights.append(np.load(f'audioWeights/{i}.npy'))
     while True:
         print()
-        now = getAudioRecording()
+        now = cnn.convolutionalSection(getAudioRecording().reshape(20,-1))
         guess = np.round(cnn.feedForward([now], weights), 4)
         print(guess)
+        print(np.std(guess))
         print(f'Guessed: {WORDS[np.argmax(guess)]}')
 
 def checkHealth():
@@ -191,7 +192,7 @@ def checkHealth():
     correct = []
     order = []
     for f in files:
-        data.append(np.load(f'AudioRecordings/{f}'))
+        data.append(cnn.convolutionalSection(np.load(f'AudioRecordings/{f}').reshape(20,-1)))
         t = [0 for i in range(len(WORDS))]
         t[WORDS.index(f[0])] = 1
         correct.append(t)
@@ -251,9 +252,12 @@ def generateConfusion():
 
 if __name__ == '__main__':
     # generateConfusion()
-    # classify()
-    trainCNN(epochs=500, layersN=LAYERS, lr = 0.01)
-    error = np.load('error.npy')
-    plt.plot(error)
-    plt.show()
-    checkHealth()
+    classify()
+    # now = time.time_ns()
+    trainCNN(epochs=5000, layersN=LAYERS, lr = 0.001)
+    # print((time.time_ns() - now)/1e9)
+    # # error = np.load('error.npy')
+    # # plt.plot(error)
+    # # plt.show()
+    # checkHealth()
+    # doOnline()

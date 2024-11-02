@@ -1,6 +1,8 @@
 import numpy as np
 from numpy import asanyarray as ana
 
+import myOwnLibrary as myJazz
+
 restrict = 10_000
 
 def errorCost(value, target):
@@ -28,13 +30,12 @@ def activation(x, derive = False):
         return 1 - activation(x)**2
     return np.tanh(x)
 
-def backProp(inDataTrue, targetDataTrue, weights, lr, tEpoch, tError, bias, randomCount = 3):
+def backProp(inDataTrue, targetDataTrue, weights, lr, tEpoch, bias, tError = 1, randomCount = -1):
     weights = weights[:]
     if type(inDataTrue) != type(ana([])):
         inDataTrue = ana(inDataTrue)
     if type(targetDataTrue) != type(ana([])):
         targetDataTrue = ana(targetDataTrue)
-    normalError = []
     outputCount = targetDataTrue.shape[1]
     optionCount = targetDataTrue.shape[0]
     indexChoice = [[] for i in range(outputCount)]
@@ -78,7 +79,7 @@ def backProp(inDataTrue, targetDataTrue, weights, lr, tEpoch, tError, bias, rand
             PD = layerOutputs[i][:, :, np.newaxis] * errors[i][: , np.newaxis, :]
             gradient = np.average(PD, axis=0)
             weights[i] += -lr * gradient
-        normalError.append(np.abs(np.mean(normalise(layerOutputs[-1] - targetData))))
+        # L2.append(np.abs(np.mean(normalise(layerOutputs[-1] - targetData))))
         L2.append(np.mean(errorCost(layerOutputs[-1], targetData)))
         # L2.append(np.mean(np.abs(layerOutputs[-1] - targetData)))
         # print(L2[-1], normalError[-1])
@@ -97,3 +98,34 @@ def feedForward(inData, weights):
     layerOutputs[-1] = layerOutputs[-1][:, 1:]
 
     return layerOutputs[-1]
+
+def convolutionalSection(audio):
+    kernels = []
+    kernels.append(ana([
+        [-1,-1,-1],
+        [-1,8,-1],
+        [-1,-1,-1],
+    ]))
+    kernels.append(ana([
+        [0,-1,0],
+        [-1,5,-1],
+        [0,-1,0]
+    ]))
+    kernels.append(np.ones((3,3))/9)
+    kernels.append(ana([
+        [0,0,0],
+        [0,1,0],
+        [0,0,0]
+    ]))
+    output = []
+    for i in kernels:
+        output.append(getMaxKernel(myJazz.convolveMultiplication(audio,i),4))
+    output = ana(output).reshape(-1)
+    return output
+
+def getMaxKernel(original,n):
+    output = np.zeros(ana(original.shape)//n)
+    for i in range(output.shape[0]):
+        for j in range(output.shape[1]):
+            output[i,j] = np.max(original[int(i*n):int((i+1)*n),int(j*n):int((j+1)*n)])
+    return output
