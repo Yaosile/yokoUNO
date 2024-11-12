@@ -15,6 +15,7 @@ def mainFootage():
             cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
+                frame = frame[yuw,xuw]
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:])
