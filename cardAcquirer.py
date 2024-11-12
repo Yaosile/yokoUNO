@@ -2,6 +2,7 @@ import numpy as np
 from numpy import asanyarray as ana
 import myOwnLibrary as myJazz
 import cv2
+from PIL import Image
 
 def mainFootage():
     boardFrame = 'Board'
@@ -50,7 +51,9 @@ def mainFootage():
                     output = myJazz.convolveMultiplication(output, blur)
                     output = myJazz.threshHold(output, 254)
                     output = myJazz.isolateCard(output, frame)
-                    print('ap')
+                    name = input('Card name?: ')
+                    Image.fromarray(output.astype(np.uint8)).save(f'CardSnaps/{name}.png')
+
 
         finally:
             video_capture.release()
