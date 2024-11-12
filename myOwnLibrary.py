@@ -220,7 +220,7 @@ def boundingBox(frame):
 def getRadius(frame, centreX, centreY):
     '''MY OWN'''
     x,y = np.meshgrid(np.arange(frame.shape[1])-centreX, np.arange(frame.shape[0])-centreY)
-    r,b = (x**2 + y**2)**0.5, np.atan2(y,x)
+    r,b = (x**2 + y**2)**0.5, np.atan(y,x)
     values = []
     i = 50
     while True:
@@ -235,7 +235,7 @@ def rotate(frame, theta):
     "Rotates an image, but only a square one"
     radius = frame.shape[0]/2
     xo,yo = np.meshgrid(np.arange(radius*2)-radius, np.arange(radius*2)-radius)
-    r,b = (xo**2 + yo**2)**0.5, np.atan2(yo,xo)
+    r,b = (xo**2 + yo**2)**0.5, np.atan(yo,xo)
     xd,yd = ((r*np.cos(b+theta))+radius), ((r*np.sin(b+theta))+radius)
     xd,yd = xd.astype(int), yd.astype(int)
     xd[xd>=radius*2] = radius*2-1
@@ -570,7 +570,7 @@ def overlayImage(bottom: np.ndarray, top:np.ndarray, rot=0, centre=-1):
         for y in range(bot.shape[0]):
             y -= centre[0]
             r = (x**2 + y**2)**0.5
-            theta = np.atan2(y,x)
+            theta = np.atan(y,x)
             if r < np.abs(top.shape[1]/(2*np.cos(theta + rot))) and r < np.abs(top.shape[0]/(2*np.sin(theta + rot))):
                 oldX = r*np.cos(theta + rot) + top.shape[1]//2
                 oldY = r*np.sin(theta + rot) + top.shape[0]//2
@@ -587,7 +587,7 @@ def rotatePoints(xs,ys,phi):
     x = xs.copy()
     y = ys.copy()
     r = (x**2 + y**2)**0.5
-    theta = np.atan2(y,x)
+    theta = np.atan(y,x)
     x = r*np.cos(theta - phi)
     y = r*np.sin(theta - phi)
     return x,y
