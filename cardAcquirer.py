@@ -9,6 +9,7 @@ def mainFootage():
     blur = np.ones((5,5))
     blur /= blur.sum()
     thresh = int(input('Enter a threshold value: '))
+    output = np.ones((10,10,3))
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
