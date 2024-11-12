@@ -63,6 +63,7 @@ def update_coordinates(event, x, y, flags, param):
             mouse_x, mouse_y = x, y
 
 def calculatePoints(og: np.ndarray):
+    points = [[0,0],[0,0],[0,0],[0,0]]
     global mouse_x, mouse_y
     ySize, xSize = og.shape[0], og.shape[1]
     windowWidth = 301
@@ -75,20 +76,35 @@ def calculatePoints(og: np.ndarray):
         while True:
             scaleY, scaleX = int((ySize/windowHeight)*mouse_y), int((xSize/windowWidth)*mouse_x)
             frame = og[scaleY:scaleY+windowHeight, scaleX:scaleX+windowWidth, :].copy()
-            frame[150,:] = 255
-            frame[:,150] = 255
+            frame[150,:] = 255-frame[150,:]
+            frame[:,150] = 255-frame[:,150]
             if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
                 cv2.imshow(frameName,frame)
             else:
                 break
             key = cv2.waitKey(10) & 0xFF
-            if key == ord('3'):
+            if key == ord('1'):
+                points[0] = [mouse_y,mouse_x][:]
+                print('top left')
+            elif key == ord('2'):
+                points[1] = [mouse_y,mouse_x][:]
+                print('bottom left')
+            elif key == ord('3'):
+                points[2] = [mouse_y,mouse_x][:]
+                print('bottom right')
+            elif key == ord('4'):
+                points[3] = [mouse_y,mouse_x][:]
+                print('top right')
+            elif key == ord('5'):
                 break
+                
     finally:
         cv2.destroyAllWindows()
+        return points
 
 if __name__ == '__main__':
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
     snap = unDistortedFootage()
-    calculatePoints(snap)
+    corners = calculatePoints(snap)
+    print(corners)
