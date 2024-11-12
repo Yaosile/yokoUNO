@@ -59,9 +59,11 @@ mouse_x, mouse_y = 0,0
 def update_coordinates(event, x, y, flags, param):
     global mouse_x, mouse_y
     if event == cv2.EVENT_MOUSEMOVE:  # Mouse is moving
-        mouse_x, mouse_y = x, y
+        if x > 0 and y > 0:
+            mouse_x, mouse_y = x, y
 
 def calculatePoints(frame):
+    global mouse_x, mouse_y
     frameName = 'Undistorted Frame'
     print('CalculatedDistortion')
     try:
