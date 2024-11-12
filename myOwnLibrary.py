@@ -273,7 +273,7 @@ def getRotation(frame, centreX, centreY, radius):
     radius += 10
     temp = frame[-radius+centreY:radius+centreY, -radius+centreX:radius+centreX]
     xo,yo = np.meshgrid(np.arange(radius*2)-radius, np.arange(radius*2)-radius)
-    r,b = (xo**2 + yo**2)**0.5, np.atan2(yo,xo)
+    r,b = (xo**2 + yo**2)**0.5, np.atan(yo,xo)
     change = np.pi/6
     sumChange = change
     rotated = temp.copy()
