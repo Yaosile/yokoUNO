@@ -21,19 +21,20 @@ def mainFootage():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 frame = frame.astype(float)
-                frame = frame - frame.min()
-                frame = frame/frame.max()
+                frame -= frame.min()
+                if frame.max() != 0:
+                    frame /= frame.max()
                 frame *= 255
                 # frame[frame<100] = 0
                 # frame[frame>=100] = 255
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(boardFrame,frame[::2,::2,:])
+                    cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
                 else:
                     break
 
                 if cv2.getWindowProperty(cardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(cardFrame,output)
+                    cv2.imshow(cardFrame,output.astype(np.uint8))
                 else:
                     break
 
