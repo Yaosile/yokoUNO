@@ -73,7 +73,7 @@ def calculatePoints(og: np.ndarray):
         window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
         cv2.setMouseCallback(frameName, update_coordinates)
         while True:
-            scaleY, scaleX = (ySize/windowHeight)*mouse_y, (xSize/windowWidth)*mouse_x
+            scaleY, scaleX = int((ySize/windowHeight)*mouse_y), int((xSize/windowWidth)*mouse_x)
             frame = og[scaleY:scaleY+windowHeight, scaleX:scaleX+windowWidth, :]
             frame[150,:] = 255
             frame[:,150] = 255
