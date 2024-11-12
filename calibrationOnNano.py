@@ -95,6 +95,8 @@ def calculatePoints(og: np.ndarray):
                 points[3] = [scaleY+150,scaleX+150][:]
                 print('top right')
             elif key == ord('5'):
+                for i in range(4):
+                    points[i] = points[i][::-1]
                 break
                 
     finally:
@@ -112,7 +114,7 @@ def finalFootage():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(frameName,frame[::4,::4,:])
+                    cv2.imshow(frameName,frame)
                 else:
                     break
 
