@@ -27,8 +27,10 @@ def rawFootage():
         print('Failed to open camera')
 
 def unDistortedFootage():
+    temp = 0
     frameName = 'Undistorted Frame'
     yu, xu = myJazz.distortionMap()
+    print('CalculatedDistortion')
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     if video_capture.isOpened():
         try:
@@ -36,6 +38,7 @@ def unDistortedFootage():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yu,xu]
+                temp = frame.copy()
 
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(frameName,frame[::4,::4,:])
@@ -48,10 +51,30 @@ def unDistortedFootage():
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
+            return temp
     else:
         print('Failed to open camera')
+
+def calculatePoints(frame):
+    frameName = 'Undistorted Frame'
+    print('CalculatedDistortion')
+    try:
+        window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
+        while True:
+
+            if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
+                cv2.imshow(frameName,frame[::4,::4,:])
+            else:
+                break
+
+            key = cv2.waitKey(10) & 0xFF
+            if key == ord('3'):
+                break
+    finally:
+        cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
-    unDistortedFootage()
+    snap = unDistortedFootage()
+    calculatePoints(snap)
