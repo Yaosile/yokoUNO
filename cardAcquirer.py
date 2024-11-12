@@ -36,16 +36,16 @@ def mainFootage():
                     break
 
                 elif key == ord(' '):
+                    print('sn',end='')
                     output = frame.astype(float)
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
                     output = myJazz.threshHold(output, thresh)
                     output = myJazz.convolveMultiplication(output, blur)
                     output = myJazz.threshHold(output, 254)
-                    t,b,l,r = myJazz.boundingBox(output)
-                    x,y = myJazz.midPoint(t,b,l,r)
-                    output[y,:] = 255
-                    output[:,x] = 255
+                    output = myJazz.isolateCard(output, frame)
+                    print('ap')
+
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
