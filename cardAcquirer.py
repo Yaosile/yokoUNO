@@ -20,11 +20,12 @@ def mainFootage():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
-                frame = frame.astype(float)
-                frame -= frame.min()
-                if frame.max() != 0:
-                    frame /= frame.max()
-                frame *= 255
+                frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
+                # frame = frame.astype(float)
+                # frame -= frame.min()
+                # if frame.max() != 0:
+                #     frame /= frame.max()
+                # frame *= 255
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
