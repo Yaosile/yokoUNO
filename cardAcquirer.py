@@ -25,8 +25,6 @@ def mainFootage():
                 if frame.max() != 0:
                     frame /= frame.max()
                 frame *= 255
-                frame[frame<thresh] = 0
-                frame[frame>=thresh] = 255
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
