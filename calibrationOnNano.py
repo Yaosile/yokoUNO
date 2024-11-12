@@ -72,7 +72,7 @@ def calculatePoints(frame):
         while True:
 
             if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                cv2.imshow(frameName,frame[mouse_y-100:mouse_y+100,mouse_x-100:mouse_x+100,:])
+                cv2.imshow(frameName,frame[mouse_y:mouse_y+100,mouse_x:mouse_x+100,:])
             else:
                 break
             key = cv2.waitKey(10) & 0xFF
