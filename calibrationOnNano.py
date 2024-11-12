@@ -62,17 +62,23 @@ def update_coordinates(event, x, y, flags, param):
         if x > 0 and y > 0:
             mouse_x, mouse_y = x, y
 
-def calculatePoints(frame):
+def calculatePoints(og: np.ndarray):
     global mouse_x, mouse_y
+    ySize, xSize = og.shape()[0], og.shape()[1]
+    windowWidth = 301
+    windowHeight = 301
     frameName = 'Undistorted Frame'
     print('CalculatedDistortion')
     try:
         window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
         cv2.setMouseCallback(frameName, update_coordinates)
         while True:
-
+            scaleY, scaleX = (ySize/windowHeight)*mouse_y, (xSize/windowWidth)*mouse_x
+            frame = og[scaleY:scaleY+windowHeight, scaleX:scaleX+windowWidth, :]
+            frame[150,:] = 255
+            frame[:,150] = 255
             if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                cv2.imshow(frameName,frame[mouse_y:mouse_y+100,mouse_x:mouse_x+100,:])
+                cv2.imshow(frameName,frame)
             else:
                 break
             key = cv2.waitKey(10) & 0xFF
