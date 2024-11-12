@@ -29,8 +29,8 @@ def rawFootage():
 def unDistortedFootage():
     temp = 0
     frameName = 'Undistorted Frame'
+    print('Calculating Distortion')
     yu, xu = myJazz.distortionMap()
-    print('CalculatedDistortion')
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     if video_capture.isOpened():
         try:
@@ -55,18 +55,22 @@ def unDistortedFootage():
     else:
         print('Failed to open camera')
 
+def get_coordinates(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDOWN:  # Left mouse button click
+        print(f"Mouse clicked at ({x}, {y})")
+
 def calculatePoints(frame):
     frameName = 'Undistorted Frame'
     print('CalculatedDistortion')
     try:
         window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
+        cv2.setMouseCallback(frameName, get_coordinates)
         while True:
 
             if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
                 cv2.imshow(frameName,frame[::4,::4,:])
             else:
                 break
-
             key = cv2.waitKey(10) & 0xFF
             if key == ord('3'):
                 break
