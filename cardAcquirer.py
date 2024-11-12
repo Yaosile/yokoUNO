@@ -20,6 +20,7 @@ def mainFootage():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
+                frame = frame.astype(float)
                 frame = frame - frame.min()
                 frame = frame/frame.max()
                 frame *= 255
