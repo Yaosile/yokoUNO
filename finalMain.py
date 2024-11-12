@@ -8,33 +8,6 @@ scaling = 1
 cameraWidth = 3264//scaling
 cameraHeight = 2464//scaling
 
-def gstreamer_pipeline(
-    sensor_id=0,
-    capture_width=cameraWidth,
-    capture_height=cameraHeight,
-    display_width=cameraWidth,
-    display_height=cameraHeight,
-    framerate=1,
-    flip_method=0,
-):
-    return (
-        "nvarguscamerasrc sensor-id=%d ! "
-        "video/x-raw(memory:NVMM), width=(int)%d, height=(int)%d, framerate=(fraction)%d/1 ! "
-        "nvvidconv flip-method=%d ! "
-        "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
-        "videoconvert ! "
-        "video/x-raw, format=(string)BGR ! appsink"
-        % (
-            sensor_id,
-            capture_width,
-            capture_height,
-            framerate,
-            flip_method,
-            display_width,
-            display_height,
-        )
-    )
-
 """
 1219, 616
 1072, 1851

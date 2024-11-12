@@ -15,7 +15,7 @@ FORMAT = pyaudio.paInt16  # 16-bit resolution
 CHANNELS = 1              # Mono channel
 RATE = 44100              # 44.1kHz sample rate
 CHUNK = 1024              # 1024 samples per frame
-RECORD_SECONDS = 1        # Duration to record
+RECORD_SECONDS = 5        # Duration to record
 
 LAYERS = 3
 
@@ -30,17 +30,17 @@ def normaliseAudio(audio):
     audio = audio/np.abs(audio).max()
     return audio
 
-def audioFrames(audio, FFT_n = 2048, hop = 10, sampleRate = 44100):
-    window = getWindow(2048)
-
+def audioFrames(audio, FFT_n = 2048, hop = 10, sampleRate = 44100, windowing = True):
+    window = getWindow(FFT_n)
     audio = np.pad(audio, FFT_n//2,mode='reflect')
     frameLen = (sampleRate * hop + 500) // 1000
     frameTot = (len(audio) - FFT_n) // frameLen + 1
     frames = []
     for n in range(frameTot):
         frames.append(audio[n*frameLen:n*frameLen+FFT_n])
-
-    return ana(frames) * window
+    if windowing:
+        return np.asanyarray(frames) * window
+    return ana(frames)
 
 def FFTframes(frames):
     FFT = []
@@ -81,16 +81,16 @@ def dct(num, len):
         b[i,:] = np.cos(i*s)*((2.0/len)**0.5)
     return b
 
-def convertToMFCC(audio, hop=15, sampleRate = 44100, filterN = 10, coeff=40):
+def convertToMFCC(audio, hop=15, sampleRate = 44100, filterN = 10, coeff=40, FFTN=2048):
     audio = normaliseAudio(audio)
-    frames = audioFrames(audio, hop = hop)
+    frames = audioFrames(audio, hop = hop, FFT_n=FFTN)
     FFT = FFTframes(frames)
-    melFreqs,freqs=getFilterPoints(0, sampleRate/2, filterN)
-    filters=getTriangleFilters(freqs)*(2.0/(melFreqs[2:] - melFreqs[:-2]))[:, None]
-    filteredOutput = (np.dot(filters, FFT.T))
+    melFreqs,freqs=getFilterPoints(0, sampleRate/2, filterN, FFT_n=FFTN)
+    filters=getTriangleFilters(freqs, FFT_n=FFTN)*(2.0/(melFreqs[2:] - melFreqs[:-2]))[:, None]
+    filteredOutput = np.dot(filters, FFT.T)
     dctcoefficients = dct(coeff, filterN)
     final = np.dot(dctcoefficients, filteredOutput)
-    return final[:coeff//2,:]
+    return final #[:coeff//2,:]
 
 def trainCNN(layersN, epochs = 500, lr=0.01):
     files = os.listdir('AudioRecordings')
@@ -138,6 +138,7 @@ def getAudioRecording():
     stream.stop_stream()
     stream.close()
     audio.terminate()
+    return recording
     final = convertToMFCC(recording)
     return final.reshape(-1)
 
@@ -175,6 +176,7 @@ def classify():
     weights = []
     for i in range(LAYERS - 1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
+        print(weights[-1].shape)
     while True:
         print()
         now = cnn.convolutionalSection(getAudioRecording().reshape(20,-1))
@@ -251,10 +253,12 @@ def generateConfusion():
 
 
 if __name__ == '__main__':
+    pass
+    # trainCNN(LAYERS)
     # generateConfusion()
     classify()
     # now = time.time_ns()
-    trainCNN(epochs=5000, layersN=LAYERS, lr = 0.001)
+    # trainCNN(epochs=5000, layersN=LAYERS, lr = 0.001)
     # print((time.time_ns() - now)/1e9)
     # # error = np.load('error.npy')
     # # plt.plot(error)

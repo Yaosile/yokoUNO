@@ -665,3 +665,33 @@ def positive(array):
 #         terms = np.exp(1j * np.pi * np.arange(X.shape[0])/X.shape[0])[:, np.newaxis]
 #         X = np.vstack([X_even + terms * X_odd, X_even - terms * X_odd])
 #     return X.ravel()
+
+scaling = 1
+cameraWidth = 3264//scaling
+cameraHeight = 2464//scaling
+def gstreamer_pipeline(
+    sensor_id=0,
+    capture_width=cameraWidth,
+    capture_height=cameraHeight,
+    display_width=cameraWidth,
+    display_height=cameraHeight,
+    framerate=1,
+    flip_method=0,
+):
+    return (
+        "nvarguscamerasrc sensor-id=%d ! "
+        "video/x-raw(memory:NVMM), width=(int)%d, height=(int)%d, framerate=(fraction)%d/1 ! "
+        "nvvidconv flip-method=%d ! "
+        "video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! "
+        "videoconvert ! "
+        "video/x-raw, format=(string)BGR ! appsink"
+        % (
+            sensor_id,
+            capture_width,
+            capture_height,
+            framerate,
+            flip_method,
+            display_width,
+            display_height,
+        )
+    )
