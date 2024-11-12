@@ -54,3 +54,4 @@ def unDistortedFootage():
 if __name__ == '__main__':
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
+    unDistortedFootage()
