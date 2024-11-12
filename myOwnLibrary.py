@@ -277,7 +277,7 @@ def getRotation(frame, centreX, centreY, radius):
     change = np.pi/6
     sumChange = change
     rotated = temp.copy()
-    for i in range(30):
+    for i in range(50):
         top,bot,left,right = boundingBox(rotated)
         diff = (right-left)/(bot-top)
         xd,yd = ((r*np.cos(b+sumChange))+radius), ((r*np.sin(b+sumChange))+radius)
