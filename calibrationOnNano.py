@@ -105,7 +105,7 @@ def calculatePoints(og: np.ndarray):
     
 def finalFootage():
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
-    frameName = 'Undistorted Frame'
+    frameName = 'Final Board Frame'
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     if video_capture.isOpened():
         try:
@@ -128,14 +128,14 @@ def finalFootage():
         print('Failed to open camera')
 
 if __name__ == '__main__':
-    # boardSize = (517*2, 605*2)
-    # print(myJazz.gstreamer_pipeline(flip_method=0))
-    # rawFootage()
-    # snap = unDistortedFootage()
-    # corners = calculatePoints(snap)
-    # yu,xu = myJazz.distortionMap()
-    # yw,xw = myJazz.unwarpMap(corners, *boardSize)
-    # yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
-    # np.save('yMap.npy', yuw)
-    # np.save('xMap.npy', xuw)
+    boardSize = (517*2, 605*2)
+    print(myJazz.gstreamer_pipeline(flip_method=0))
+    rawFootage()
+    snap = unDistortedFootage()
+    corners = calculatePoints(snap)
+    yu,xu = myJazz.distortionMap()
+    yw,xw = myJazz.unwarpMap(corners, *boardSize)
+    yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
+    np.save('yMap.npy', yuw)
+    np.save('xMap.npy', xuw)
     finalFootage()
