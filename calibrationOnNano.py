@@ -13,7 +13,7 @@ if video_capture.isOpened():
         while True:
             ret_val, frame = video_capture.read()
             if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                cv2.imshow(frameName,frame[::4,::4].astype(np.uint8))
+                cv2.imshow(frameName,frame[::4,::4,:])
             else:
                 break
     finally:
