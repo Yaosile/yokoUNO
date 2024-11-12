@@ -55,20 +55,22 @@ def unDistortedFootage():
     else:
         print('Failed to open camera')
 
-def get_coordinates(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDOWN:  # Left mouse button click
-        print(f"Mouse clicked at ({x}, {y})")
+mouse_x, mouse_y = 0,0
+def update_coordinates(event, x, y, flags, param):
+    global mouse_x, mouse_y
+    if event == cv2.EVENT_MOUSEMOVE:  # Mouse is moving
+        mouse_x, mouse_y = x, y
 
 def calculatePoints(frame):
     frameName = 'Undistorted Frame'
     print('CalculatedDistortion')
     try:
         window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
-        cv2.setMouseCallback(frameName, get_coordinates)
+        cv2.setMouseCallback(frameName, update_coordinates)
         while True:
 
             if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                cv2.imshow(frameName,frame[::4,::4,:])
+                cv2.imshow(frameName,frame[mouse_y-100:mouse_y+100,mouse_x-100:mouse_x+100,:])
             else:
                 break
             key = cv2.waitKey(10) & 0xFF
