@@ -266,8 +266,7 @@ def isolateCard(frame, originalImage):
     # temp[:,l] = 255
     # temp[:,r] = 255
     # return temp[t-4:b-4,l-4:right-4]
-    cx,cy = midPoint(t,b,l,right)
-    return temp[cy-180:cy+180,cx-112:cx+112]
+    return temp[t:b,l:right]
 
 def getRotation(frame, centreX, centreY, radius):
     '''MY OWN'''
