@@ -436,7 +436,7 @@ def distortionMap(distotionCoefficients = dist, mtx = mtx, width = cameraWidth, 
 #                 output[j, i] = coordinateMatrix[int(y), int(x)]
 #     return output[:,:,0], output[:,:,1]
 
-def unwarpMap(src, dstWidth, dstHeight, imageWidth, imageHeight):
+def unwarpMap(src, dstWidth, dstHeight, imageWidth=cameraWidth, imageHeight=cameraHeight):
     '''MY OWN/REFINED BY GPT'''
     if type(src) != np.ndarray:
         src = ana(src)

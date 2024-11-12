@@ -69,7 +69,6 @@ def calculatePoints(og: np.ndarray):
     windowWidth = 301
     windowHeight = 301
     frameName = 'Undistorted Frame'
-    print('CalculatedDistortion')
     try:
         window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
         cv2.setMouseCallback(frameName, update_coordinates)
@@ -84,16 +83,16 @@ def calculatePoints(og: np.ndarray):
                 break
             key = cv2.waitKey(10) & 0xFF
             if key == ord('1'):
-                points[0] = [mouse_y,mouse_x][:]
+                points[0] = [scaleY+150,scaleX+150][:]
                 print('top left')
             elif key == ord('2'):
-                points[1] = [mouse_y,mouse_x][:]
+                points[1] = [scaleY+150,scaleX+150][:]
                 print('bottom left')
             elif key == ord('3'):
-                points[2] = [mouse_y,mouse_x][:]
+                points[2] = [scaleY+150,scaleX+150][:]
                 print('bottom right')
             elif key == ord('4'):
-                points[3] = [mouse_y,mouse_x][:]
+                points[3] = [scaleY+150,scaleX+150][:]
                 print('top right')
             elif key == ord('5'):
                 break
@@ -101,10 +100,40 @@ def calculatePoints(og: np.ndarray):
     finally:
         cv2.destroyAllWindows()
         return points
+    
+def finalFootage():
+    yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
+    frameName = 'Undistorted Frame'
+    video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    if video_capture.isOpened():
+        try:
+            window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
+            while True:
+                ret_val, frame = video_capture.read()
+                frame = frame[yuw,xuw]
+                if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
+                    cv2.imshow(frameName,frame[::4,::4,:])
+                else:
+                    break
+
+                key = cv2.waitKey(10) & 0xFF
+                if key == ord('q'):
+                    break
+        finally:
+            video_capture.release()
+            cv2.destroyAllWindows()
+    else:
+        print('Failed to open camera')
 
 if __name__ == '__main__':
+    boardSize = (517*2, 605*2)
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
     snap = unDistortedFootage()
     corners = calculatePoints(snap)
-    print(corners)
+    yu,xu = myJazz.distortionMap()
+    yw,xw = myJazz.unwarpMap(corners, *boardSize)
+    yuw, xuw = myJazz.getFinalTransform(yw,xw,yu,xu)
+    np.save('yMap.npy', yuw)
+    np.save('xMap.npy', xuw)
+    finalFootage()
