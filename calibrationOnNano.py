@@ -114,7 +114,7 @@ def finalFootage():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(frameName,frame)
+                    cv2.imshow(frameName,frame[::2, ::2])
                 else:
                     break
 
