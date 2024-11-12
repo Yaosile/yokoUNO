@@ -64,7 +64,7 @@ def update_coordinates(event, x, y, flags, param):
 
 def calculatePoints(og: np.ndarray):
     global mouse_x, mouse_y
-    ySize, xSize = og.shape()[0], og.shape()[1]
+    ySize, xSize = og.shape[0], og.shape[1]
     windowWidth = 301
     windowHeight = 301
     frameName = 'Undistorted Frame'
