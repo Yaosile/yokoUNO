@@ -50,8 +50,8 @@ def testCalibration():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
-                frame[cy,:] = 255
-                frame[:,cx] = 255
+                frame[cy-1:cy+1,:] = 255
+                frame[:,cx-1:cx+1] = 255
                 print(cx,cy)
                 
 
