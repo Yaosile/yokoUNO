@@ -476,6 +476,24 @@ def unwarpMap(src, dstWidth, dstHeight, imageWidth=cameraWidth, imageHeight=came
     # Return the mapping of destination image coordinates to source image coordinates
     return y_transformed, x_transformed
 
+def armCalibrationHomo(src, dst, x, y):
+    if type(src) != np.ndarray:
+        src = ana(src)
+    if type(dst) != np.ndarray:
+        dst = ana(dst)
+
+    H = find_homography(src, dst)
+    H_inv = np.linalg.inv(H)
+
+    temp = [x,y,1]
+    temp = np.dot(H_inv, temp)
+    temp = temp/temp[2]
+
+    return temp[0], temp[1]
+
+
+
+
 # def unwarpMap3D(src, dstWidth, dstHeight, imageWidth, imageHeight, zOffset=0):
 #     if type(src) != np.ndarray:
 #         src = ana(src)
