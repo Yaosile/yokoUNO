@@ -18,6 +18,8 @@ def calibrationPoints():
     gx,gy = 0,0
     blur = np.ones((5,5))
     blur = blur/blur.sum()
+    src = []
+    dst = []
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
     frameName = 'Final Board Frame'
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
