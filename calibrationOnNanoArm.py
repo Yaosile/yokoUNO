@@ -100,6 +100,7 @@ def calibrationPoints():
         print('Failed to open camera')
 
 def testPoints():
+    cy, cx = 0,0
     blur = np.ones((5,5))
     blur = blur/blur.sum()
     src = np.load('src.npy')
@@ -115,8 +116,8 @@ def testPoints():
                 frame = frame[yuw,xuw]
                 frame[cy-1:cy+1,:] = 255
                 frame[:,cx-1:cx+1] = 255
-                frame[gy-1:gy+1,:,2] = 0
-                frame[:,gx-1:gx+1,2] = 0
+                # frame[gy-1:gy+1,:,2] = 0
+                # frame[:,gx-1:gx+1,2] = 0
                 
 
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
