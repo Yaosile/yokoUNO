@@ -49,7 +49,7 @@ def cardPositionFinder():
                     output = myJazz.threshHold(output, thresh)
                     output = myJazz.convolveMultiplication(output, blur)
                     output = myJazz.threshHold(output, 254)
-                    t,b,l,right = myJazz.boundingBox(frame)
+                    t,b,l,right = myJazz.boundingBox(output)
                     cx,cy = myJazz.midPoint(t,b,l,right)
                     output[cy,:] = 255
                     output[:,cx] = 255
