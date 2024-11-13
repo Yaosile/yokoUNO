@@ -9,6 +9,7 @@ import serial
 
 
 def cardPositionFinder():
+    cx,cy = 0,0
     blur = np.ones((5,5))
     blur /= blur.sum()
     boardFrame = 'Board'
@@ -21,7 +22,8 @@ def cardPositionFinder():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
-
+                frame[cy,:] = 255
+                frame[:,cx] = 255
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
                 else:
