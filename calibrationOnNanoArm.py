@@ -84,7 +84,7 @@ def calibrationPoints():
                     ser.close()
                 elif key == ord('e'):
                     src.append([cx,cy])
-                    dst.append([cx+gx,cy+gy])
+                    dst.append([gx,gy])
 
                 elif key == ord('f'):
                     src = ana(src)
