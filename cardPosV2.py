@@ -75,6 +75,13 @@ def cardPositionFinder():
                     ser.write(test.encode())
                     ser.close()
 
+                elif key == ord('d'):
+                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 1'
+                    ser = serial.Serial('/dev/ttyUSB0', 115200)
+                    ser.write(test.encode())
+                    ser.close()
+
+
 
         finally:
             video_capture.release()
