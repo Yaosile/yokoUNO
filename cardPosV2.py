@@ -9,6 +9,7 @@ import serial
 
 
 def cardPositionFinder():
+    output = np.zeros((100,100,1))
     cx,cy = 0,0
     blur = np.ones((5,5))
     blur /= blur.sum()
