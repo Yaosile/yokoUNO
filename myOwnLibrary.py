@@ -111,8 +111,10 @@ def cartesianToScara(x,y):
     '''MY OWN'''
     #Right side dimensions
     xOffset = 150
-    L1 = 250+14+14
-    L2 = xOffset + L1
+    # L1 = 250+14+14
+    # L2 = xOffset + L1
+    L1 = 280
+    L2 = 430
 
     #Right Motor
     d = np.sqrt((x-xOffset)**2 + y**2) #calculating the distance from the motor to point
@@ -129,8 +131,10 @@ def cartesianToScara(x,y):
 
     #Left side dimensions
     xOffset = 150
-    L1 = 250+14+14
-    L2 = xOffset + L1
+    # L1 = 250+14+14
+    # L2 = xOffset + L1
+    L1 = 285
+    L2 = 427
     #Left Motor
     xOffset = -xOffset
     d = np.sqrt((x-xOffset)**2 + y**2)
