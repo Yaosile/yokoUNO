@@ -48,7 +48,7 @@ def cardPositionFinder():
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
                     output = myJazz.threshHold(output, thresh)
-                    for i in range(5):
+                    for i in range(3):
                         output = signal.fftconvolve(output, blur, mode='same')
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(output)
