@@ -51,6 +51,8 @@ def cardPositionFinder():
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(frame)
                     cx,cy = myJazz.midPoint(t,b,l,right)
+                    output[cy,:] = 255
+                    output[:,cx] = 255
                     x,y = myJazz.pixelToCartesian(cx,cy,frame.shape[1],frame.shape[0])
                     l,r = myJazz.cartesianToScara(x,y)
                     test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
