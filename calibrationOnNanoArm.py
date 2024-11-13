@@ -74,12 +74,16 @@ def calibrationPoints():
                 
                 elif key == ord('w'):
                     gy += 1
+                    print(gx,gy)
                 elif key == ord('a'):
                     gx -= 1
+                    print(gx,gy)
                 elif key == ord('s'):
                     gy -= 1
+                    print(gx,gy)
                 elif key == ord('d'):
                     gx += 1
+                    print(gx,gy)
                 elif key == ord('e'):
                     src.append([cx,cy])
                     dst.append([cx+gx,cy+gy])
