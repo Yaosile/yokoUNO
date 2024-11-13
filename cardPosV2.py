@@ -24,6 +24,7 @@ def cardPositionFinder():
                 frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
                 frame[cy,:] = 255
                 frame[:,cx] = 255
+                frame[frame.shape[0]//2:,:] = 0
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
                 else:
@@ -34,7 +35,6 @@ def cardPositionFinder():
                     break
 
                 elif key == ord(' '):
-                    print('sn',end='')
                     output = frame.astype(float)
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
