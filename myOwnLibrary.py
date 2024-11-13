@@ -660,6 +660,26 @@ def positive(array):
     array[condition] = 0
     return array
 
+def histogram_equalization(image):
+    # Flatten the image array and compute histogram
+    image = image.astype(np.uint8)
+    hist, bins = np.histogram(image.flatten(), 256, [0, 256])
+    
+    # Compute cumulative distribution function (CDF)
+    cdf = hist.cumsum()
+    cdf_normalized = cdf * hist.max() / cdf.max()  # Normalize CDF
+    
+    # Mask the zeros in CDF (if there are any)
+    cdf_m = np.ma.masked_equal(cdf, 0)
+    
+    # Perform histogram equalization transformation
+    cdf_m = (cdf_m - cdf_m.min()) * 255 / (cdf_m.max() - cdf_m.min())
+    cdf_final = np.ma.filled(cdf_m, 0).astype('uint8')
+    
+    # Map the original grayscale values to equalized values using the CDF
+    equalized_image = cdf_final[image]
+    return equalized_image
+
 # def IFFT(X: np.ndarray):
 #     '''MY OWN'''
 #     N = X.shape[0]
