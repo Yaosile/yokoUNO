@@ -58,6 +58,24 @@ def cardPositionFinder():
                     l,r = myJazz.cartesianToScara(x,y)
                     test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
                     print(test)
+                
+                elif key == ord('m'):
+                    x,y = myJazz.pixelToCartesian(cx,cy,frame.shape[1],frame.shape[0])
+                    y-=15
+                    l,r = myJazz.cartesianToScara(x,y)
+                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
+
+                    ser = serial.Serial('/dev/ttyUSB0', 115200)
+                    ser.write(test.encode())
+                    ser.close()
+
+                elif key == ord('o'):
+                    test = '220000 60000 0'
+                    ser = serial.Serial('/dev/ttyUSB0', 115200)
+                    ser.write(test.encode())
+                    ser.close()
+
+
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
