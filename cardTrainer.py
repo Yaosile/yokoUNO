@@ -10,27 +10,28 @@ import os
 
 lookUp = ['0','1','2','3','4','5','6','7','8','9','+','r','s']
 
-# inData = []
-# targetData =[]
-# files = os.listdir('CardSnaps/')
-# #No green Photos, didn't come out nice ig
-# files = [i for i in files if i[0] == 'r']
-# # output in format of [0-9,+,r,s]
+inData = []
+targetData =[]
+files = os.listdir('CardSnaps/')
+#No green Photos, didn't come out nice ig
+files = [i for i in files if i[0] == 'r']
+# output in format of [0-9,+,r,s]
 
-# for f in files:
-#     output = [0]*len(lookUp)
-#     output[lookUp.index(f[1])] = 1
-#     targetData.append(output)
-#     targetData.append(output)
+for f in files:
+    output = [0]*len(lookUp)
+    output[lookUp.index(f[1])] = 1
+    targetData.append(output)
+    targetData.append(output)
 
-#     img = ana(Image.open(f'CardSnaps/{f}'))
-#     img = myJazz.scaleImage(img, 100, 100)
-#     img = myJazz.rgb2hsv(img)
-#     img = img[...,1]*img[...,2]*255
-#     img = myJazz.histogram_equalization(img)
+    img = ana(Image.open(f'CardSnaps/{f}'))[...,::-1]
+    img = myJazz.scaleImage(img, 100, 100)
+    img = myJazz.rgb2gray(img)
+    # img = myJazz.rgb2hsv(img)
+    # img = img[...,1]*img[...,2]*255
+    img = myJazz.histogram_equalization(img)
 
-#     inData.append(cnn.convolutionalSection(img))
-#     inData.append(cnn.convolutionalSection(myJazz.rot90(img,2)))
+    inData.append(cnn.convolutionalSection(img))
+    inData.append(cnn.convolutionalSection(myJazz.rot90(img,2)))
 
 # weights = cnn.generateWeights(len(inData[0]), int(len(inData[0])*1.15), len(targetData[0]), 3)
 
@@ -38,7 +39,7 @@ lookUp = ['0','1','2','3','4','5','6','7','8','9','+','r','s']
 weights = []
 for i in range(2):
     weights.append(np.load(f'imageWeights/{i}.npy'))
-# L2, weights = cnn.backProp(inData, targetData, weights, 0.001, 1000, 1)
+# L2, weights = cnn.backProp(inData, targetData, weights, 0.001, 100, 1)
 # for i in range(len(weights)):
 #     np.save(f'imageWeights/{i}.npy', weights[i])
 # plt.plot(L2)
@@ -53,15 +54,16 @@ for i in range(2):
 # print(lookUp[np.argmax(cnn.feedForward(img, weights))])
 
 files = os.listdir('CardSnaps/')
-files = [i for i in files if i[0] == 'g']
+files = [i for i in files if i[0] == 'r']
 tot = len(files)
 testData = []
 correct = []
 for f in files:
-    img = ana(Image.open(f'CardSnaps/{f}'))
+    img = ana(Image.open(f'CardSnaps/{f}'))[...,::-1]
     img = myJazz.scaleImage(img, 100, 100)
-    img = myJazz.rgb2hsv(img)
-    img = img[...,1]*img[...,2]*255
+    img = myJazz.rgb2gray(img)
+    # img = myJazz.rgb2hsv(img)
+    # img = img[...,1]*img[...,2]*255
     img = myJazz.histogram_equalization(img)
 
     testData.append(cnn.convolutionalSection(img))

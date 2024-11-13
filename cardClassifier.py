@@ -52,9 +52,10 @@ def mainFootage():
                     output = myJazz.convolveMultiplication(output, blur)
                     output = myJazz.threshHold(output, 254)
                     output = myJazz.isolateCard(output, frame)
-                    img = myJazz.scaleImage(output, 100, 100)
-                    img = myJazz.rgb2hsv(img)
-                    img = img[...,1]*img[...,2]*255
+                    img = myJazz.scaleImage(output[...,::-1], 100, 100)
+                    img = myJazz.rgb2gray(img)
+                    # img = myJazz.rgb2hsv(img)
+                    # img = img[...,1]*img[...,2]*255
                     img = [cnn.convolutionalSection(myJazz.histogram_equalization(img))]
                     value = lookUp[np.argmax(cnn.feedForward(img, weights))]
                     print(value)
