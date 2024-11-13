@@ -4,6 +4,7 @@ import myOwnLibrary as myJazz
 import cv2
 from PIL import Image
 import feedForwardybackwards as cnn
+from scipy import signal
 
 import serial
 
@@ -47,7 +48,8 @@ def cardPositionFinder():
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
                     output = myJazz.threshHold(output, thresh)
-                    output = myJazz.convolveMultiplication(output, blur)
+                    for i in range(5):
+                        output = signal.fftconvolve(output, blur, mode='same')
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(output)
                     cx,cy = myJazz.midPoint(t,b,l,right)
