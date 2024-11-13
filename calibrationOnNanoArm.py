@@ -31,6 +31,8 @@ def calibrationPoints():
                 frame = frame[yuw,xuw]
                 frame[cy-1:cy+1,:] = 255
                 frame[:,cx-1:cx+1] = 255
+                frame[gy-1:gy+1,:,2] = 0
+                frame[:,gx-1:gx+1,2] = 0
                 
 
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
@@ -44,8 +46,6 @@ def calibrationPoints():
                 if key == ord('q'):
                     break
                 elif key == ord(' '):
-                    gx = 0
-                    gy = 0
                     output = frame.astype(float)
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
@@ -55,11 +55,20 @@ def calibrationPoints():
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(output)
                     cx,cy = myJazz.midPoint(t,b,l,right)
-                    x,y = myJazz.pixelToCartesian(cx,cy,frame.shape[1],frame.shape[0])
-                    l,r = myJazz.cartesianToScara(x,y)
-                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
-                    print(test)
                     print(cx,cy)
+
+                elif key == ord('n'):
+                    output = frame.astype(float)
+                    output = myJazz.rgb2hsv(output,Calculations='SV')
+                    output = (output[:,:,1])*output[:,:,2]*255
+                    output = myJazz.threshHold(output, thresh)
+                    for i in range(3): 
+                        output = signal.fftconvolve(output, blur, mode='same')
+                    output = myJazz.threshHold(output, 254)
+                    t,b,l,right = myJazz.boundingBox(output)
+                    gx,gy = myJazz.midPoint(t,b,l,right)
+                    print(gx,gy)
+
                 elif key == ord('m'):
                     x,y = myJazz.pixelToCartesian(cx+gx,cy+gy,frame.shape[1],frame.shape[0])
                     l,r = myJazz.cartesianToScara(x,y)
@@ -73,19 +82,6 @@ def calibrationPoints():
                     ser = serial.Serial('/dev/ttyUSB0', 115200)
                     ser.write(test.encode())
                     ser.close()
-                
-                elif key == ord('w'):
-                    gy += 5
-                    print(gx,gy)
-                elif key == ord('a'):
-                    gx -= 5
-                    print(gx,gy)
-                elif key == ord('s'):
-                    gy -= 5
-                    print(gx,gy)
-                elif key == ord('d'):
-                    gx += 5
-                    print(gx,gy)
                 elif key == ord('e'):
                     src.append([cx,cy])
                     dst.append([cx+gx,cy+gy])
