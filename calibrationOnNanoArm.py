@@ -59,7 +59,7 @@ def calibrationPoints():
                     print(test)
                     print(cx,cy)
                 elif key == ord('m'):
-                    x,y = myJazz.pixelToCartesian(cx,cy,frame.shape[1],frame.shape[0])
+                    x,y = myJazz.pixelToCartesian(cx+gx,cy+gy,frame.shape[1],frame.shape[0])
                     l,r = myJazz.cartesianToScara(x,y)
                     test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
 
@@ -74,44 +74,12 @@ def calibrationPoints():
                 
                 elif key == ord('w'):
                     gy += 1
-                    x,y = myJazz.pixelToCartesian(cx+gx,cy+gy,frame.shape[1],frame.shape[0])
-
-                    l,r = myJazz.cartesianToScara(x,y)
-                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
-                    ser = serial.Serial('/dev/ttyUSB0', 115200)
-                    ser.write(test.encode())
-                    ser.close()
                 elif key == ord('a'):
                     gx -= 1
-                    x,y = myJazz.pixelToCartesian(cx+gx,cy+gy,frame.shape[1],frame.shape[0])
-
-                    l,r = myJazz.cartesianToScara(x,y)
-                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
-
-                    ser = serial.Serial('/dev/ttyUSB0', 115200)
-                    ser.write(test.encode())
-                    ser.close()
                 elif key == ord('s'):
                     gy -= 1
-                    x,y = myJazz.pixelToCartesian(cx+gx,cy+gy,frame.shape[1],frame.shape[0])
-
-                    l,r = myJazz.cartesianToScara(x,y)
-                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
-
-                    ser = serial.Serial('/dev/ttyUSB0', 115200)
-                    ser.write(test.encode())
-                    ser.close()
                 elif key == ord('d'):
                     gx += 1
-                    x,y = myJazz.pixelToCartesian(cx+gx,cy+gy,frame.shape[1],frame.shape[0])
-
-                    l,r = myJazz.cartesianToScara(x,y)
-                    test = f'{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)} 0'
-
-                    ser = serial.Serial('/dev/ttyUSB0', 115200)
-                    ser.write(test.encode())
-                    ser.close()
-
                 elif key == ord('e'):
                     src.append([cx,cy])
                     dst.append([cx+gx,cy+gy])
