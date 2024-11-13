@@ -52,7 +52,6 @@ def testCalibration():
                 frame = frame[yuw,xuw]
                 frame[cy-1:cy+1,:] = 255
                 frame[:,cx-1:cx+1] = 255
-                print(cx,cy)
                 
 
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
