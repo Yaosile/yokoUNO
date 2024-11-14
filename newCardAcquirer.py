@@ -48,8 +48,10 @@ def captureCard():
                     card = card/card.max()
                     card = card * 255
                     card, cx, cy = myJazz.isolateCard(card,card)
-                    card = myJazz.getCardColour(card)
-                    print('go')
+                    card, col = myJazz.getCardColour(card)
+                    name = input('Card Face Value')
+                    img = Image.fromarray(card.astype(np.uint8))
+                    img.save(f'HighResCards/{name + col + np.random.random()}.png')
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
