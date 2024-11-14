@@ -214,7 +214,7 @@ def PlayUNO():
                             humanHand += 1
 
                     elif robotThought == 2:
-                        cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
+                        hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
                         print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
 
                 
