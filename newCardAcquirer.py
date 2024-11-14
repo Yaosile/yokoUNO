@@ -11,7 +11,7 @@ def captureCard():
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
-    video_capture.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # 0.25 often disables auto-exposure
+    video_capture.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.75)  # 0.25 often disables auto-exposure
     video_capture.set(cv2.CAP_PROP_EXPOSURE, -5)         # Set a high exposure value (try different values)
     video_capture.set(cv2.CAP_PROP_GAIN, 100) 
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
