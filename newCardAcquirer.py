@@ -10,10 +10,6 @@ def captureCard():
     output = np.ones((100,100,3))
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-
-    video_capture.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # 0.25 often disables auto-exposure
-    video_capture.set(cv2.CAP_PROP_EXPOSURE, 10)         # Set a high exposure value (try different values)
-    video_capture.set(cv2.CAP_PROP_GAIN, 100) 
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
     if video_capture.isOpened():
         try:
@@ -23,6 +19,8 @@ def captureCard():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
+                frame[frame>100] = 255
+                frame[frame != 255] = 0
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
