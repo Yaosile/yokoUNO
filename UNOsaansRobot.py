@@ -184,7 +184,7 @@ def PlayUNO():
                         cardBuffer.append(card)
                         cardBuffer.pop(0)
                         timeout += 1
-                        if len(set(cardBuffer) == 1):
+                        if len(set(cardBuffer)) == 1:
                             print(f'looks like a human played a {card}')
                             robotThought = 1
                             discard = card
