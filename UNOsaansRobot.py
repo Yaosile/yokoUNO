@@ -124,7 +124,7 @@ def PlayUNO():
     # cardFrame = 'Card'
     cx,cy = 0,0
 
-    prev = np.zeros(())
+    prev = np.zeros((1210,1034,3))
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
@@ -135,18 +135,13 @@ def PlayUNO():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
-                print(frame.shape)
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
                 else:
                     break
                 key = cv2.waitKey(1) & 0xFF
                 if turn == 0: #Humans turn
-
-
-
-
-
+                    print(np.average(frame-prev))
                     prev = frame.copy()
                 else: #Robots turn
                     pass
