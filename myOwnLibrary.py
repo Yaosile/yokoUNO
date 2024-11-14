@@ -296,7 +296,8 @@ def isolateCard(frame, originalImage, thresh = 50):
     temp = temp-temp.min()
     temp = temp/temp.max()
     temp = temp*255
-    temp = adjust_contrast(temp, 1.5, 0)
+    temp = adjust_contrast(temp, 1.2, 0)
+    temp = increase_saturation(temp, 1.5)
     return temp, cx, cy
     return temp[t:b,l:right]
 
@@ -315,6 +316,34 @@ def adjust_contrast(image, alpha, beta):
     # Apply the contrast and brightness adjustment
     adjusted = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
     return adjusted
+
+def increase_saturation(image, saturation_factor):
+    """
+    Increases the saturation of an image.
+    
+    Parameters:
+    - image: The input BGR image
+    - saturation_factor: Factor to increase saturation (e.g., 1.5 increases by 50%)
+    
+    Returns:
+    - The image with increased saturation
+    """
+    # Convert the image to HSV color space
+    hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    
+    # Split the HSV channels
+    h, s, v = cv2.split(hsv_image)
+    
+    # Increase the saturation by the factor
+    s = np.clip(s * saturation_factor, 0, 255).astype(np.uint8)
+    
+    # Merge the channels back
+    adjusted_hsv_image = cv2.merge((h, s, v))
+    
+    # Convert back to BGR color space
+    adjusted_image = cv2.cvtColor(adjusted_hsv_image, cv2.COLOR_HSV2BGR)
+    
+    return adjusted_image
 
 def getCardColour(card):
     colours = ['r','g','b','y','B']
