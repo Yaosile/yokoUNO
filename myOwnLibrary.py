@@ -296,7 +296,7 @@ def isolateCard(frame, originalImage, thresh = 50):
     temp = temp-temp.min()
     temp = temp/temp.max()
     temp = temp*255
-    temp = adjust_contrast(temp, 2, 0)
+    temp = adjust_contrast(temp, 1.5, 0)
     return temp, cx, cy
     return temp[t:b,l:right]
 
