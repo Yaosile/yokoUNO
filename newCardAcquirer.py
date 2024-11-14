@@ -26,16 +26,16 @@ def captureCard():
                     break
 
                 if cv2.getWindowProperty(cardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(boardFrame,card.astype(np.uint8))
+                    cv2.imshow(cardFrame,card.astype(np.uint8))
                 else:
                     break
 
                 key = cv2.waitKey(10) & 0xFF
                 if key == ord('q'):
                     break
-                elif key == ord(' '):
-                    card = frame.copy()
-                    card = myJazz.isolateCard(card, frame)
+                # elif key == ord(' '):
+                #     card = frame.copy()
+                #     card = myJazz.isolateCard(card, frame)
 
         finally:
             video_capture.release()
