@@ -1,5 +1,6 @@
 import numpy as np
 from numpy import asanyarray as ana
+import cv2
 
 from scipy import signal
 # import numba
@@ -279,8 +280,8 @@ def isolateCard(frame, originalImage, thresh = 50):
     temp = rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
     t,b,l,right = boundingBox(temp)
     r = 100
-    # temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
-    temp = originalImage[-r+cy:r+cy, -r+cx:r+cx]
+    temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
+    temp = cv2
     # temp[t,:] = [255,0,0]
     # temp[b,:] = [255,0,0]
     # temp[:,l] = [255,0,0]
@@ -290,6 +291,7 @@ def isolateCard(frame, originalImage, thresh = 50):
     # temp[:,l] = 255
     # temp[:,r] = 255
     # return temp[t-4:b-4,l-4:right-4]
+    print(temp.shape)
     return temp, cx, cy
     return temp[t:b,l:right]
 
