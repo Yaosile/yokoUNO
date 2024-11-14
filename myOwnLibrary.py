@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import asanyarray as ana
 import cv2
+import feedForwardybackwards as cnn
 
 from scipy import signal
 # import numba
@@ -15,6 +16,8 @@ mtx = ana([
     [0,1.729637617052701E3,1.195682065165660E3],
     [0,0,1],
 ])
+
+lookUp = ['0','1','2','3','4','5','6','7','8','9','+2','Reverse','Skip']
 
 def linear_interpolate(v1, v2, fraction):
     return (1 - fraction) * v1 + fraction * v2
@@ -371,11 +374,21 @@ def getCardColour(card:np.ndarray):
         colour = colours[4]
     else:
         colour = colours[5]
-    
-
     return temp, colour
 
+def getCardValue(card:np.ndarray):
+    weights = []
+    for i in range(2):
+        weights.append(np.load(f'imageWeights/{i}.npy'))
 
+    face = card[6:41,10:45]
+    face = face.sum(axis=2)/3
+    face[face>254] = 1
+    face[face<1] = 0
+    face[face>1] = 0.5
+    face = [cnn.convolutionalSection(face,kernelMax=2)]
+    guess = cnn.feedForward(face, weights)
+    return lookUp[np.argmax(guess)]
 
 def getRotation(frame, centreX, centreY, radius):
     '''MY OWN'''
