@@ -124,7 +124,7 @@ def PlayUNO():
     # cardFrame = 'Card'
     cx,cy = 0,0
 
-    prev = np.zeros((1210,1034,3))
+    prev = np.ones((1210,1034,3))
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
