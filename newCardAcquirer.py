@@ -27,7 +27,7 @@ def captureCard():
                     break
 
                 if cv2.getWindowProperty(cardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(cardFrame,output.astype(np.uint8))
+                    cv2.imshow(cardFrame,card.astype(np.uint8))
                 else:
                     break
 
