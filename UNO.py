@@ -13,19 +13,14 @@ predefinedLocations = {
     'hand2': 's205000 70000', #TBD
     'discard': 's220000 60000', #TBD
     'playerDeal': 's200000 120000', #TBD
-<<<<<<< HEAD
     'rotator': 's',
     'zd': 'zd',
     'zs': 'zs',
     'zu': 'zu',
-=======
-    'rotator': 's'
->>>>>>> 6699ba5 (locations Updated)
 }
 
 hand1 = []
 hand2 = []
-<<<<<<< HEAD
 deck = 101-3
 discard = 0
 topCard = 2.416013
@@ -34,10 +29,6 @@ travelTime = 5
 
 serialPort = '/dev/ttyUSB0'
 serialPort = '/dev/tty.usbserial-0001'
-=======
-deck = 101
-discard = 0
->>>>>>> 6699ba5 (locations Updated)
 
 blur = np.ones((5,5))
 blur = blur/blur.sum()

@@ -17,7 +17,6 @@ import os
 
 # dira = 'CardSnaps/'
 
-<<<<<<< HEAD
 cards = os.listdir(dira)
 choice = np.random.choice(cards)
 choice = 'r1.png'
@@ -48,19 +47,6 @@ img.show()
 # img.show()
 
 
-=======
-# files = [i for i in os.listdir(dira) if i[0] == 'b']
-
-# choice = np.random.choice(files)
-
-# img = ana(Image.open(dira + choice))[...,::-1]
-# img = myJazz.rgb2gray(img)
-
-# img = Image.fromarray(img.astype(np.uint8))
-# img.show()
-
-
->>>>>>> 6699ba5 (locations Updated)
 # # kernels = []
 # # kernels.append(ana([
 # #     [0,0,0],

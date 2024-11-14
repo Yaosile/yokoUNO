@@ -22,6 +22,14 @@ lookUp = ['0','1','2','3','4','5','6','7','8','9','+2','Reverse','Skip']
 def linear_interpolate(v1, v2, fraction):
     return (1 - fraction) * v1 + fraction * v2
 
+def drawCircle(frame, x,y):
+    
+    xd,yd = np.meshgrid(np.arange(frame.shape[1])-x, np.arange(frame.shape[0])-y)
+    r = xd**2 + yd**2
+    frame[r<200] = 0
+    return frame
+
+
 def bilinear_interpolation(image, x, y):
     x1 = min(int(x), image.shape[1]-1)  # floor of x
     y1 = min(int(y), image.shape[0]-1)  # floor of y
