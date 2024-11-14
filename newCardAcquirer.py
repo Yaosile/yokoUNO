@@ -7,7 +7,7 @@ from PIL import Image
 def captureCard():
     boardFrame = 'Board'
     cardFrame = 'Card'
-    output = np.ones((100,100,3))
+    card = np.ones((100,100,3))
     cx,cy = 0,0
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
