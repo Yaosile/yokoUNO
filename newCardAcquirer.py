@@ -19,8 +19,8 @@ def captureCard():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
-                # frame[frame>100] = 255
-                # frame[frame != 255] = 0
+                frame[frame>100] = 255
+                frame[frame != 255] = 0
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
