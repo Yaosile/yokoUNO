@@ -115,7 +115,8 @@ def initilisation():
             cv2.destroyAllWindows()
 
 def PlayUNO():
-    turn = 0 #0 for Human 1 For Robot
+    turn = -1 #0 for Human 1 For Robot
+    ready = False
     drawLocation = np.load('drawLoc.npy')
     hand1Location = np.load('h1Loc.npy')
     hand2Location = np.load('h2Loc.npy')
@@ -142,7 +143,21 @@ def PlayUNO():
                 else:
                     break
                 key = cv2.waitKey(1) & 0xFF
-                if turn == 0: #Humans turn
+                if turn == -1: #Initial waiting period
+                    print('waiting')
+                    frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
+                    change = (np.average(frame-prev))
+                    if (np.abs(change-prevChange)) > 1:
+                        movement = 30
+                    if movement == 1:
+                        movement = 0
+                        turn = 0
+                        print('Ready')
+                    if movement > 0:
+                        movement -= 1
+                    prev = frame.copy()
+                    prevChange = change
+                elif turn == 0: #Humans turn
                     frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                     change = (np.average(frame-prev))
                     if (np.abs(change-prevChange)) > 1:
