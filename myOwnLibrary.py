@@ -362,7 +362,7 @@ def getCardColour(card:np.ndarray):
                 values[2] += 1
             elif pixel == [0,255,255]:
                 values[3] += 1
-                
+    values = ana(values)
     print(values/values.sum())
 
     return temp
