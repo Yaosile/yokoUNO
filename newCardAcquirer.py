@@ -17,6 +17,7 @@ def captureCard():
             cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
+                frame = frame.astype(np.uint8)
                 frame = frame[yuw,xuw]
                 lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
 
