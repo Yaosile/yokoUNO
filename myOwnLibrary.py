@@ -281,7 +281,6 @@ def isolateCard(frame, originalImage, thresh = 50):
     t,b,l,right = boundingBox(temp)
     r = 100
     temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
-    temp = cv2
     # temp[t,:] = [255,0,0]
     # temp[b,:] = [255,0,0]
     # temp[:,l] = [255,0,0]
