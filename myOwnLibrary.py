@@ -259,10 +259,19 @@ def rotate(frame, theta):
     rotated = frame[yd,xd]
     return rotated
 
-def isolateCard(frame, originalImage):
+def isolateCard(frame, originalImage, thresh = 50):
     '''MY OWN'''
+    blur = np.ones(5,5)
+    blur /= blur.sum()
     # frame = frame.copy()
     # originalImage = originalImage.copy()
+    output = frame.astype(float)
+    output = rgb2hsv(output,Calculations='SV')
+    output = (output[:,:,1])*output[:,:,2]*255
+    output = threshHold(output, thresh)
+    output = convolveMultiplication(output, blur)
+    output = threshHold(output, 254)
+    frame = output.copy()
     t,b,l,right = boundingBox(frame)
     cx,cy = midPoint(t,b,l,right)
     r = getRadius(frame, cx,cy)
