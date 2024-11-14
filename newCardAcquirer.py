@@ -9,9 +9,8 @@ def captureCard():
     cardFrame = 'Card'
     blur = np.ones((5,5))
     blur /= blur.sum()
-    thresh = int(input('Enter a threshold value: '))
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
-    card = np.zeros(100,100,3)
+    card = np.zeros((100,100,3))
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     if video_capture.isOpened():
