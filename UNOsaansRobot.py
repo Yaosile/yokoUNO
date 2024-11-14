@@ -123,6 +123,7 @@ def PlayUNO():
     boardFrame = 'Board'
     # cardFrame = 'Card'
     cx,cy = 0,0
+    movement = 0
 
     prev = np.ones((1210,1034,3))
 
@@ -141,8 +142,16 @@ def PlayUNO():
                     break
                 key = cv2.waitKey(1) & 0xFF
                 if turn == 0: #Humans turn
-                    print(np.average(cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)-cv2.cvtColor(prev,cv2.COLOR_BGR2GRAY)))
+                    print(np.average(frame-prev))
+                    if movement == 1:
+                        movement = 0
+                        turn = 1
+                        print('Human played')
+                    if movement > 0:
+                        movement -= 1
                     prev = frame.copy()
+                    
+
                 else: #Robots turn
                     pass
 

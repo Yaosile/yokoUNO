@@ -27,9 +27,9 @@ def drawCircle(frame, x,y, inverted = False):
     xd,yd = np.meshgrid(np.arange(frame.shape[1])-x, np.arange(frame.shape[0])-y)
     r = xd**2 + yd**2
     if inverted:
-        frame[r>10_000] = 0
+        frame[r>15_000] = 0
     else:
-        frame[r<10_000] = 0
+        frame[r<15_000] = 0
     return frame
 
 
