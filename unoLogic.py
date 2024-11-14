@@ -98,7 +98,7 @@ def playCard(hand1, hand2, choice):
     hands = [hand1, hand2]
     depth = hands[whatHand][::-1].index(choice)
 
-    for i in depth():#shuffling cards around
+    for i in range(depth):#shuffling cards around
         hands[1-whatHand].append(hands[whatHand].pop())
     hands[whatHand].pop()
     for i in hands:
