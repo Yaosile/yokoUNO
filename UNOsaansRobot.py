@@ -19,6 +19,14 @@ blur = np.ones((5,5))
 blur /= blur.sum()
 
 def initilisation():
+    global drawLocation
+    global hand1Location
+    global hand2Location
+    global discardLocation
+    
+    global thresh
+
+    global blur
     boardFrame = 'Board'
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     if video_capture.isOpened():
