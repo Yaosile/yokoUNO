@@ -145,7 +145,8 @@ def PlayUNO():
                 if turn == 0: #Humans turn
                     frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                     change = (np.average(frame-prev))
-                    print(np.abs(change-prevChange))
+                    if (np.abs(change-prevChange)) > 1:
+                        movement = 10
                     if movement == 1:
                         movement = 0
                         turn = 1
