@@ -170,6 +170,7 @@ def PlayUNO():
                     frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                     change = (np.average(frame-prev))
                     if (np.abs(change-prevChange)) > 1:
+                        print('detected Movement')
                         movement = 10
                     if movement == 1:
                         movement = 0
