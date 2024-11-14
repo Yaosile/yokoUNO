@@ -349,8 +349,8 @@ def getCardColour(card):
     temp = temp*255
     temp[temp>100] = 255
     temp[temp<=100] = 0
-
-    print(np.sum(temp, axis=(0,1)))
+    values = np.sum(temp, axis=(0,1))
+    print(values/values.sum())
 
     return temp
 
