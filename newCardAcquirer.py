@@ -17,25 +17,7 @@ def captureCard():
             cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                frame = frame.astype(float)
-                frame = frame.astype(np.uint8)
                 frame = frame[yuw,xuw]
-                lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
-
-                # Split LAB channels
-                l, a, b = cv2.split(lab)
-
-                # Apply CLAHE to the L channel
-                clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-                cl = clahe.apply(l)
-
-                # Merge channels and convert back to BGR color space
-                limg = cv2.merge((cl, a, b))
-                frame = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-                frame = frame - frame.min()
-                frame = frame/frame.max()
-                frame = frame * 255
-
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
                 else:
@@ -50,7 +32,20 @@ def captureCard():
                 if key == ord('q'):
                     break
                 elif key == ord(' '):
-                    pass
+                    lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+                    # Split LAB channels
+                    l, a, b = cv2.split(lab)
+                    # Apply CLAHE to the L channel
+                    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+                    cl = clahe.apply(l)
+                    # Merge channels and convert back to BGR color space
+                    limg = cv2.merge((cl, a, b))
+                    card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+                    card = card - card.min()
+                    card = card/card.max()
+                    card = card * 255
+
+                    card = myJazz.isolateCard(card,card)
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
