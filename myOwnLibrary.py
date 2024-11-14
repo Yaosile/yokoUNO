@@ -353,13 +353,14 @@ def getCardColour(card:np.ndarray):
     values = [0,0,0,0]
     for i in temp:
         for j in i:
-            if j == [0,0,255]:
+            pixel = j.tolist() if isinstance(j, np.ndarray) else j
+            if pixel == [0,0,255]:
                 values[0] += 1
-            elif j == [0,255,0]:
+            elif pixel == [0,255,0]:
                 values[1] += 1
-            elif j == [255,0,0]:
+            elif pixel == [255,0,0]:
                 values[2] += 1
-            elif j == [0,255,255]:
+            elif pixel == [0,255,255]:
                 values[3] += 1
                 
     print(values/values.sum())
