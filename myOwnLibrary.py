@@ -291,7 +291,7 @@ def isolateCard(frame, originalImage, thresh = 50):
     # temp[:,r] = 255
     # return temp[t-4:b-4,l-4:right-4]
     yThick = 80
-    xThick = 80
+    xThick = 60
     return temp[r-yThick:r+yThick, r-xThick:r+xThick], cx, cy
     return temp[t:b,l:right]
 
