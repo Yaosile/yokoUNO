@@ -8,6 +8,7 @@ def captureCard():
     boardFrame = 'Board'
     cardFrame = 'Card'
     output = np.ones((100,100,3))
+    cx,cy = 0,0
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
@@ -18,6 +19,8 @@ def captureCard():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
+                frame[cy-1:cy+1, :] = 255
+                frame[:, cx-1:cx+1] = 255
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
                 else:
@@ -32,7 +35,9 @@ def captureCard():
                 if key == ord('q'):
                     break
                 elif key == ord(' '):
-                    lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+                    card = frame.copy()
+                    card[card.shape[0]//2:,:] = 0
+                    lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
                     # Split LAB channels
                     l, a, b = cv2.split(lab)
                     # Apply CLAHE to the L channel
