@@ -177,20 +177,21 @@ def PlayUNO():
 
                     
 
-                else: #Robots turn
+                elif turn == 1: #Robots turn
                     if robotThought == 0:
                         frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                         card = logic.getCardPlayed(frame)
                         cardBuffer.append(card)
                         cardBuffer.pop(0)
                         timeout += 1
+                        print('.',end='')
                         if len(set(cardBuffer)) == 1:
                             print(f'looks like a human played a {card}')
                             robotThought = 1
                             discard = card
                             timeout = 0
                         if timeout > 30:
-                            discard = input('cannot determine what human played, please enter the card')
+                            discard = input('cannot determine what human played, please enter the card: ')
                             robotThought = 1
                             timeout = 0
 
