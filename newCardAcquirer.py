@@ -48,7 +48,7 @@ def captureCard():
                 if key == ord('q'):
                     break
                 elif key == ord(' '):
-
+                    pass
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
