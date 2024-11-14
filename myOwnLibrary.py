@@ -17,7 +17,7 @@ mtx = ana([
     [0,0,1],
 ])
 
-lookUp = ['0','1','2','3','4','5','6','7','8','9','+2','Reverse','Skip']
+lookUp = ['0','1','2','3','4','5','6','7','8','9','+','r','s']
 
 def linear_interpolate(v1, v2, fraction):
     return (1 - fraction) * v1 + fraction * v2
@@ -355,7 +355,7 @@ def increase_saturation(image, saturation_factor):
     return adjusted_image
 
 def getCardColour(card:np.ndarray):
-    colours = ['Red','Green','Blue','Yellow','Wild', 'Wild+4']
+    colours = ['r','g','b','y','w','W']
     colour = ''
     temp = adjust_contrast(card, 1.2, 0)
     temp = increase_saturation(temp, 1.5)

@@ -17,6 +17,7 @@ discardLocation = 0
 
 hand1 = ['r+','y5','g4']
 hand2 = ['yr','w','g8','rs']
+discard = 'r6'
 
 thresh = 50
 
@@ -174,7 +175,9 @@ def PlayUNO():
                     
 
                 else: #Robots turn
-                    pass
+                    frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
+                    card = logic.getCardPlayed(frame)
+                    print(f'looks like a human played a {card}')
 
                 
 
