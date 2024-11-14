@@ -101,7 +101,7 @@ def feedForward(inData, weights):
 
     return layerOutputs[-1]
 
-def convolutionalSection(audio):
+def convolutionalSection(audio, kernelMax = 2):
     kernels = []
     kernels.append(ana([
         [-1,-1,-1],
@@ -121,7 +121,7 @@ def convolutionalSection(audio):
     ]))
     output = []
     for i in kernels:
-        output.append(getMaxKernel(myJazz.convolveMultiplication(audio,i),2))
+        output.append(getMaxKernel(myJazz.convolveMultiplication(audio,i),kernelMax))
     output = ana(output).reshape(-1)
     return output
 
