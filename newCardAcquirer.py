@@ -13,7 +13,8 @@ def captureCard():
     card = np.zeros((100,100,3))
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-    video_capture.set(cv2.CAP_PROP_EXPOSURE, 10)
+    fixed_gain = 50
+    video_capture.set(cv2.CAP_PROP_GAIN, fixed_gain)
     while video_capture.isOpened():
         try:
             cv2.namedWindow(boardFrame, cv2.WINDOW_AUTOSIZE)
