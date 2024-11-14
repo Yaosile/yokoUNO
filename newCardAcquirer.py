@@ -10,6 +10,9 @@ def captureCard():
     output = np.ones((100,100,3))
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+
+    fixed_gain = 50
+    video_capture.set(cv2.CAP_PROP_GAIN, fixed_gain)
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
     if video_capture.isOpened():
         try:
