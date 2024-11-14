@@ -21,6 +21,18 @@ def captureCard():
                 frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
                 frame[frame>100] = 255
                 frame[frame != 255] = 0
+                lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
+
+                # Split LAB channels
+                l, a, b = cv2.split(lab)
+
+                # Apply CLAHE to the L channel
+                clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+                cl = clahe.apply(l)
+
+                # Merge channels and convert back to BGR color space
+                limg = cv2.merge((cl, a, b))
+                frame = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
@@ -35,6 +47,8 @@ def captureCard():
                 key = cv2.waitKey(10) & 0xFF
                 if key == ord('q'):
                     break
+                elif key == ord(' '):
+
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
