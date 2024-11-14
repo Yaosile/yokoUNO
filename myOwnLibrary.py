@@ -261,7 +261,7 @@ def rotate(frame, theta):
 
 def isolateCard(frame, originalImage, thresh = 50):
     '''MY OWN'''
-    blur = np.ones(5,5)
+    blur = np.ones((5,5))
     blur /= blur.sum()
     # frame = frame.copy()
     # originalImage = originalImage.copy()
