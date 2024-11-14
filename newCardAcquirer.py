@@ -49,7 +49,7 @@ def captureCard():
                     card = card - card.min()
                     card = card/card.max()
                     card = card * 255
-                    card = myJazz.isolateCard(card,card)
+                    card, cx, cy = myJazz.isolateCard(card,card)
                     print('go')
         finally:
             video_capture.release()
