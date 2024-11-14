@@ -340,7 +340,7 @@ def increase_saturation(image, saturation_factor):
     
     return adjusted_image
 
-def getCardColour(card):
+def getCardColour(card:np.ndarray):
     colours = ['r','g','b','y','B']
     temp = adjust_contrast(card, 1.2, 0)
     temp = increase_saturation(temp, 1.5)
@@ -349,7 +349,20 @@ def getCardColour(card):
     temp = temp*255
     temp[temp>100] = 255
     temp[temp<=100] = 0
-    values = np.sum(temp, axis=(0,1))
+    #Red Greens Blues Yellows
+    values = [0,0,0,0]
+    np.count
+    for i in temp:
+        for j in i:
+            if j == [0,0,255]:
+                values[0] += 1
+            elif j == [0,255,0]:
+                values[1] += 1
+            elif j == [255,0,0]:
+                values[2] += 1
+            elif j == [0,255,255]:
+                values[3] += 1
+                
     print(values/values.sum())
 
     return temp
