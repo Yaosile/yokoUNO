@@ -351,7 +351,6 @@ def getCardColour(card:np.ndarray):
     temp[temp<=100] = 0
     #Red Greens Blues Yellows
     values = [0,0,0,0]
-    np.count
     for i in temp:
         for j in i:
             if j == [0,0,255]:
