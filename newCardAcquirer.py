@@ -21,7 +21,7 @@ def captureCard():
                 cv2.namedWindow(boardFrame, cv2.WINDOW_AUTOSIZE)
                 cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
                 ret_val, frame = video_capture.read()
-                frame = frame[yuw,xuw]
+                # frame = frame[yuw,xuw]
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
                 else:
