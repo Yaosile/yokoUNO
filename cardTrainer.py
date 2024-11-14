@@ -39,11 +39,11 @@ for f in files:
 weights = []
 for i in range(2):
     weights.append(np.load(f'imageWeights/{i}.npy'))
-# L2, weights = cnn.backProp(inData, targetData, weights, 0.001, 100, 1)
-# for i in range(len(weights)):
-#     np.save(f'imageWeights/{i}.npy', weights[i])
-# plt.plot(L2)
-# plt.show()
+L2, weights = cnn.backProp(inData, targetData, weights, 0.001, 100, 1)
+for i in range(len(weights)):
+    np.save(f'imageWeights/{i}.npy', weights[i])
+plt.plot(L2)
+plt.show()
 # img = ana(Image.open(f'CardSnaps/b0.png'))
 # img = myJazz.scaleImage(img, 100, 100)
 # img = myJazz.rgb2hsv(img)

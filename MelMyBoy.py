@@ -106,7 +106,7 @@ def trainCNN(layersN, epochs = 500, lr=0.01):
     for i in range(layersN-1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
 
-    # weights = cnn.generateWeights(len(audioSample), int(len(audioSample)*1.15), len(WORDS), layers=layersN)
+    weights = cnn.generateWeights(len(audioSample), int(len(audioSample)*1.15), len(WORDS), layers=layersN)
 
     L2, weights = cnn.backProp(ana(data), ana(correct), weights, lr, epochs, 1, randomCount=10)
     for i, weight in enumerate(weights):
@@ -138,7 +138,7 @@ def getAudioRecording():
     stream.stop_stream()
     stream.close()
     audio.terminate()
-    return recording
+    # return recording
     final = convertToMFCC(recording)
     return final.reshape(-1)
 

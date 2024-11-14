@@ -3,6 +3,8 @@ from numpy import asanyarray as ana
 
 import myOwnLibrary as myJazz
 
+from scipy import signal
+
 restrict = 10_000
 
 def errorCost(value, target):
@@ -119,7 +121,7 @@ def convolutionalSection(audio):
     ]))
     output = []
     for i in kernels:
-        output.append(getMaxKernel(myJazz.convolveMultiplication(audio,i),4))
+        output.append(getMaxKernel(myJazz.convolveMultiplication(audio,i),2))
     output = ana(output).reshape(-1)
     return output
 

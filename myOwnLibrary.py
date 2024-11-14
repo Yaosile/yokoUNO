@@ -1,5 +1,7 @@
 import numpy as np
 from numpy import asanyarray as ana
+
+from scipy import signal
 # import numba
 
 scaling = 1
@@ -161,6 +163,13 @@ def normalise(array, minOut = 0, maxOut = 255):
     array *= maxOut
     array += minOut
     return array
+
+def vectorNormalise(number, minIn, maxIn, minOut, maxOut):
+    number -= minIn
+    number /= (maxIn - minIn)
+    number *= (maxOut - minOut)
+    number += minOut
+    return number
 
 def rgb2gray(image):
     '''Standard'''
@@ -646,6 +655,9 @@ def rotatePoints(xs,ys,phi):
 
 def convolveMultiplication(frame: np.ndarray, kernel: np.ndarray, mode='full'):
     '''MY OWN'''
+
+    return signal.fftconvolve(frame, kernel, mode=mode)
+
     if type(frame) == list:
         frame = np.array(frame)
     if type(kernel) == list:

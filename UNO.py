@@ -3,28 +3,116 @@ import serial
 from numpy import asanyarray as ana
 import myOwnLibrary as myJazz
 import cv2
+import time
 
 from scipy import signal
 
 predefinedLocations = {
     'draw': 's220000 60000',
-    'hand1': 's200000 100000', #TBD
-    'hand2': 's220000 120000', #TBD
-    'discard': 's220000 60000' #TBD
+    'hand1': 's250000 100000', #TBD
+    'hand2': 's205000 70000', #TBD
+    'discard': 's220000 60000', #TBD
+    'playerDeal': 's200000 120000', #TBD
+<<<<<<< HEAD
+    'rotator': 's',
+    'zd': 'zd',
+    'zs': 'zs',
+    'zu': 'zu',
+=======
+    'rotator': 's'
+>>>>>>> 6699ba5 (locations Updated)
 }
+
+hand1 = []
+hand2 = []
+<<<<<<< HEAD
+deck = 101-3
+discard = 0
+topCard = 2.416013
+bottomCard = 7.867078
+travelTime = 5
+
+serialPort = '/dev/ttyUSB0'
+serialPort = '/dev/tty.usbserial-0001'
+=======
+deck = 101
+discard = 0
+>>>>>>> 6699ba5 (locations Updated)
 
 blur = np.ones((5,5))
 blur = blur/blur.sum()
-
+now = time.time_ns()
 def determineLocations():
     while True:
-        location = input('Enter a location(draw, hand1, hand2, discard): ')
+        location = input('Enter a location(draw, hand1, hand2, discard) or command: ')
         if location in list(predefinedLocations.keys()):
-            ser = serial.Serial('/dev/ttyUSB0', 115200)
+            ser = serial.Serial(serialPort, 115200)
             ser.write(predefinedLocations[location].encode())
+            ser.close()
+        elif location == 'drawCard':
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['zu'].encode())
+            ser.close()
+            time.sleep(10)
+
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['draw'].encode())
+            ser.close()
+            time.sleep(travelTime)
+
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['zd'].encode())
+            ser.close()
+            time.sleep(myJazz.vectorNormalise(98, 1, 98, 7.867078, 2.416013))
+
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['zs'].encode())
+            ser.close()
+            time.sleep(travelTime)
+
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['zu'].encode())
+            ser.close()
+            time.sleep(myJazz.vectorNormalise(98, 1, 98, 7.867078, 2.416013))
+            time.sleep(travelTime)
+
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['hand1'].encode())
+            ser.close()
+            time.sleep(travelTime)
+
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['zd'].encode())
+            ser.close()
+            time.sleep(travelTime)
+
+            ser = serial.Serial(serialPort, 115200)
+            ser.write(predefinedLocations['zs'].encode())
             ser.close()
         else:
             print('That location is not found')
+
+def playUNO():
+    src = np.load('src.npy')
+    dst = np.load('dst.npy')
+    yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
+    frameName = 'Board View'
+    video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    if video_capture.isOpened():
+        try:
+            window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
+            while True:
+                ret_val, frame = video_capture.read()
+                frame = frame[yuw,xuw]
+                if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
+                    cv2.imshow(frameName,frame[::2, ::2])
+
+        finally:
+            video_capture.release()
+            cv2.destroyAllWindows()
+
+
+
 
 # def draw7Cards():
 #     src = np.load('src.npy')
