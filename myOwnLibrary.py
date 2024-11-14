@@ -288,6 +288,7 @@ def isolateCard(frame, originalImage, thresh = 50):
     # temp[:,l] = 255
     # temp[:,r] = 255
     # return temp[t-4:b-4,l-4:right-4]
+    return temp
     return temp[t:b,l:right]
 
 def getRotation(frame, centreX, centreY, radius):
