@@ -142,6 +142,7 @@ def PlayUNO():
                     break
                 key = cv2.waitKey(1) & 0xFF
                 if turn == 0: #Humans turn
+                    frame = myJazz.drawCircle(frame, discardLocation, inverted=True)
                     print(np.average(frame-prev))
                     if movement == 1:
                         movement = 0
