@@ -212,6 +212,10 @@ def PlayUNO():
                             turn = 0 #go back to Human turn
                             humanHand += 1
 
+                    elif robotThought == 2:
+                        cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
+                        print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
+
                 
 
 

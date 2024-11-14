@@ -53,4 +53,54 @@ def getMoveValid(discard,played):
     if played[1] == discard[1]:
         return True
     return False
+
+def getMoveToPlay(hand1, hand2, discard):
+
+    chosenCard = ''
+
+    hand = hand1+hand2
+
+    if 'W' in [i[0] for i in hand]: #wanna play wild +4 first
+        chosenCard = 'W'
+    elif 'w' in [i[0] for i in hand]: #wanna play wild
+        chosenCard = 'w'
+    elif discard[0] in [i[0] for i in hand]: #wanna play same colour
+        chosenCard = np.random.choice([i for i in hand if i[0] == discard[0]])
+    else:
+        chosenCard = 'draw'
+    return hand1, hand2, chosenCard
+
+def makeMove(hand1, hand2, choice, drawLocation, frame):
+    smallestHand = np.argmax([len(hand1), len(hand2)])
+    if choice == 'draw':
+        print(f'The robot has chosen to draw and added it to {smallestHand + 1}')
+        return drawCard(hand1, hand2, drawLocation, frame, smallestHand)
+    else:
+        print(f'The robot is playing {choice}')
+        return playCard(hand1, hand2, choice)
     
+
+
+def drawCard(hand1, hand2, drawLocation, frame, handChoice):
+    frame = frame.copy()
+    frame = myJazz.drawCircle(frame, *drawLocation, inverted=True)
+    drawenCard = getCardPlayed(frame)
+    if handChoice == 0:
+        hand1.append(drawenCard)
+    else:
+        hand2.append(drawenCard)
+    return hand1, hand2
+
+def playCard(hand1, hand2, choice):
+    whatHand = 0
+    if choice in hand2:
+        whatHand = 1
+    hands = [hand1, hand2]
+    depth = hands[whatHand][::-1].index(choice)
+
+    for i in depth():#shuffling cards around
+        hands[1-whatHand].append(hands[whatHand].pop())
+    hands[whatHand].pop()
+    for i in hands:
+        print(hands)
+    return hands[0], hands[1]

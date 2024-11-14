@@ -15,20 +15,27 @@ import matplotlib.gridspec as gridspec
 import feedForwardybackwards as cnn
 import os
 
+hand1 = ['r+','y5','g4']
+hand2 = ['yr','w','g8','rs']
+
+hand = hand1 + hand2
+
+print(hand)
+
 # dira = 'CardSnaps/'
 
-cards = os.listdir(dira)
-choice = np.random.choice(cards)
-choice = 'r1.png'
+# cards = os.listdir(dira)
+# choice = np.random.choice(cards)
+# choice = 'r1.png'
 
-img = ana(Image.open(dira + choice))[...,::-1]
-
-
+# img = ana(Image.open(dira + choice))[...,::-1]
 
 
 
-img = Image.fromarray(img.astype(np.uint8))
-img.show()
+
+
+# img = Image.fromarray(img.astype(np.uint8))
+# img.show()
 # for i in cards:
 #     print(i)
 
