@@ -4,6 +4,8 @@ import myOwnLibrary as myJazz
 import cv2
 from PIL import Image
 
+import unoLogic as logic
+
 from scipy import signal
 
 yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
@@ -12,6 +14,9 @@ drawLocation = 0
 hand1Location = 0
 hand2Location = 0
 discardLocation = 0
+
+hand1 = ['r+','y5','g4']
+hand2 = ['yr','w','g8','rs']
 
 thresh = 50
 
@@ -65,6 +70,7 @@ def initilisation():
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(output)
                     drawLocation = myJazz.midPoint(t,b,l,right)
+                    np.save('drawLoc.npy', ana(drawLocation))
                 elif key == ord('2'):
                     print('hand1')
 
@@ -77,6 +83,7 @@ def initilisation():
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(output)
                     hand1Location = myJazz.midPoint(t,b,l,right)
+                    np.save('h1Loc.npy', ana(hand1Location))
                 elif key == ord('3'):
                     print('hand2')
 
@@ -89,6 +96,7 @@ def initilisation():
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(output)
                     hand2Location = myJazz.midPoint(t,b,l,right)
+                    np.save('h2Loc.npy', ana(hand2Location))
                 elif key == ord('4'):
                     print('discard location')
 
@@ -101,6 +109,7 @@ def initilisation():
                     output = myJazz.threshHold(output, 254)
                     t,b,l,right = myJazz.boundingBox(output)
                     discardLocation = myJazz.midPoint(t,b,l,right)
+                    np.save('discardLoc.npy', ana(discardLocation))
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
@@ -160,5 +169,7 @@ def captureCard():
             cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    initilisation()
+    response = input('do initilisation: ')
+    if response == 'y':
+        initilisation()
     captureCard()
