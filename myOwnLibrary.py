@@ -26,7 +26,7 @@ def drawCircle(frame, x,y):
     
     xd,yd = np.meshgrid(np.arange(frame.shape[1])-x, np.arange(frame.shape[0])-y)
     r = xd**2 + yd**2
-    frame[r<40_000] = 0
+    frame[r<10_000] = 0
     return frame
 
 
