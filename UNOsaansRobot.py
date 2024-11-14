@@ -141,7 +141,7 @@ def PlayUNO():
                     break
                 key = cv2.waitKey(1) & 0xFF
                 if turn == 0: #Humans turn
-                    print(np.average(cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)-cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)))
+                    print(np.average(cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)-cv2.cvtColor(prev,cv2.COLOR_BGR2GRAY)))
                     prev = frame.copy()
                 else: #Robots turn
                     pass
