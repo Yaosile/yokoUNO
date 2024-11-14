@@ -115,6 +115,7 @@ def PlayUNO():
     hand1 = ['r+','y5','g4']
     hand2 = ['yr','w','g8','rs']
     discard = 'r6'
+    card = 'W'
 
     cardBuffer = ['WW','WW','WW', 'WW']
     turn = -1 #0 for Human 1 For Robot
@@ -201,7 +202,7 @@ def PlayUNO():
 
 
                     elif robotThought == 1:
-                        if logic.getMoveValid(discard):
+                        if logic.getMoveValid(discard, card):
                             discard = card
                             print('that is a valid move')
                             robotThought = 2
