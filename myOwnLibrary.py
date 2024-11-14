@@ -293,13 +293,6 @@ def isolateCard(frame, originalImage, thresh = 50):
     yThick = 80
     xThick = 60
     temp = temp[r-yThick:r+yThick, r-xThick:r+xThick]
-    temp = adjust_contrast(temp, 1.2, 0)
-    temp = increase_saturation(temp, 1.5)
-    temp = temp-temp.min()
-    temp = temp/temp.max()
-    temp = temp*255
-    temp[temp>127] = 255
-    temp[temp<=127] = 0
     return temp, cx, cy
     return temp[t:b,l:right]
 
@@ -349,6 +342,19 @@ def increase_saturation(image, saturation_factor):
 
 def getCardColour(card):
     colours = ['r','g','b','y','B']
+    temp = adjust_contrast(card, 1.2, 0)
+    temp = increase_saturation(temp, 1.5)
+    temp = temp-temp.min()
+    temp = temp/temp.max()
+    temp = temp*255
+    temp[temp>100] = 255
+    temp[temp<=100] = 0
+
+    print(np.sum(temp, axis=(0,1)))
+
+    return temp
+
+
 
 def getRotation(frame, centreX, centreY, radius):
     '''MY OWN'''
