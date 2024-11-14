@@ -49,8 +49,6 @@ def captureCard():
                     card = card * 255
                     card, cx, cy = myJazz.isolateCard(card,card)
                     print('go')
-                frame[cy-1:cy+1, :] = 255
-                frame[:, cx-1:cx+1] = 255
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
