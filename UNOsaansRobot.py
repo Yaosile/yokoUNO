@@ -42,11 +42,12 @@ def initilisation():
                 else:
                     break
 
-                
+
                 key = cv2.waitKey(10) & 0xFF
                 if key == ord('q'):
                     break
                 elif key == ord('1'):
+                    print('draw location')
                     output = frame.astype(float)
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
@@ -57,6 +58,8 @@ def initilisation():
                     t,b,l,right = myJazz.boundingBox(output)
                     drawLocation = myJazz.midPoint(t,b,l,right)
                 elif key == ord('2'):
+                    print('hand1')
+
                     output = frame.astype(float)
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
@@ -67,6 +70,8 @@ def initilisation():
                     t,b,l,right = myJazz.boundingBox(output)
                     hand1Location = myJazz.midPoint(t,b,l,right)
                 elif key == ord('3'):
+                    print('hand2')
+
                     output = frame.astype(float)
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
@@ -77,6 +82,8 @@ def initilisation():
                     t,b,l,right = myJazz.boundingBox(output)
                     hand2Location = myJazz.midPoint(t,b,l,right)
                 elif key == ord('4'):
+                    print('discard location')
+
                     output = frame.astype(float)
                     output = myJazz.rgb2hsv(output,Calculations='SV')
                     output = (output[:,:,1])*output[:,:,2]*255
