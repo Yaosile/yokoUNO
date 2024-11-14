@@ -18,9 +18,7 @@ def captureCard():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
-                frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
-                frame[frame>100] = 255
-                frame[frame != 255] = 0
+                # frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
                 lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
 
                 # Split LAB channels
