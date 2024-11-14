@@ -17,8 +17,8 @@ def captureCard():
             cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
-                # frame = frame[yuw,xuw]
-                # frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
+                frame = frame[yuw,xuw]
+                frame = cv2.normalize(frame, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
                 # frame[frame>100] = 255
                 # frame[frame != 255] = 0
 
