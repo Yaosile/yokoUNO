@@ -40,7 +40,7 @@ def getCardPlayed(frame):
     card = card * 255
     card, cx, cy = myJazz.isolateCard(card,card)
     card, col = myJazz.getCardColour(card)
-    if col not in ['Wild', 'Wild+4']:
+    if col not in ['w', 'W']:
         return f'{col + myJazz.getCardValue(card)}'
     else:
         return col

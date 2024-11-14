@@ -116,7 +116,10 @@ def initilisation():
             cv2.destroyAllWindows()
 
 def PlayUNO():
+    cardBuffer = ['WW','WW','WW']
     turn = -1 #0 for Human 1 For Robot
+    robotThought = 0
+    timeout = 0
     ready = False
     drawLocation = np.load('drawLoc.npy')
     hand1Location = np.load('h1Loc.npy')
@@ -175,9 +178,25 @@ def PlayUNO():
                     
 
                 else: #Robots turn
-                    frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
-                    card = logic.getCardPlayed(frame)
-                    print(f'looks like a human played a {card}')
+                    if robotThought == 0:
+                        frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
+                        card = logic.getCardPlayed(frame)
+                        cardBuffer.append(card)
+                        cardBuffer.pop(0)
+                        timeout += 1
+                        if len(set(cardBuffer) == 1):
+                            print(f'looks like a human played a {card}')
+                            robotThought = 1
+                            discard = card
+                            timeout = 0
+                        if timeout > 30:
+                            discard = input('cannot determine what human played, please enter the card')
+                            robotThought = 1
+                            timeout = 0
+
+
+                    elif robotThought == 1:
+                        print('Next Step')
 
                 
 
