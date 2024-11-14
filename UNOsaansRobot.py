@@ -36,13 +36,13 @@ def initilisation():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 if drawLocation != 0:
-                    frame = myJazz.drawCircle(frame, drawLocation)
+                    frame = myJazz.drawCircle(frame, *drawLocation)
                 if hand1Location != 0:
-                    frame = myJazz.drawCircle(frame, hand1Location)
+                    frame = myJazz.drawCircle(frame, *hand1Location)
                 if hand2Location != 0:
-                    frame = myJazz.drawCircle(frame, hand2Location)
+                    frame = myJazz.drawCircle(frame, *hand2Location)
                 if discardLocation != 0:
-                    frame = myJazz.drawCircle(frame, discardLocation)
+                    frame = myJazz.drawCircle(frame, *discardLocation)
 
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
