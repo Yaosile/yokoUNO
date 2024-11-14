@@ -45,3 +45,12 @@ def getCardPlayed(frame):
     else:
         return col
     
+def getMoveValid(discard,played):
+    if len(played) == 1: #played a type of wild
+        return True
+    if played[0] == discard[0]:
+        return True
+    if played[1] == discard[1]:
+        return True
+    return False
+    

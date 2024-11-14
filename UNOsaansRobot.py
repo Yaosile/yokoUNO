@@ -15,10 +15,6 @@ hand1Location = 0
 hand2Location = 0
 discardLocation = 0
 
-hand1 = ['r+','y5','g4']
-hand2 = ['yr','w','g8','rs']
-discard = 'r6'
-
 thresh = 50
 
 blur = np.ones((5,5))
@@ -116,11 +112,16 @@ def initilisation():
             cv2.destroyAllWindows()
 
 def PlayUNO():
-    cardBuffer = ['WW','WW','WW']
+    hand1 = ['r+','y5','g4']
+    hand2 = ['yr','w','g8','rs']
+    discard = 'r6'
+
+    cardBuffer = ['WW','WW','WW', 'WW']
     turn = -1 #0 for Human 1 For Robot
     robotThought = 0
     timeout = 0
     ready = False
+    humanHand = 7
     drawLocation = np.load('drawLoc.npy')
     hand1Location = np.load('h1Loc.npy')
     hand2Location = np.load('h2Loc.npy')
@@ -161,7 +162,10 @@ def PlayUNO():
                         movement -= 1
                     prev = frame.copy()
                     prevChange = change
+
+
                 elif turn == 0: #Humans turn
+                    print('waiting on player move')
                     frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                     change = (np.average(frame-prev))
                     if (np.abs(change-prevChange)) > 1:
@@ -169,6 +173,7 @@ def PlayUNO():
                     if movement == 1:
                         movement = 0
                         turn = 1
+                        humanHand -= 1
                         print('Human played')
                     if movement > 0:
                         movement -= 1
@@ -188,16 +193,23 @@ def PlayUNO():
                         if len(set(cardBuffer)) == 1:
                             print(f'looks like a human played a {card}')
                             robotThought = 1
-                            discard = card
                             timeout = 0
                         if timeout > 30:
-                            discard = input('cannot determine what human played, please enter the card: ')
+                            card = input('cannot determine what human played, please enter the card: ')
                             robotThought = 1
                             timeout = 0
 
 
                     elif robotThought == 1:
-                        print('Next Step')
+                        if logic.getMoveValid(discard):
+                            discard = card
+                            print('that is a valid move')
+                            robotThought = 2
+                        else:
+                            print('that move is invalid, please take it back')
+                            robotThought = 0 #reset robot thought
+                            turn = 0 #go back to Human turn
+                            humanHand += 1
 
                 
 
