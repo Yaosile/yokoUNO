@@ -126,6 +126,7 @@ def PlayUNO():
     movement = 0
 
     prev = np.ones((1210,1034,3))
+    prevChange = 0
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
@@ -143,7 +144,8 @@ def PlayUNO():
                 key = cv2.waitKey(1) & 0xFF
                 if turn == 0: #Humans turn
                     frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
-                    print(np.average(frame-prev))
+                    change = (np.average(frame-prev))
+                    print(np.abs(change-prevChange))
                     if movement == 1:
                         movement = 0
                         turn = 1
@@ -151,6 +153,8 @@ def PlayUNO():
                     if movement > 0:
                         movement -= 1
                     prev = frame.copy()
+                    prevChange = change
+
                     
 
                 else: #Robots turn
