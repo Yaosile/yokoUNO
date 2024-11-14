@@ -32,7 +32,8 @@ def captureCard():
                 limg = cv2.merge((cl, a, b))
                 frame = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
                 frame -= frame.min()
-                frame *= frame.max()
+                frame /= frame.max()
+                frame *= 255
 
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
