@@ -293,11 +293,13 @@ def isolateCard(frame, originalImage, thresh = 50):
     yThick = 80
     xThick = 60
     temp = temp[r-yThick:r+yThick, r-xThick:r+xThick]
+    temp = adjust_contrast(temp, 1.2, 0)
+    temp = increase_saturation(temp, 1.5)
     temp = temp-temp.min()
     temp = temp/temp.max()
     temp = temp*255
-    temp = adjust_contrast(temp, 1.2, 0)
-    temp = increase_saturation(temp, 1.5)
+    temp[temp>127] = 255
+    temp[temp<=127] = 0
     return temp, cx, cy
     return temp[t:b,l:right]
 
