@@ -341,7 +341,7 @@ def increase_saturation(image, saturation_factor):
     return adjusted_image
 
 def getCardColour(card:np.ndarray):
-    colours = ['r','g','b','y','Wild', 'Wild+4']
+    colours = ['Red','Green','Blue','Yellow','Wild', 'Wild+4']
     temp = adjust_contrast(card, 1.2, 0)
     temp = increase_saturation(temp, 1.5)
     temp = temp-temp.min()
@@ -363,6 +363,7 @@ def getCardColour(card:np.ndarray):
             elif pixel == [0,255,255]:
                 values[3] += 1
     values = ana(values)
+    print(values)
     if values.max() > 0.9:
         print(colours[np.argmax(values)])
     elif values.max() < 0.28:
