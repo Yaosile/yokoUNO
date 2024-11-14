@@ -292,8 +292,15 @@ def isolateCard(frame, originalImage, thresh = 50):
     # return temp[t-4:b-4,l-4:right-4]
     yThick = 80
     xThick = 60
+    temp = temp[r-yThick:r+yThick, r-xThick:r+xThick]
+    temp = temp-temp.min()
+    temp = temp/temp.max()
+    temp = temp*255
     return temp[r-yThick:r+yThick, r-xThick:r+xThick], cx, cy
     return temp[t:b,l:right]
+
+def getCardColour(card):
+    colours = ['r','g','b','y','B']
 
 def getRotation(frame, centreX, centreY, radius):
     '''MY OWN'''
