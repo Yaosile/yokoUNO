@@ -296,8 +296,25 @@ def isolateCard(frame, originalImage, thresh = 50):
     temp = temp-temp.min()
     temp = temp/temp.max()
     temp = temp*255
-    return temp[r-yThick:r+yThick, r-xThick:r+xThick], cx, cy
+    temp = adjust_contrast(temp, 2, 0)
+    return temp, cx, cy
     return temp[t:b,l:right]
+
+def adjust_contrast(image, alpha, beta):
+    """
+    Adjusts the contrast and brightness of an image.
+    
+    Parameters:
+    - image: The input image
+    - alpha: Contrast control (1.0 = no change, >1.0 = increase contrast, <1.0 = decrease contrast)
+    - beta: Brightness control (0 = no change, positive = brighter, negative = darker)
+    
+    Returns:
+    - The adjusted image
+    """
+    # Apply the contrast and brightness adjustment
+    adjusted = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    return adjusted
 
 def getCardColour(card):
     colours = ['r','g','b','y','B']
