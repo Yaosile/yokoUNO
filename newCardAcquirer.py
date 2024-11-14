@@ -19,18 +19,18 @@ def captureCard():
         while True:
             try:
                 cv2.namedWindow(boardFrame, cv2.WINDOW_AUTOSIZE)
-                cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
+                # cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
                 ret_val, frame = video_capture.read()
                 # frame = frame[yuw,xuw]
                 if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
+                    cv2.imshow(boardFrame,frame)
                 else:
                     break
 
-                if cv2.getWindowProperty(cardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(cardFrame,card.astype(np.uint8))
-                else:
-                    break
+                # if cv2.getWindowProperty(cardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
+                #     cv2.imshow(cardFrame,card.astype(np.uint8))
+                # else:
+                #     break
 
                 key = cv2.waitKey(10) & 0xFF
                 if key == ord('q'):
