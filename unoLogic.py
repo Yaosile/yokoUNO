@@ -16,3 +16,4 @@ for i in range(10):
     faceValues[f'{i}'] = f'{i}'
 
 def canPlay(hand1, hand2, discard):
+    pass
