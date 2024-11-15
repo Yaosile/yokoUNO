@@ -34,7 +34,7 @@ blur = blur/blur.sum()
 def determineLocations():
     rc.init()
     while True:
-        location = input('please enter a location to calibrate')
+        location = input('please enter a location to calibrate: ')
         if location == 'q':
             break
         if location in rc.commands:

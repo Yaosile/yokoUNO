@@ -114,6 +114,7 @@ def playCard(hand1, hand2, choice):
         rc.pickUpHand2()
     else:
         rc.pickUpHand1()
+        
     rc.playCard()
 
     for i in hands:

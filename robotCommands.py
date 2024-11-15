@@ -48,7 +48,17 @@ def pickUpHand1():
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zu'].encode())
     ser.close()
-    time.sleep(pickUpHands)
+    time.sleep(1)
+
+    ser = serial.Serial(serialPort, 115200)
+    ser.write(commands['zs'].encode())
+    ser.close()
+    time.sleep(suctionTime)
+
+    ser = serial.Serial(serialPort, 115200)
+    ser.write(commands['zu'].encode())
+    ser.close()
+    time.sleep(pickUpHands+1)
 
 def pickUpHand2():
     ser = serial.Serial(serialPort, 115200)
@@ -69,7 +79,17 @@ def pickUpHand2():
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zu'].encode())
     ser.close()
-    time.sleep(pickUpHands)
+    time.sleep(1)
+
+    ser = serial.Serial(serialPort, 115200)
+    ser.write(commands['zs'].encode())
+    ser.close()
+    time.sleep(suctionTime)
+
+    ser = serial.Serial(serialPort, 115200)
+    ser.write(commands['zu'].encode())
+    ser.close()
+    time.sleep(pickUpHands+1)
 
 def dropHand1():
     ser = serial.Serial(serialPort, 115200)
@@ -144,7 +164,7 @@ def drawCard(pileHeight= 64):
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zu'].encode())
     ser.close()
-    time.sleep(abs(pickTime - 1))
+    time.sleep(abs(pickTime - 1)+1)
 
 def playCard():
     ser = serial.Serial(serialPort, 115200)
