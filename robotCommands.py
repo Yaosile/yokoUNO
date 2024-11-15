@@ -148,6 +148,7 @@ def dropHand2():
     time.sleep(dropHands)
 
 def drawCard():
+    global pileHeight
     pickTime = myJazz.vectorNormalise(pileHeight, 1, 98, 7.867078, 2.416013)
     pileHeight -=1
     ser = serial.Serial(serialPort, 115200)
