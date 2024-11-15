@@ -39,7 +39,10 @@ def getCardPlayed(frame):
     card = card - card.min()
     card = card/card.max()
     card = card * 255
-    card, cx, cy = myJazz.isolateCard(card,card)
+    try:
+        card, cx, cy = myJazz.isolateCard(card,card)
+    except:
+        card = '0'
     card, col = myJazz.getCardColour(card)
     if col not in ['w', 'W']:
         return f'{col + myJazz.getCardValue(card)}'

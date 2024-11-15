@@ -13,7 +13,7 @@ commands = {
     'zu': 'zu',
 }
 travelTime = 2
-pickUpHands = 6
+pickUpHands = 5
 dropHands = 4
 
 suctionTime = 3
@@ -83,7 +83,7 @@ def pickUpHand2():
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zd'].encode())
     ser.close()
-    time.sleep(pickUpHands)
+    time.sleep(pickUpHands+1)
 
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zs'].encode())
