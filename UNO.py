@@ -1,19 +1,19 @@
 import numpy as np
-import serial
 from numpy import asanyarray as ana
 import myOwnLibrary as myJazz
 import cv2
 import time
+import robotCommands as rc
+import unoLogic as logic
 
 from scipy import signal
 
 predefinedLocations = {
-    'draw': 's220000 60000',
-    'hand1': 's250000 100000', #TBD
-    'hand2': 's205000 70000', #TBD
-    'discard': 's220000 60000', #TBD
+    'draw': 's210000 60000',
+    'hand1': 's240000 100000', #TBD
+    'hand2': 's220000 110000', #TBD
+    'discard': '185000 85000', #TBD
     'playerDeal': 's200000 120000', #TBD
-    'rotator': 's',
     'zd': 'zd',
     'zs': 'zs',
     'zu': 'zu',
@@ -27,138 +27,157 @@ topCard = 2.416013
 bottomCard = 7.867078
 travelTime = 5
 
-serialPort = '/dev/ttyUSB0'
-serialPort = '/dev/tty.usbserial-0001'
-
 blur = np.ones((5,5))
 blur = blur/blur.sum()
 now = time.time_ns()
 def determineLocations():
-    while True:
-        location = input('Enter a location(draw, hand1, hand2, discard) or command: ')
-        if location in list(predefinedLocations.keys()):
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations[location].encode())
-            ser.close()
-        elif location == 'drawCard':
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['zu'].encode())
-            ser.close()
-            time.sleep(10)
+    rc.init()
+def PlayUNO():
+    hand1 = ['r+','y5','g4']
+    hand2 = ['yr','w','g8','rs']
+    discard = 'r6'
+    card = 'W'
 
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['draw'].encode())
-            ser.close()
-            time.sleep(travelTime)
+    cardBuffer = ['WW','WW','WW', 'WW']
+    turn = -1 #0 for Human 1 For Robot
+    robotThought = 0
+    timeout = 0
+    ready = False
+    humanHand = 7
+    drawLocation = np.load('drawLoc.npy')
+    hand1Location = np.load('h1Loc.npy')
+    hand2Location = np.load('h2Loc.npy')
+    discardLocation = np.load('discardLoc.npy')
+    boardFrame = 'Board'
+    # cardFrame = 'Card'
+    cx,cy = 0,0
+    movement = 0
 
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['zd'].encode())
-            ser.close()
-            time.sleep(myJazz.vectorNormalise(98, 1, 98, 7.867078, 2.416013))
+    prev = np.ones((1210,1034,3))
+    prevChange = 0
 
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['zs'].encode())
-            ser.close()
-            time.sleep(travelTime)
-
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['zu'].encode())
-            ser.close()
-            time.sleep(myJazz.vectorNormalise(98, 1, 98, 7.867078, 2.416013))
-            time.sleep(travelTime)
-
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['hand1'].encode())
-            ser.close()
-            time.sleep(travelTime)
-
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['zd'].encode())
-            ser.close()
-            time.sleep(travelTime)
-
-            ser = serial.Serial(serialPort, 115200)
-            ser.write(predefinedLocations['zs'].encode())
-            ser.close()
-        else:
-            print('That location is not found')
-
-def playUNO():
-    src = np.load('src.npy')
-    dst = np.load('dst.npy')
-    yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
-    frameName = 'Board View'
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
+    yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
     if video_capture.isOpened():
         try:
-            window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
+            cv2.namedWindow(boardFrame, cv2.WINDOW_AUTOSIZE)
+            # cv2.namedWindow(cardFrame, cv2.WINDOW_AUTOSIZE)
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
-                if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(frameName,frame[::2, ::2])
+                if cv2.getWindowProperty(boardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
+                    cv2.imshow(boardFrame,frame[::2,::2,:].astype(np.uint8))
+                else:
+                    break
+                key = cv2.waitKey(1) & 0xFF
+                if turn == -1: #Initial waiting period
+                    print('waiting')
+                    frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
+                    change = (np.average(frame-prev))
+                    if (np.abs(change-prevChange)) > 1:
+                        movement = 30
+                    if movement == 1:
+                        movement = 0
+                        turn = 0
+                        print('Ready')
+                    if movement > 0:
+                        movement -= 1
+                    prev = frame.copy()
+                    prevChange = change
 
+
+                elif turn == 0: #Humans turn
+                    print('waiting on player move')
+                    frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
+                    change = (np.average(frame-prev))
+                    if (np.abs(change-prevChange)) > 1:
+                        print('detected Movement')
+                        movement = 10
+                    if movement == 1:
+                        movement = 0
+                        turn = 1
+                        humanHand -= 1
+                        print('Human played')
+                    if movement > 0:
+                        movement -= 1
+                    prev = frame.copy()
+                    prevChange = change
+
+                    
+
+                elif turn == 1: #Robots turn
+                    if robotThought == 0:
+                        frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
+                        card = logic.getCardPlayed(frame)
+                        cardBuffer.append(card)
+                        cardBuffer.pop(0)
+                        timeout += 1
+                        print('.',end='')
+                        if len(set(cardBuffer)) == 1:
+                            print(f'looks like a human played a {card}')
+                            robotThought = 1
+                            timeout = 0
+                        if timeout > 30:
+                            card = input('cannot determine what human played, please enter the card: ')
+                            robotThought = 1
+                            timeout = 0
+
+
+                    elif robotThought == 1:
+                        if logic.getMoveValid(discard, card):
+                            discard = card
+                            print('that is a valid move')
+                            robotThought = 2
+                        else:
+                            print('that move is invalid, please take it back')
+                            robotThought = 0 #reset robot thought
+                            turn = 0 #go back to Human turn
+                            humanHand += 1
+
+                    elif robotThought == 2:
+                        hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
+                        print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
+
+                
+
+
+
+
+
+
+
+                # if cv2.getWindowProperty(cardFrame, cv2.WND_PROP_AUTOSIZE) >= 0:
+                #     cv2.imshow(cardFrame,card.astype(np.uint8))
+                # else:
+                #     break
+                if key == ord('q'):
+                    break
+                # elif key == ord(' '):
+                #     card = frame.copy()
+                #     card[card.shape[0]//2:,:] = 0
+                #     lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
+                #     # Split LAB channels
+                #     l, a, b = cv2.split(lab)
+                #     # Apply CLAHE to the L channel
+                #     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+                #     cl = clahe.apply(l)
+                #     # Merge channels and convert back to BGR color space
+                #     limg = cv2.merge((cl, a, b))
+                #     card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+                #     card = card - card.min()
+                #     card = card/card.max()
+                #     card = card * 255
+                #     card, cx, cy = myJazz.isolateCard(card,card)
+                #     card, col = myJazz.getCardColour(card)
+
+                #     if col not in ['Wild', 'Wild+4']:
+                #         print(col, myJazz.getCardValue(card))
+                #     else:
+                #         print(col)
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
 
-
-
-
-# def draw7Cards():
-#     src = np.load('src.npy')
-#     dst = np.load('dst.npy')
-#     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
-#     frameName = 'Drawing 7 Cards'
-#     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-#     if video_capture.isOpened():
-#         try:
-#             window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
-#             while True:
-#                 ret_val, frame = video_capture.read()
-#                 frame = frame[yuw,xuw]
-#                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-#                     cv2.imshow(frameName,frame[::2, ::2])
-#                 else:
-#                     break
-
-#                 frame[frame.shape[0]//2:, :] = 0
-
-#                 key = cv2.waitKey(10) & 0xFF
-#                 if key == ord('q'):
-#                     break
-#                 elif key == ord(' '):
-#                     output = frame.astype(float)
-#                     output = myJazz.rgb2hsv(output,Calculations='SV')
-#                     output = (output[:,:,1])*output[:,:,2]*255
-#                     output = myJazz.threshHold(output, thresh)
-#                     for i in range(3): 
-#                         output = signal.fftconvolve(output, blur, mode='same')
-#                     output = myJazz.threshHold(output, 254)
-#                     t,b,l,right = myJazz.boundingBox(output)
-#                     cx,cy = myJazz.midPoint(t,b,l,right)
-#                     print(cx,cy)
-
-#                 elif key == ord('m'):
-#                     gx,gy = myJazz.armCalibrationHomo(src,dst,cx,cy)
-#                     x,y = myJazz.pixelToCartesian(gx,gy,frame.shape[1],frame.shape[0])
-#                     l,r = myJazz.cartesianToScara(x,y)
-#                     test = f's{int((l*180/np.pi + 45)*1000)} {int((r*180/np.pi + 45)*1000)}'
-
-#                     ser = serial.Serial('/dev/ttyUSB0', 115200)
-#                     ser.write(test.encode())
-#                     ser.close()
-#                 elif key == ord('o'):
-#                     test = 's220000 60000'
-#                     ser = serial.Serial('/dev/ttyUSB0', 115200)
-#                     ser.write(test.encode())
-#                     ser.close()
-#         finally:
-#             video_capture.release()
-#             cv2.destroyAllWindows()
-#     else:
-#         print('Failed to open camera')
-
 if __name__ == '__main__':
     determineLocations()
-    # draw7Cards()
+    playUNO()
