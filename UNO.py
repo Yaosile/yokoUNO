@@ -154,7 +154,7 @@ def playUNO():
                             print('please declare the colour')  
                             declaredColour = audio.classify()
                             for i in range(4):
-                                hand1, hand2 = logic.drawCard(hand1, hand2, *drawLocation, frame, np.argmin([len(hand1), len(hand2)]))
+                                hand1, hand2 = logic.drawCard(hand1, hand2, drawLocation, frame, np.argmin([len(hand1), len(hand2)]))
                             robotThought = 0
                             turn = 0
 
