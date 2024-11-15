@@ -28,6 +28,7 @@ discard = 0
 topCard = 2.416013
 bottomCard = 7.867078
 travelTime = 5
+drawPile = ['g1','y0','gr','g5','W','gs','b7','b5','b7','r+']
 
 blur = np.ones((5,5))
 blur = blur/blur.sum()
@@ -154,7 +155,8 @@ def playUNO():
                             print('please declare the colour')  
                             declaredColour = audio.classify()
                             for i in range(4):
-                                hand1, hand2 = logic.drawCard(hand1, hand2, drawLocation, frame, np.argmin([len(hand1), len(hand2)]))
+                                topMostCard = drawPile.pop(0)
+                                hand1, hand2 = logic.drawCard(hand1, hand2, drawLocation, frame, np.argmin([len(hand1), len(hand2)]), topMostCard)
                             robotThought = 0
                             turn = 0
 

@@ -82,11 +82,12 @@ def makeMove(hand1, hand2, choice, drawLocation, frame):
     
 
 
-def drawCard(hand1, hand2, drawLocation, frame, handChoice):
+def drawCard(hand1, hand2, drawLocation, frame, handChoice, topCard):
     rc.moveTo('hand2')
     frame = frame.copy()
     frame = myJazz.drawCircle(frame, *drawLocation, inverted=True)
-    drawenCard = getCardPlayed(frame)
+    # drawenCard = getCardPlayed(frame)
+    drawenCard = topCard
     rc.drawCard()
     if handChoice == 0:
         hand1.append(drawenCard)
