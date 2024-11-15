@@ -172,6 +172,9 @@ def playUNO():
                         else:
                             hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
                             logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame)
+                            turn = 0
+                            robotThought = 0
+                            rc.init()
 
                 
 

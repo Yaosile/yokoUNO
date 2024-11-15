@@ -112,7 +112,7 @@ def playCard(hand1, hand2, choice):
             rc.dropHand1()
         else:
             rc.pickUpHand1()
-            rc.dropHand1()
+            rc.dropHand2()
     hands[whatHand].pop()
 
     if whatHand == 1:
