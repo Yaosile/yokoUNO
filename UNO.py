@@ -123,10 +123,10 @@ def playUNO():
                         cardBuffer.pop(0)
                         timeout += 1
                         print('.',end='')
-                        if len(set(cardBuffer)) == 1:
-                            print(f'looks like a human played a {card}')
-                            robotThought = 1
-                            timeout = 0
+                        # if len(set(cardBuffer)) == 1:
+                        print(f'looks like a human played a {card}')
+                        robotThought = 1
+                        timeout = 0
                         if timeout > 30:
                             card = input('cannot determine what human played, please enter the card: ')
                             robotThought = 1
