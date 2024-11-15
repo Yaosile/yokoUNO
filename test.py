@@ -15,12 +15,17 @@ import matplotlib.gridspec as gridspec
 import feedForwardybackwards as cnn
 import os
 
-hand1 = ['r+','y5','g4']
-hand2 = ['yr','w','g8','rs']
+import MelMyBoy as audio
 
-hand = hand1 + hand2
+while True:
+    MelMyBoy.classify()
 
-print(hand)
+# hand1 = ['r+','y5','g4']
+# hand2 = ['yr','w','g8','rs']
+
+# hand = hand1 + hand2
+
+# print(hand)
 
 # dira = 'CardSnaps/'
 

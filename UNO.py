@@ -5,7 +5,7 @@ import cv2
 import time
 import robotCommands as rc
 import unoLogic as logic
-
+import MelMyBoy as audio
 import serial
 
 from scipy import signal
@@ -83,8 +83,8 @@ def playUNO():
                     print('waiting')
                     frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                     change = (np.average(frame-prev))
-                    if (np.abs(change-prevChange)) > 1:
-                        movement = 30
+                    if (np.abs(change-prevChange)) > 0.9:
+                        movement = 20
                     if movement == 1:
                         movement = 0
                         turn = 0
@@ -144,6 +144,12 @@ def playUNO():
                             humanHand += 1
 
                     elif robotThought == 2:
+                        if discard == 'w':
+                            print('Please declare the colour')
+                            declaredColour = audio.classify()
+                        elif discard == 'W':
+                            print('please declare the colour')
+                            declaredColour = audio.classify()
                         hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
                         print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
                         robotThought = 3
