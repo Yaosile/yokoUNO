@@ -147,12 +147,19 @@ def playUNO():
                         if discard == 'w':
                             print('Please declare the colour')
                             declaredColour = audio.classify()
+                            hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
+                            print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
                         elif discard == 'W':
-                            print('please declare the colour')
+                            print('please declare the colour')  
                             declaredColour = audio.classify()
-                        hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
-                        print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
-                        robotThought = 3
+                            for i in range(4):
+                                hand1, hand2 = logic.drawCard(hand1, hand2, frame, np.argmin([len(hand1), len(hand2)]))
+                            robotThought = 0
+                            turn = 0
+
+                    robotThought = 3
+
+
 
                 
 
