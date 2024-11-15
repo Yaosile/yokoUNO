@@ -121,7 +121,7 @@ def getAudioRecording():
                     rate=RATE, input=True,
                     frames_per_buffer=CHUNK)
     recording = []
-    print('GO')
+    print('Please state the colour')
     while True:
         data = stream.read(CHUNK)
         data = byte2int(data)

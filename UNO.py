@@ -119,11 +119,9 @@ def playUNO():
                     if robotThought == 0:
                         frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                         card = logic.getCardPlayed(frame)
-                        print(card)
                         cardBuffer.append(card)
                         cardBuffer.pop(0)
                         timeout += 1
-                        print('.',end='')
                         # if len(set(cardBuffer)) == 1:
                         print(f'looks like a human played a {card}')
                         robotThought = 1
@@ -139,6 +137,9 @@ def playUNO():
                             discard = card
                             print('that is a valid move')
                             robotThought = 2
+                            if card[1] in ['r', 's']:
+                                turn = 0
+                                robotThought = 0
                         else:
                             print('that move is invalid, please take it back')
                             robotThought = 0 #reset robot thought
@@ -149,8 +150,9 @@ def playUNO():
                         if discard == 'w':
                             print('Please declare the colour')
                             declaredColour = audio.classify()
+                            discard = declaredColour + '0'
                             hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
-                            print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
+                            logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame)
                         elif discard == 'W':
                             print('please declare the colour')  
                             declaredColour = audio.classify()
@@ -159,10 +161,17 @@ def playUNO():
                                 hand1, hand2 = logic.drawCard(hand1, hand2, drawLocation, frame, np.argmin([len(hand1), len(hand2)]), topMostCard)
                             robotThought = 0
                             turn = 0
-
-                        robotThought = 3
-
-
+                            rc.init()
+                        elif discard[1] == '+':
+                            for i in range(2):
+                                topMostCard = drawPile.pop(0)
+                                hand1, hand2 = logic.drawCard(hand1, hand2, drawLocation, frame, np.argmin([len(hand1), len(hand2)]), topMostCard)
+                            robotThought = 0
+                            turn = 0
+                            rc.init()
+                        else:
+                            hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
+                            logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame)
 
                 
 

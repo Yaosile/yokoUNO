@@ -124,4 +124,5 @@ def playCard(hand1, hand2, choice):
 
     for i in hands:
         print(hands)
+    
     return hands[0], hands[1]

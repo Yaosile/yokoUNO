@@ -169,7 +169,7 @@ def drawCard():
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zu'].encode())
     ser.close()
-    time.sleep(1)
+    time.sleep(2)
 
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zs'].encode())
@@ -179,7 +179,7 @@ def drawCard():
     ser = serial.Serial(serialPort, 115200)
     ser.write(commands['zu'].encode())
     ser.close()
-    time.sleep(abs(pickTime - 1)+1)
+    time.sleep(abs(pickTime - 1)+2)
 
 def playCard():
     ser = serial.Serial(serialPort, 115200)
