@@ -118,6 +118,7 @@ def playUNO():
                     if robotThought == 0:
                         frame = myJazz.drawCircle(frame, *discardLocation, inverted=True)
                         card = logic.getCardPlayed(frame)
+                        print(card)
                         cardBuffer.append(card)
                         cardBuffer.pop(0)
                         timeout += 1
