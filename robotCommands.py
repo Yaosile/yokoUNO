@@ -13,7 +13,7 @@ commands = {
     'zu': 'zu',
 }
 travelTime = 2
-pickUpHands = 5
+pickUpHands = 6
 dropHands = 4
 
 suctionTime = 3
