@@ -6,6 +6,8 @@ import time
 import robotCommands as rc
 import unoLogic as logic
 
+import serial
+
 from scipy import signal
 
 predefinedLocations = {
@@ -32,6 +34,14 @@ blur = blur/blur.sum()
 now = time.time_ns()
 def determineLocations():
     rc.init()
+    while True:
+        location = input('please enter a location to calibrate')
+        if location == 'q':
+            break
+        if location in rc.commands:
+            ser = serial.Serial(rc.serialPort, 115200)
+            ser.write(rc.commands[location].encode())
+            ser.close()
 def PlayUNO():
     hand1 = ['r+','y5','g4']
     hand2 = ['yr','w','g8','rs']
