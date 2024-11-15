@@ -31,7 +31,6 @@ travelTime = 5
 
 blur = np.ones((5,5))
 blur = blur/blur.sum()
-now = time.time_ns()
 def determineLocations():
     rc.init()
     while True:
