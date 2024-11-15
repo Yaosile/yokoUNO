@@ -158,7 +158,7 @@ def playUNO():
                             robotThought = 0
                             turn = 0
 
-                    robotThought = 3
+                        robotThought = 3
 
 
 
