@@ -41,12 +41,11 @@ def determineLocations():
             ser = serial.Serial(rc.serialPort, 115200)
             ser.write(rc.commands[location].encode())
             ser.close()
-def PlayUNO():
+def playUNO():
     hand1 = ['r+','y5','g4']
     hand2 = ['yr','w','g8','rs']
     discard = 'r6'
     card = 'W'
-
     cardBuffer = ['WW','WW','WW', 'WW']
     turn = -1 #0 for Human 1 For Robot
     robotThought = 0
@@ -67,6 +66,7 @@ def PlayUNO():
 
     video_capture = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
     yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
+    rc.init()
     if video_capture.isOpened():
         try:
             cv2.namedWindow(boardFrame, cv2.WINDOW_AUTOSIZE)
@@ -146,6 +146,7 @@ def PlayUNO():
                     elif robotThought == 2:
                         hand1, hand2, cardToPlay = logic.getMoveToPlay(hand1, hand2, discard)
                         print(logic.makeMove(hand1, hand2, cardToPlay, drawLocation, frame))
+                        robotThought = 3
 
                 
 

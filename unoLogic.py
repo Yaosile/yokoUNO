@@ -2,6 +2,7 @@ import myOwnLibrary as myJazz
 import cv2
 import numpy as np
 from numpy import asanyarray as ana
+import robotCommands as rc
 
 colours = {
     'r':'Red',
@@ -100,7 +101,21 @@ def playCard(hand1, hand2, choice):
 
     for i in range(depth):#shuffling cards around
         hands[1-whatHand].append(hands[whatHand].pop())
+
+        if whatHand == 1:
+            rc.pickUpHand2()
+            rc.dropHand1()
+        else:
+            rc.pickUpHand1()
+            rc.dropHand1()
     hands[whatHand].pop()
+
+    if whatHand == 1:
+        rc.pickUpHand2()
+    else:
+        rc.pickUpHand1()
+    rc.playCard()
+
     for i in hands:
         print(hands)
     return hands[0], hands[1]
