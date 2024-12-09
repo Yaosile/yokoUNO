@@ -3,6 +3,8 @@ from numpy import asanyarray as ana
 import cv2
 import feedForwardybackwards as cnn
 
+from matplotlib import pyplot as plt
+
 from scipy import signal
 # import numba
 
@@ -813,6 +815,19 @@ def positive(array):
     condition = array < 0
     array[condition] = 0
     return array
+
+def adaptiveThreshold(img):
+    # img = cv2.adaptiveThreshold(img.astype(np.uint8), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, blockSize=11, C=10)
+
+
+    size = 3
+    C = 100
+    kernel = gaussianKernelGenerator(size)
+    gaussian = convolveMultiplication(img, kernel, mode = 'same') - C
+    locations = np.where(gaussian < 0)
+    img = np.zeros_like(img)
+    img[locations] = 255
+    return img
 
 def histogram_equalization(image):
     # Flatten the image array and compute histogram

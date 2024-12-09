@@ -180,10 +180,11 @@ def classify():
     print()
     now = cnn.convolutionalSection(getAudioRecording().reshape(20,-1), kernelMax=4)
     guess = np.round(cnn.feedForward([now], weights), 4)
+    guess = guess[0]
     print(guess)
     print(np.std(guess))
-    print(f'Guessed: {WORDS[np.argmax(guess)]}')
-    return WORDS[np.argmax(guess)]
+    print(f'Guessed: {WORDS[np.argmax(guess[:-1])]}')
+    return WORDS[np.argmax(guess[:-1])]
 
 def checkHealth():
     weights = []
