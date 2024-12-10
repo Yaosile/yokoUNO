@@ -20,6 +20,7 @@ mtx = ana([
 ])
 
 lookUp = ['0','1','2','3','4','5','6','7','8','9','+','r','s']
+angleLookUp = np.load('angleLUT.npy')
 
 def linear_interpolate(v1, v2, fraction):
     return (1 - fraction) * v1 + fraction * v2
@@ -61,7 +62,8 @@ def bilinear_interpolation(image, x, y):
     return P
 
 def scaleImage(image, width, height):
-    if image.shape[2] > 1:
+    return cv2.resize(image, (width, height), interpolation=cv2.INTER_LINEAR)
+    if len(image.shape) > 2:
         temp = np.zeros((height, width, image.shape[2]))
     else:
         temp = np.zeros((height,width))
@@ -240,6 +242,8 @@ def boundingBox(frame):
     '''MY OWN'''
     frame = frame.copy()
     valid = np.where(frame > 254)
+    if valid == ():
+        return 0,0,0,0
     t = valid[0][0]
     b = valid[0][-1]
     l = np.min(valid[1])
@@ -261,6 +265,15 @@ def getRadius(frame, centreX, centreY):
     return i
 
 def rotate(frame, theta):
+    theta = np.rad2deg(theta)
+    (h, w) = frame.shape[:2]
+    center = (w // 2, h // 2)
+    rotation_matrix = cv2.getRotationMatrix2D(center, -theta, 1)
+    rotated_image = cv2.warpAffine(frame, rotation_matrix, (w, h))
+    return rotated_image
+
+
+
     '''MY OWN'''
     "Rotates an image, but only a square one"
     radius = frame.shape[0]/2
@@ -276,41 +289,72 @@ def rotate(frame, theta):
     rotated = frame[yd,xd]
     return rotated
 
-def isolateCard(frame, originalImage, thresh = 50):
-    '''MY OWN'''
-    blur = np.ones((5,5))
-    blur /= blur.sum()
-    # frame = frame.copy()
-    # originalImage = originalImage.copy()
-    output = frame.astype(float)
-    output = rgb2hsv(output,Calculations='SV')
-    output = (output[:,:,1])*output[:,:,2]*255
-    output = threshHold(output, thresh)
-    output = convolveMultiplication(output, blur)
-    output = threshHold(output, 254)
-    frame = output.copy()
-    t,b,l,right = boundingBox(frame)
-    cx,cy = midPoint(t,b,l,right)
-    r = getRadius(frame, cx,cy)
-    theta = getRotation(frame, cx,cy,r)
-    temp = rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
-    t,b,l,right = boundingBox(temp)
-    r = 100
-    temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
-    # temp[t,:] = [255,0,0]
-    # temp[b,:] = [255,0,0]
-    # temp[:,l] = [255,0,0]
-    # temp[:,r] = [255,0,0]
-    # temp[t,:] = 255
-    # temp[b,:] = 255
-    # temp[:,l] = 255
-    # temp[:,r] = 255
-    # return temp[t-4:b-4,l-4:right-4]
-    yThick = 80
-    xThick = 60
-    temp = temp[r-yThick:r+yThick, r-xThick:r+xThick]
-    return temp, cx, cy
-    return temp[t:b,l:right]
+def drawBox(frame,t,b,l,r):
+    frame[t,:] = 255
+    frame[b,:] = 255
+    frame[:,l] = 255
+    frame[:,r] = 255
+
+def getRatio(t,b,l,r):
+    return (r-l)/(b-t)
+
+def angleLUT(ratio):
+    angle = (np.argmin(np.abs(angleLookUp - ratio)))/20
+    return angle
+
+def isolateCard(frame):
+    '''Takes in colour image of card'''
+    og = frame.copy()
+    frame = rgb2hsv(frame, 'SV')
+    frame = frame[...,1]*frame[...,2]*255
+    frame = frame-frame.min()
+    frame = (frame/frame.max())*255
+    frame[frame>100] = 255
+    frame[frame<=100] = 0
+    t,b,l,r = boundingBox(frame)
+    ratio = getRatio(t,b,l,r)
+    cx,cy = midPoint(t,b,l,r)
+    angle = angleLUT(ratio)
+    frame = rotate(frame, np.deg2rad(angle)) #card is now correct orientation
+    t,b,l,r = boundingBox(frame)
+    og = rotate(og, np.deg2rad(angle))
+    return og[t:b,l:r]
+
+# def isolateCard(frame, originalImage, thresh = 50):
+#     '''MY OWN'''
+#     blur = np.ones((5,5))
+#     blur /= blur.sum()
+#     # frame = frame.copy()
+#     # originalImage = originalImage.copy()
+#     output = frame.astype(float)
+#     output = rgb2hsv(output,Calculations='SV')
+#     output = (output[:,:,1])*output[:,:,2]*255
+#     output = threshHold(output, thresh)
+#     output = convolveMultiplication(output, blur)
+#     output = threshHold(output, 254)
+#     frame = output.copy()
+#     t,b,l,right = boundingBox(frame)
+#     cx,cy = midPoint(t,b,l,right)
+#     r = getRadius(frame, cx,cy)
+#     theta = getRotation(frame, cx,cy,r)
+#     temp = rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
+#     t,b,l,right = boundingBox(temp)
+#     r = 100
+#     temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
+#     # temp[t,:] = [255,0,0]
+#     # temp[b,:] = [255,0,0]
+#     # temp[:,l] = [255,0,0]
+#     # temp[:,r] = [255,0,0]
+#     # temp[t,:] = 255
+#     # temp[b,:] = 255
+#     # temp[:,l] = 255
+#     # temp[:,r] = 255
+#     # return temp[t-4:b-4,l-4:right-4]
+#     # yThick = 80
+#     # xThick = 60
+#     # temp = temp[r-yThick:r+yThick, r-xThick:r+xThick]
+#     # return temp, cx, cy
+#     return temp[t:b,l:right]
 
 def adjust_contrast(image, alpha, beta):
     """
@@ -389,19 +433,22 @@ def getCardColour(card:np.ndarray):
         colour = colours[5]
     return temp, colour
 
-def getCardValue(card:np.ndarray):
-    weights = []
-    for i in range(2):
-        weights.append(np.load(f'imageWeights/{i}.npy'))
+def getCardValue(card:np.ndarray):...
 
-    face = card[6:41,10:45]
-    face = face.sum(axis=2)/3
-    face[face>254] = 1
-    face[face<1] = 0
-    face[face>1] = 0.5
-    face = [cnn.convolutionalSection(face,kernelMax=2)]
-    guess = cnn.feedForward(face, weights)
-    return lookUp[np.argmax(guess)]
+
+# def getCardValue(card:np.ndarray):
+#     weights = []
+#     for i in range(2):
+#         weights.append(np.load(f'imageWeights/{i}.npy'))
+
+#     face = card[6:41,10:45]
+#     face = face.sum(axis=2)/3
+#     face[face>254] = 1
+#     face[face<1] = 0
+#     face[face>1] = 0.5
+#     face = [cnn.convolutionalSection(face,kernelMax=2)]
+#     guess = cnn.feedForward(face, weights)
+#     return lookUp[np.argmax(guess)]
 
 def getRotation(frame, centreX, centreY, radius):
     '''MY OWN'''
@@ -816,15 +863,72 @@ def positive(array):
     array[condition] = 0
     return array
 
-def adaptiveThreshold(img):
-    # img = cv2.adaptiveThreshold(img.astype(np.uint8), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, blockSize=11, C=10)
+def apply_clahe(image, clip_limit=2.0, tile_grid_size=(8, 8)):
+    """
+    Apply Contrast Limited Adaptive Histogram Equalization (CLAHE) to an image.
 
+    Parameters:
+        image_path (str): Path to the input image file.
+        clip_limit (float): Threshold for contrast clipping (default=2.0).
+        tile_grid_size (tuple): Size of the grid for the histogram equalization 
+                                (default=(8, 8)).
 
-    size = 3
-    C = 100
+    Returns:
+        numpy.ndarray: CLAHE-enhanced image.
+    """
+    # Read the input image
+    
+    # Convert the image to LAB color space
+    lab_image = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
+    
+    # Split the LAB image into its components
+    l, a, b = cv2.split(lab_image)
+    
+    # Apply CLAHE to the L (lightness) channel
+    clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=tile_grid_size)
+    l_clahe = clahe.apply(l)
+    
+    # Merge the CLAHE-enhanced L channel with the original A and B channels
+    lab_clahe = cv2.merge((l_clahe, a, b))
+    
+    # Convert the LAB image back to BGR color space
+    result_image = cv2.cvtColor(lab_clahe, cv2.COLOR_LAB2BGR)
+    
+    return result_image
+
+def removeNoise(img, size=3):
+    img = cv2.blur(img, (size,size))
+    img[img<255] = 0
+    img = cv2.blur(img, (size, size))
+    img[img>0] = 255
+    return img
+
+def compareTemplate(ref, template):
+    oneCardWidth = ref.shape[1]
+    templates = template.shape[1]//oneCardWidth
+    score = []
+    for i in range(templates):
+        compare = min(np.sum((ref//255 + rot90(template[:,i*oneCardWidth:(i+1)*oneCardWidth,...],2)//255)%2), np.sum((ref//255 + template[:,i*oneCardWidth:(i+1)*oneCardWidth,...]//255)%2))
+        score.append(compare)
+    return np.argmin(score)
+
+def isolateValue(card:np.ndarray):
+    # img = apply_clahe(card)
+    hsv = rgb2hsv(card, 'SV')
+    saansColour = threshHold((1-hsv[...,1]), 200/255)
+    white = threshHold(hsv[...,2],100/255)
+    img = (saansColour*white)/255
+    img = removeNoise(img, size= 11)
+
+    return img
+    # img = (255-adaptiveThreshold(img)*hsv[...,2])
+    # img = adaptiveThreshold(img,C=100,size=1)
+
+def adaptiveThreshold(img, C = -2, size = 5):
+    # img = cv2.adaptiveThreshold(img.astype(np.uint8), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, blockSize=size, C=C)
     kernel = gaussianKernelGenerator(size)
     gaussian = convolveMultiplication(img, kernel, mode = 'same') - C
-    locations = np.where(gaussian < 0)
+    locations = np.where(gaussian < img)
     img = np.zeros_like(img)
     img[locations] = 255
     return img
@@ -832,7 +936,7 @@ def adaptiveThreshold(img):
 def histogram_equalization(image):
     # Flatten the image array and compute histogram
     image = image.astype(np.uint8)
-    hist, bins = np.histogram(image.flatten(), 256, [0, 256])
+    hist, bins = np.histogram(image.flatten(), 256, [0, 255])
     
     # Compute cumulative distribution function (CDF)
     cdf = hist.cumsum()

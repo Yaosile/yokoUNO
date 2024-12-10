@@ -7,6 +7,7 @@ import scipy
 import scipy.signal
 
 from PIL import Image
+import pillow_heif
 
 import MelMyBoy
 import myOwnLibrary as myJazz
@@ -14,20 +15,50 @@ from matplotlib import pyplot as plt
 import matplotlib.gridspec as gridspec
 import feedForwardybackwards as cnn
 import os
+import cv2
 
 import MelMyBoy as audio
 
 dira = 'CardSnaps/'
 
+cardCount = 13
+
+guessIndex = ['+', *[f'{i}' for i in range(10)], 'r', 's']
+
+template = ana(Image.open('templates/template.png'))
+
+dimensions = (template.shape[1]//cardCount, template.shape[0])
+print(dimensions)
 cards = os.listdir(dira)
-choice = np.random.choice(cards)
-choice = 'b+.png'
 
-img = ana(Image.open(dira + choice))[...,::-1]
-img = myJazz.rgb2hsv(img, 'SV')
-img = (1-img[...,1])*img[...,2]*255
+guesses = 0
+correctness = 0
+incorrect = []
+for choice in cards:
+    correct = choice[1]
+    ref = ana(Image.open(dira + choice))
+    ref = myJazz.scaleImage(ref,*dimensions)
+    ref = myJazz.isolateValue(ref)
+    guess = guessIndex[myJazz.compareTemplate(ref, template)]
+    print(correct, guess)
+    guesses += 1
+    if correct == guess:
+        correctness += 1
+    else:
+        incorrect.append(choice)
 
-img = myJazz.adaptiveThreshold(img)
-img = Image.fromarray(img.astype(np.uint8))
-print(choice)
-img.save('temp.png')
+print(correctness, guesses, correctness/guesses)
+print(incorrect)
+
+# incorrect = ['b8.png', 'r3.png', 'r8.png', 'b4.png', 'b3.png', 'y8.png']
+# choice = incorrect[2]
+# choice = 'b0.png'
+# ref = ana(Image.open(dira + choice))
+# ref = myJazz.scaleImage(ref,*dimensions)
+
+ref = myJazz.isolateValue(ref)
+
+# print(myJazz.compareTemplate(ref, template))
+
+img = Image.fromarray(ref.astype(np.uint8))
+img.show()
