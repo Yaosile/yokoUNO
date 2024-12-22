@@ -313,11 +313,10 @@ def isolateCard(frame):
     frame = (frame/frame.max())*255
     frame[frame>100] = 255
     frame[frame<=100] = 0
-    return frame
     t,b,l,r = boundingBox(frame)
     ratio = getRatio(t,b,l,r)
     cx,cy = midPoint(t,b,l,r)
-    angle = angleLUT(ratio)
+    angle = getRotation(frame, cx, cy, 200)
     frame = rotate(frame, np.deg2rad(angle)) #card is now correct orientation
     t,b,l,r = boundingBox(frame)
     og = rotate(og, np.deg2rad(angle))
