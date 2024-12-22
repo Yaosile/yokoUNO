@@ -19,46 +19,54 @@ import cv2
 
 import MelMyBoy as audio
 
-dira = 'CardSnaps/'
+mapX = np.load('mapX.npy')
+mapY = np.load('mapY.npy')
 
-cardCount = 13
+xDiff = np.max(mapX) - np.min(mapX)
+yDiff = np.max(mapY) - np.min(mapY)
+print(xDiff, yDiff)
 
-guessIndex = ['+', *[f'{i}' for i in range(10)], 'r', 's']
 
-template = ana(Image.open('templates/template.png'))
+# dira = 'CardSnaps/'
 
-dimensions = (template.shape[1]//cardCount, template.shape[0])
-print(dimensions)
-cards = os.listdir(dira)
+# cardCount = 13
 
-guesses = 0
-correctness = 0
-incorrect = []
-for choice in cards:
-    correct = choice[1]
-    ref = ana(Image.open(dira + choice))
-    ref = myJazz.scaleImage(ref,*dimensions)
-    ref = myJazz.isolateValue(ref)
-    guess = guessIndex[myJazz.compareTemplate(ref, template)]
-    print(correct, guess)
-    guesses += 1
-    if correct == guess:
-        correctness += 1
-    else:
-        incorrect.append(choice)
+# guessIndex = ['+', *[f'{i}' for i in range(10)], 'r', 's']
 
-print(correctness, guesses, correctness/guesses)
-print(incorrect)
+# template = ana(Image.open('templates/template.png'))
 
-# incorrect = ['b8.png', 'r3.png', 'r8.png', 'b4.png', 'b3.png', 'y8.png']
-# choice = incorrect[2]
-# choice = 'b0.png'
-# ref = ana(Image.open(dira + choice))
-# ref = myJazz.scaleImage(ref,*dimensions)
+# dimensions = (template.shape[1]//cardCount, template.shape[0])
+# print(dimensions)
+# cards = os.listdir(dira)
 
-ref = myJazz.isolateValue(ref)
+# guesses = 0
+# correctness = 0
+# incorrect = []
+# for choice in cards:
+#     correct = choice[1]
+#     ref = ana(Image.open(dira + choice))
+#     ref = myJazz.scaleImage(ref,*dimensions)
+#     ref = myJazz.isolateValue(ref)
+#     guess = guessIndex[myJazz.compareTemplate(ref, template)]
+#     print(correct, guess)
+#     guesses += 1
+#     if correct == guess:
+#         correctness += 1
+#     else:
+#         incorrect.append(choice)
 
-# print(myJazz.compareTemplate(ref, template))
+# print(correctness, guesses, correctness/guesses)
+# print(incorrect)
 
-img = Image.fromarray(ref.astype(np.uint8))
-img.show()
+# # incorrect = ['b8.png', 'r3.png', 'r8.png', 'b4.png', 'b3.png', 'y8.png']
+# # choice = incorrect[2]
+# # choice = 'b0.png'
+# # ref = ana(Image.open(dira + choice))
+# # ref = myJazz.scaleImage(ref,*dimensions)
+
+# ref = myJazz.isolateValue(ref)
+
+# # print(myJazz.compareTemplate(ref, template))
+
+# img = Image.fromarray(ref.astype(np.uint8))
+# img.show()

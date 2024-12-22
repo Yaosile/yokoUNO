@@ -12,6 +12,8 @@ scaling = 1
 cameraWidth = 3264//scaling
 cameraHeight = 2464//scaling
 
+boardSize = ()
+
 dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
 mtx = ana([
     [1.734239392051136E3,0,1.667798059392088E3],
