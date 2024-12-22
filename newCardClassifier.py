@@ -50,8 +50,8 @@ def captureCard():
                     col = myJazz.getCardColour(card)
                     print(col)
                     card = myJazz.isolateValue(card)
-                    guess = myJazz.compareTemplate(card)
-                    print(myJazz.guessIndex[guess])
+                    # guess = myJazz.compareTemplate(card)
+                    # print(myJazz.guessIndex[guess])
 
 
                     # if col not in ['Wild', 'Wild+4']:
