@@ -34,7 +34,6 @@ def captureCard():
                     break
                 elif key == ord(' '):
                     card = frame.copy()
-                    card[card.shape[0]//2:,:] = 0
                     lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
                     # Split LAB channels
                     l, a, b = cv2.split(lab)
