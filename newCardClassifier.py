@@ -34,27 +34,30 @@ def captureCard():
                     break
                 elif key == ord(' '):
                     card = frame.copy()
-                    img = Image.fromarray(card.astype(np.uint8))
-                    img.save('test.png')
-                    # lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
-                    # # Split LAB channels
-                    # l, a, b = cv2.split(lab)
-                    # # Apply CLAHE to the L channel
-                    # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-                    # cl = clahe.apply(l)
-                    # # Merge channels and convert back to BGR color space
-                    # limg = cv2.merge((cl, a, b))
-                    # card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-                    # card = card - card.min()
-                    # card = card/card.max()
-                    # card = card * 255
-                    # card = myJazz.isolateCard(card)
-                    # # card, col = myJazz.getCardColour(card)
-                    # # print(col)
-                    # # if col not in ['Wild', 'Wild+4']:
-                    # #     print(col, myJazz.getCardValue(card))
-                    # # else:
-                    # #     print(col)
+                    lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
+                    # Split LAB channels
+                    l, a, b = cv2.split(lab)
+                    # Apply CLAHE to the L channel
+                    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+                    cl = clahe.apply(l)
+                    # Merge channels and convert back to BGR color space
+                    limg = cv2.merge((cl, a, b))
+                    card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+                    card = card - card.min()
+                    card = card/card.max()
+                    card = card * 255
+                    card = myJazz.isolateCard(card)
+                    card, col = myJazz.getCardColour(card)
+                    print(col)
+                    card = myJazz.isolateValue(card)
+                    guess = myJazz.compareTemplate(card)
+                    print(myJazz.guessIndex[guess])
+
+
+                    # if col not in ['Wild', 'Wild+4']:
+                    #     print(col, myJazz.getCardValue(card))
+                    # else:
+                    #     print(col)
         finally:
             video_capture.release()
             cv2.destroyAllWindows()

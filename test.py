@@ -19,6 +19,31 @@ import cv2
 
 import MelMyBoy as audio
 
+
+card = ana(Image.open('test.png'))[...,::-1]
+
+lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
+# Split LAB channels
+l, a, b = cv2.split(lab)
+# Apply CLAHE to the L channel
+clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+cl = clahe.apply(l)
+# Merge channels and convert back to BGR color space
+limg = cv2.merge((cl, a, b))
+card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+card = card - card.min()
+card = card/card.max()
+card = card * 255
+
+card = myJazz.isolateCard(card)
+card = myJazz.isolateValue(card)
+guess = myJazz.compareTemplate(card)
+
+print(myJazz.guessIndex[guess])
+
+img = Image.fromarray(card.astype(np.uint8))
+img.show()
+
 # mapX = np.load('xMap.npy')
 # mapY = np.load('yMap.npy')
 
@@ -27,9 +52,6 @@ import MelMyBoy as audio
 # print(mapX.shape, mapY.shape)
 # print(xDiff, yDiff)
 
-
-angle = np.load('angleLUT.npy')
-print(angle.shape)
 # dira = 'CardSnaps/'
 
 # cardCount = 13

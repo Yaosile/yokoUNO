@@ -6,6 +6,7 @@ import feedForwardybackwards as cnn
 from matplotlib import pyplot as plt
 
 from scipy import signal
+from PIL import Image
 # import numba
 
 scaling = 1
@@ -13,6 +14,9 @@ cameraWidth = 3264//scaling
 cameraHeight = 2464//scaling
 
 boardSize = ()
+
+guessIndex = ['+', *[f'{i}' for i in range(10)], 'r', 's']
+template = ana(Image.open('templates/template.png'))
 
 dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
 mtx = ana([
@@ -313,10 +317,12 @@ def isolateCard(frame):
     frame = (frame/frame.max())*255
     frame[frame>100] = 255
     frame[frame<=100] = 0
+    frame = removeNoise(frame,5)
     t,b,l,r = boundingBox(frame)
     ratio = getRatio(t,b,l,r)
     cx,cy = midPoint(t,b,l,r)
-    angle = angleLUT(ratio)
+    radius = getRadius(frame, cx, cy)
+    angle = -np.rad2deg(getRotation(frame, cx, cy, radius))
     frame = rotate(frame, np.deg2rad(angle)) #card is now correct orientation
     t,b,l,r = boundingBox(frame)
     og = rotate(og, np.deg2rad(angle))
@@ -433,7 +439,7 @@ def getCardColour(card:np.ndarray):
         colour = colours[4]
     else:
         colour = colours[5]
-    return temp, colour
+    return colour
 
 def getCardValue(card:np.ndarray):...
 
@@ -905,9 +911,11 @@ def removeNoise(img, size=3):
     img[img>0] = 255
     return img
 
-def compareTemplate(ref, template):
-    oneCardWidth = ref.shape[1]
-    templates = template.shape[1]//oneCardWidth
+def compareTemplate(ref, template=template):
+    oneCardWidth = template.shape[1]//len(guessIndex)
+    oneCardHeight = template.shape[0]
+    ref = scaleImage(ref,oneCardWidth, oneCardHeight)
+    templates = len(guessIndex)
     score = []
     for i in range(templates):
         compare = min(np.sum((ref//255 + rot90(template[:,i*oneCardWidth:(i+1)*oneCardWidth,...],2)//255)%2), np.sum((ref//255 + template[:,i*oneCardWidth:(i+1)*oneCardWidth,...]//255)%2))
@@ -920,7 +928,7 @@ def isolateValue(card:np.ndarray):
     saansColour = threshHold((1-hsv[...,1]), 200/255)
     white = threshHold(hsv[...,2],100/255)
     img = (saansColour*white)/255
-    img = removeNoise(img, size= 11)
+    img = removeNoise(img, size= 3)
 
     return img
     # img = (255-adaptiveThreshold(img)*hsv[...,2])
