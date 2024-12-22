@@ -313,6 +313,7 @@ def isolateCard(frame):
     frame = (frame/frame.max())*255
     frame[frame>100] = 255
     frame[frame<=100] = 0
+    return frame
     t,b,l,r = boundingBox(frame)
     ratio = getRatio(t,b,l,r)
     cx,cy = midPoint(t,b,l,r)
