@@ -49,8 +49,8 @@ def calibrationPoints():
                     card = (card/card.max())*255
                     card[card>100] = 255
                     card[card<=100] = 0
-                    card = myJazz.removeNoise(frame,5)
-                    t,b,l,r = myJazz.boundingBox(frame)
+                    card = myJazz.removeNoise(card,5)
+                    t,b,l,r = myJazz.boundingBox(card)
                     cx,cy = myJazz.midPoint(t,b,l,r)
                     x,y = myJazz.pixelToCartesian(cx,cy,frame.shape[1],frame.shape[0])
                     l,r = myJazz.cartesianToScara(x,y)
