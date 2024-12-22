@@ -130,7 +130,7 @@ def arucoCorners(frame: np.ndarray):
 def pixelToCartesian(px,py,imageWidth,imageHeight): 
     '''MY OWN'''
     boardDimensions = (605, 517) #height, width in mm
-    y = (imageHeight - py)*(boardDimensions[0]/imageHeight)
+    y = (imageHeight - py)*(boardDimensions[0]/imageHeight)-65
     x = (px - imageWidth/2)*(boardDimensions[1]/imageWidth)
     return x,y
 
