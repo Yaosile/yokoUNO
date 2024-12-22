@@ -56,7 +56,7 @@ def calibrationPoints():
                     print()
                     print(x,y)
                     l,r = myJazz.cartesianToScara(x,y)
-                    l,r = int(np.rad2deg(l)*1000), int(np.rad2deg(r)*1000)
+                    l,r = int((np.rad2deg(l)+45)*1000), int((np.rad2deg(r)+45)*1000)
                     print(l,r)
         finally:
             video_capture.release()
