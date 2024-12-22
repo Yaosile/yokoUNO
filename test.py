@@ -19,8 +19,8 @@ import cv2
 
 import MelMyBoy as audio
 
-mapX = np.load('mapX.npy')
-mapY = np.load('mapY.npy')
+mapX = np.load('xMap.npy')
+mapY = np.load('yMap.npy')
 
 xDiff = np.max(mapX) - np.min(mapX)
 yDiff = np.max(mapY) - np.min(mapY)
