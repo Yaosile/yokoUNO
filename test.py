@@ -19,15 +19,17 @@ import cv2
 
 import MelMyBoy as audio
 
-mapX = np.load('xMap.npy')
-mapY = np.load('yMap.npy')
+# mapX = np.load('xMap.npy')
+# mapY = np.load('yMap.npy')
 
-xDiff = np.max(mapX) - np.min(mapX)
-yDiff = np.max(mapY) - np.min(mapY)
-print(mapX.shape, mapY.shape)
-print(xDiff, yDiff)
+# xDiff = np.max(mapX) - np.min(mapX)
+# yDiff = np.max(mapY) - np.min(mapY)
+# print(mapX.shape, mapY.shape)
+# print(xDiff, yDiff)
 
 
+angle = np.load('angleLUT.npy')
+print(angle.shape)
 # dira = 'CardSnaps/'
 
 # cardCount = 13
