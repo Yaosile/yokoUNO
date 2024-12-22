@@ -44,10 +44,10 @@ def captureCard():
                     # Merge channels and convert back to BGR color space
                     limg = cv2.merge((cl, a, b))
                     card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-                    # card = card - card.min()
-                    # card = card/card.max()
-                    # card = card * 255
-                    # card = myJazz.isolateCard(card)
+                    card = card - card.min()
+                    card = card/card.max()
+                    card = card * 255
+                    card = myJazz.isolateCard(card)
                     # card, col = myJazz.getCardColour(card)
                     # print(col)
                     # if col not in ['Wild', 'Wild+4']:
