@@ -47,7 +47,7 @@ def captureCard():
                     card = card/card.max()
                     card = card * 255
                     card = myJazz.isolateCard(card)
-                    card, col = myJazz.getCardColour(card)
+                    col = myJazz.getCardColour(card)
                     print(col)
                     card = myJazz.isolateValue(card)
                     guess = myJazz.compareTemplate(card)
