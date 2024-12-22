@@ -53,8 +53,8 @@ def calibrationPoints():
                     t,b,l,r = myJazz.boundingBox(frame)
                     cx,cy = myJazz.midPoint(t,b,l,r)
                     x,y = myJazz.pixelToCartesian(cx,cy,frame.shape[1],frame.shape[0])
-                    command = myJazz.cartesianToScara(x,y)
-                    print(command)
+                    l,r = myJazz.cartesianToScara(x,y)
+                    l,r = int(np.rad2deg(l)*1000), int(np.rad2deg(r)*1000)
         finally:
             video_capture.release()
             cv2.destroyAllWindows()
