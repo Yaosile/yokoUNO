@@ -113,7 +113,6 @@ def finalFootage():
             while True:
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
-                print(frame.shape)
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
                     cv2.imshow(frameName,frame[::2, ::2])
                 else:
@@ -130,7 +129,6 @@ def finalFootage():
 
 if __name__ == '__main__':
     boardSize = (int(517*2), int(605*2))
-    boardSize = (100, 100)
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
     snap = unDistortedFootage()
