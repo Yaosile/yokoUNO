@@ -7,7 +7,7 @@ import scipy
 import scipy.signal
 
 from PIL import Image
-import pillow_heif
+# import pillow_heif
 
 import MelMyBoy
 import myOwnLibrary as myJazz
