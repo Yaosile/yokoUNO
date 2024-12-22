@@ -24,6 +24,7 @@ mapY = np.load('mapY.npy')
 
 xDiff = np.max(mapX) - np.min(mapX)
 yDiff = np.max(mapY) - np.min(mapY)
+print(mapX.shape, mapY.shape)
 print(xDiff, yDiff)
 
 

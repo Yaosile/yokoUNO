@@ -129,7 +129,8 @@ def finalFootage():
         print('Failed to open camera')
 
 if __name__ == '__main__':
-    boardSize = (517*2, 605*2)
+    boardSize = (int(517*2), int(605*2))
+    boardSize = (100, 100)
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
     snap = unDistortedFootage()
