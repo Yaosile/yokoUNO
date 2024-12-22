@@ -16,7 +16,7 @@ cameraHeight = 2464//scaling
 boardSize = ()
 
 guessIndex = ['+', *[f'{i}' for i in range(10)], 'r', 's']
-template = ana(Image.open('templates/template.png'))
+template = ana(Image.open('templates/template.png'))[::8,::8]
 
 dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
 mtx = ana([

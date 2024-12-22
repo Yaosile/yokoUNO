@@ -19,7 +19,6 @@ import cv2
 
 import MelMyBoy as audio
 
-
 card = ana(Image.open('test.png'))[...,::-1]
 
 lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
@@ -41,8 +40,8 @@ guess = myJazz.compareTemplate(card)
 
 print(myJazz.guessIndex[guess])
 
-img = Image.fromarray(card.astype(np.uint8))
-img.show()
+# img = Image.fromarray(card.astype(np.uint8))
+# img.show()
 
 # mapX = np.load('xMap.npy')
 # mapY = np.load('yMap.npy')
