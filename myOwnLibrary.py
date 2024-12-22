@@ -130,18 +130,18 @@ def arucoCorners(frame: np.ndarray):
 def pixelToCartesian(px,py,imageWidth,imageHeight): 
     '''MY OWN'''
     boardDimensions = (605, 517) #height, width in mm
-    y = (imageHeight - py)*(boardDimensions[0]/imageHeight)-65
+    y = ((imageHeight - py)*(boardDimensions[0]/imageHeight))-(65/2)
     x = (px - imageWidth/2)*(boardDimensions[1]/imageWidth)
     return x,y
 
 def cartesianToScara(x,y):
     '''MY OWN'''
     #Right side dimensions
-    xOffset = 150
+    xOffset = 303.9/2
     # L1 = 250+14+14
     # L2 = xOffset + L1
-    L1 = 280
-    L2 = 430
+    L1 = 150.6 + (2*63)
+    L2 = 302 + (2*63)
 
     #Right Motor
     d = np.sqrt((x-xOffset)**2 + y**2) #calculating the distance from the motor to point
@@ -157,11 +157,11 @@ def cartesianToScara(x,y):
     theta2r = np.arctan2(y-yr, x-xr)
 
     #Left side dimensions
-    xOffset = 150
+    xOffset = 303.9/2
     # L1 = 250+14+14
     # L2 = xOffset + L1
-    L1 = 285
-    L2 = 427
+    L1 = 151.1 + (2*63)
+    L2 = 302 + (2*63)
     #Left Motor
     xOffset = -xOffset
     d = np.sqrt((x-xOffset)**2 + y**2)
