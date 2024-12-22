@@ -53,6 +53,8 @@ def calibrationPoints():
                     t,b,l,r = myJazz.boundingBox(card)
                     cx,cy = myJazz.midPoint(t,b,l,r)
                     x,y = myJazz.pixelToCartesian(cx,cy,frame.shape[1],frame.shape[0])
+                    print()
+                    print(x,y)
                     l,r = myJazz.cartesianToScara(x,y)
                     l,r = int(np.rad2deg(l)*1000), int(np.rad2deg(r)*1000)
                     print(l,r)
