@@ -50,6 +50,7 @@ def captureCard():
                     col = myJazz.getCardColour(card)
                     print(col)
                     card = myJazz.isolateValue(card)
+                    print(card.shape)
                     # guess = myJazz.compareTemplate(card)
                     # print(myJazz.guessIndex[guess])
 
