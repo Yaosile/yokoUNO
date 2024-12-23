@@ -130,12 +130,13 @@ def arucoCorners(frame: np.ndarray):
 def pixelToCartesian(px,py,imageWidth,imageHeight): 
     '''MY OWN'''
     boardDimensions = (605, 517) #height, width in mm
-    y = ((imageHeight - py)*(boardDimensions[0]/imageHeight))-(65/2)
+    y = ((imageHeight - py)*(boardDimensions[0]/imageHeight))
     x = (px - imageWidth/2)*(boardDimensions[1]/imageWidth)
     return x,y
 
 def cartesianToScara(x,y):
     '''MY OWN'''
+    y-=55
     #Right side dimensions
     xOffset = 303.9/2
     # L1 = 250+14+14

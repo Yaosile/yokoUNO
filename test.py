@@ -19,26 +19,38 @@ import cv2
 
 import MelMyBoy as audio
 
-card = ana(Image.open('test.png'))[...,::-1]
+x,y = 0, 400
+# x,y = myJazz.pixelToCartesian(x, y, 517, 605)
 
-lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
-# Split LAB channels
-l, a, b = cv2.split(lab)
-# Apply CLAHE to the L channel
-clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-cl = clahe.apply(l)
-# Merge channels and convert back to BGR color space
-limg = cv2.merge((cl, a, b))
-card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-card = card - card.min()
-card = card/card.max()
-card = card * 255
+l1, r1 = myJazz.cartesianToScara(x,y)
 
-card = myJazz.isolateCard(card)
-card = myJazz.isolateValue(card)
-guess = myJazz.compareTemplate(card)
+l1,r1 = np.rad2deg(l1)+45, np.rad2deg(r1)+45
+print()
+print(f's{int(l1*1000)} {int(r1*1000)}')
+print()
 
-print(myJazz.guessIndex[guess])
+
+
+# card = ana(Image.open('test.png'))[...,::-1]
+
+# lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
+# # Split LAB channels
+# l, a, b = cv2.split(lab)
+# # Apply CLAHE to the L channel
+# clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+# cl = clahe.apply(l)
+# # Merge channels and convert back to BGR color space
+# limg = cv2.merge((cl, a, b))
+# card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+# card = card - card.min()
+# card = card/card.max()
+# card = card * 255
+
+# card = myJazz.isolateCard(card)
+# card = myJazz.isolateValue(card)
+# guess = myJazz.compareTemplate(card)
+
+# print(myJazz.guessIndex[guess])
 
 # img = Image.fromarray(card.astype(np.uint8))
 # img.show()
