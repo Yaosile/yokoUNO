@@ -136,7 +136,7 @@ def getAudioRecording():
         data = byte2int(data)
         recording += data
     print('END')
-    recording = ana(recording)
+    recording = np.int16(recording)
     stream.stop_stream()
     stream.close()
     audio.terminate()
