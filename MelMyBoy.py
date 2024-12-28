@@ -11,6 +11,9 @@ import time
 
 from matplotlib import pyplot as plt
 
+recordingPath = 'audioRecordings/' #
+
+
 FORMAT = pyaudio.paInt16  # 16-bit resolution
 CHANNELS = 1              # Mono channel
 RATE = 44100              # 44.1kHz sample rate
@@ -93,11 +96,11 @@ def convertToMFCC(audio, hop=15, sampleRate = 44100, filterN = 10, coeff=40, FFT
     return final #[:coeff//2,:]
 
 def trainCNN(layersN, epochs = 500, lr=0.01):
-    files = os.listdir('AudioRecordings')
+    files = os.listdir('audioRecordings')
     data = []
     correct = []
     for f in files:
-        data.append(cnn.convolutionalSection(np.load(f'AudioRecordings/{f}').reshape(20,-1),kernelMax=4))
+        data.append(cnn.convolutionalSection(np.load(f'audioRecordings/{f}').reshape(20,-1),kernelMax=4))
         t = [0 for i in range(len(WORDS))]
         t[WORDS.index(f[0])] = 1
         correct.append(t)
@@ -116,7 +119,6 @@ def trainCNN(layersN, epochs = 500, lr=0.01):
 def getAudioRecording():
     print('starting capture')
     audio = pyaudio.PyAudio()
-    OUTPUT_FILENAME = "AudioRecordings/output.wav"
     stream = audio.open(format=FORMAT, channels=CHANNELS,
                     rate=RATE, input=True,
                     frames_per_buffer=CHUNK)
@@ -138,19 +140,17 @@ def getAudioRecording():
     stream.stop_stream()
     stream.close()
     audio.terminate()
-    # return recording
-    final = convertToMFCC(recording)
-    return final.reshape(-1)
+    return recording
 
 def doOnline():
     weights = []
     for i in range(LAYERS - 1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
-    files = os.listdir('AudioRecordings')
+    files = os.listdir('audioRecordings')
     data = []
     correct = []
     for f in files:
-        data.append(np.load(f'AudioRecordings/{f}'))
+        data.append(np.load(f'audioRecordings/{f}'))
         t = [0 for i in range(len(WORDS))]
         t[WORDS.index(f[0])] = 1
         correct.append(t)
@@ -168,9 +168,9 @@ def doOnline():
         t[WORDS.index(word)] = 1
         correct.append(t)
 
-        n = len(os.listdir('AudioRecordings'))
-        np.save(f'AudioRecordings/{word}{n}.npy', now)
-        # data.append(np.load(f'AudioRecordings/{word}{n}.npy'))
+        n = len(os.listdir('audioRecordings'))
+        np.save(f'audioRecordings/{word}{n}.npy', now)
+        # data.append(np.load(f'audioRecordings/{word}{n}.npy'))
 
 def classify():
     weights = []
@@ -190,12 +190,12 @@ def checkHealth():
     weights = []
     for i in range(LAYERS-1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
-    files = os.listdir('AudioRecordings')
+    files = os.listdir('audioRecordings')
     data = []
     correct = []
     order = []
     for f in files:
-        data.append(cnn.convolutionalSection(np.load(f'AudioRecordings/{f}').reshape(20,-1),kernelMax=4))
+        data.append(cnn.convolutionalSection(np.load(f'audioRecordings/{f}').reshape(20,-1),kernelMax=4))
         t = [0 for i in range(len(WORDS))]
         t[WORDS.index(f[0])] = 1
         correct.append(t)
@@ -218,11 +218,11 @@ def checkHealth():
     print('Total:', totCorrect, totDone, f'{totCorrect/totDone*100}%', sep='\t')
     
 def generateConfusion():
-    files = os.listdir('AudioRecordings')
+    files = os.listdir('audioRecordings')
     correct = []
     data = []
     for f in files:
-        data.append(np.load(f'AudioRecordings/{f}'))
+        data.append(np.load(f'audioRecordings/{f}'))
         t = [0 for i in range(len(WORDS))]
         t[WORDS.index(f[0])] = 1
         correct.append(t)
@@ -251,13 +251,28 @@ def generateConfusion():
     plt.yticks(ticks=range(len(WORDS)), labels=Axis)
     plt.show()
 
+def getSamples():
+    name = input('Please enter your name: ').lower()
+    number = input('Please enter the sample range (1-10): ')
+    number = [int(i) for i in number.split('-')]
+    word = input('Please enter the spoken word: ').lower()[0]
+    for i in range(number[0], number[1]+1):
+        file = f'{name}-{word}-{i}.wav'
+        print(f'Recording: {file}')
+        data = getAudioRecording()
+        wavfile.write(f'{recordingPath}{file}', RATE, data)
+        print(f'Saved: {file}\n')
+
 
 
 if __name__ == '__main__':
     pass
+
+
+    getSamples()
     # trainCNN(LAYERS)
     # generateConfusion()
-    classify()
+    # classify()
     # now = time.time_ns()
     # trainCNN(epochs=5000, layersN=LAYERS, lr = 0.001)
     # print((time.time_ns() - now)/1e9)
