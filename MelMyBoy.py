@@ -21,6 +21,9 @@ CHUNK = 1024              # 1024 samples per frame
 RECORD_SECONDS = 1        # Duration to record
 
 LAYERS = 3
+FILTERN = 40
+COEFF = 80
+FFTN = 2048
 
 WORDS = ['r', 'y', 'g', 'b', 'u']
 
@@ -84,25 +87,28 @@ def dct(num, len):
         b[i,:] = np.cos(i*s)*((2.0/len)**0.5)
     return b
 
-def convertToMFCC(audio, hop=15, sampleRate = 44100, filterN = 10, coeff=40, FFTN=2048):
+def convertToMFCC(audio, hop=15, sampleRate = 44100, filterN = FILTERN, coeff=COEFF, FFTN=FFTN):
     audio = normaliseAudio(audio)
     frames = audioFrames(audio, hop = hop, FFT_n=FFTN)
     FFT = FFTframes(frames)
     melFreqs,freqs=getFilterPoints(0, sampleRate/2, filterN, FFT_n=FFTN)
     filters=getTriangleFilters(freqs, FFT_n=FFTN)*(2.0/(melFreqs[2:] - melFreqs[:-2]))[:, None]
     filteredOutput = np.dot(filters, FFT.T)
+    # filteredOutput = 10.0 * np.log10(filteredOutput) #Optional
     dctcoefficients = dct(coeff, filterN)
     final = np.dot(dctcoefficients, filteredOutput)
     return final #[:coeff//2,:]
 
 def trainCNN(layersN, epochs = 500, lr=0.01):
-    files = os.listdir('audioRecordings')
+    files = os.listdir(recordingPath)
     data = []
     correct = []
     for f in files:
-        data.append(cnn.convolutionalSection(np.load(f'audioRecordings/{f}').reshape(20,-1),kernelMax=4))
+        temp = cnn.convolutionalSection(convertToMFCC(wavfile.read(f'{recordingPath}{f}')[1]),kernelMax=4)
+        data.append(temp)
+        word = f.split('-')[1]
         t = [0 for i in range(len(WORDS))]
-        t[WORDS.index(f[0])] = 1
+        t[WORDS.index(word)] = 1
         correct.append(t)
     audioSample = data[0]
     weights = []
@@ -111,7 +117,7 @@ def trainCNN(layersN, epochs = 500, lr=0.01):
 
     # weights = cnn.generateWeights(len(audioSample), int(len(audioSample)*1.15), len(WORDS), layers=layersN)
 
-    L2, weights = cnn.backProp(ana(data), ana(correct), weights, lr, epochs, 1, randomCount=10)
+    L2, weights = cnn.backProp(ana(data), ana(correct), weights, lr, epochs, 1, randomCount=-1)
     for i, weight in enumerate(weights):
         np.save(f'audioWeights/{i}.npy', weight)
     np.save('error.npy', L2)
@@ -176,9 +182,8 @@ def classify():
     weights = []
     for i in range(LAYERS - 1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
-        print(weights[-1].shape)
-    print()
-    now = cnn.convolutionalSection(getAudioRecording().reshape(20,-1), kernelMax=4)
+    now = convertToMFCC(getAudioRecording())
+    now = cnn.convolutionalSection(now, kernelMax=4)
     guess = np.round(cnn.feedForward([now], weights), 4)
     guess = guess[0]
     print(guess)
@@ -193,13 +198,13 @@ def checkHealth():
     files = os.listdir('audioRecordings')
     data = []
     correct = []
-    order = []
     for f in files:
-        data.append(cnn.convolutionalSection(np.load(f'audioRecordings/{f}').reshape(20,-1),kernelMax=4))
+        temp = cnn.convolutionalSection(convertToMFCC(wavfile.read(f'{recordingPath}{f}')[1]),kernelMax=4)
+        data.append(temp)
+        word = f.split('-')[1]
         t = [0 for i in range(len(WORDS))]
-        t[WORDS.index(f[0])] = 1
+        t[WORDS.index(word)] = 1
         correct.append(t)
-        order.append(f[0])
     
     output = cnn.feedForward(data, weights)
     tally = {i:0 for i in WORDS}
@@ -264,20 +269,26 @@ def getSamples():
         print(f'Saved: {file}\n')
 
 
-
 if __name__ == '__main__':
     pass
+    # testData = f'{recordingPath}josh-g-4.wav'
+    # data = wavfile.read(testData)[1]
+    # data = convertToMFCC(data)
+    # plt.imshow(data)
+    # plt.show()
 
 
-    getSamples()
-    # trainCNN(LAYERS)
+    # getSamples()
+    # trainCNN(LAYERS, epochs=100, lr = 0.001)
     # generateConfusion()
     # classify()
     # now = time.time_ns()
     # trainCNN(epochs=5000, layersN=LAYERS, lr = 0.001)
     # print((time.time_ns() - now)/1e9)
-    # # error = np.load('error.npy')
-    # # plt.plot(error)
-    # # plt.show()
-    # checkHealth()
+
+    # error = np.load('error.npy')
+    # plt.plot(error)
+    # plt.show()
+
+    checkHealth()
     # doOnline()

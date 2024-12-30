@@ -964,6 +964,8 @@ def histogram_equalization(image):
     equalized_image = cdf_final[image]
     return equalized_image
 
+def distance(point1, point2):
+    return np.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)
 # def IFFT(X: np.ndarray):
 #     '''MY OWN'''
 #     N = X.shape[0]
