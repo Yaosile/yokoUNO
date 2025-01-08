@@ -460,25 +460,18 @@ def getCardColour(card:np.ndarray):
     elif values.max() < 0.28:
         colour = colours[4]
     else:
-        colour = colours[5]
+        colour = colours[4]
     return colour
 
-def getCardValue(card:np.ndarray):...
+def getCardValue(card:np.ndarray):
+    colour = getCardColour(card)
+    if colour == 'w':
+        return 'w', 0, 'w'
+    face = isolateValue(card)
+    score = 0
+    face, score = compareTemplate(face)
 
-
-# def getCardValue(card:np.ndarray):
-#     weights = []
-#     for i in range(2):
-#         weights.append(np.load(f'imageWeights/{i}.npy'))
-
-#     face = card[6:41,10:45]
-#     face = face.sum(axis=2)/3
-#     face[face>254] = 1
-#     face[face<1] = 0
-#     face[face>1] = 0.5
-#     face = [cnn.convolutionalSection(face,kernelMax=2)]
-#     guess = cnn.feedForward(face, weights)
-#     return lookUp[np.argmax(guess)]
+    return f'{colour}{guessIndex[face]}', score, face
 
 def getRotation(frame, centreX, centreY, radius):
     '''MY OWN'''
@@ -499,7 +492,6 @@ def getRotation(frame, centreX, centreY, radius):
         yd[yd>=radius*2] = radius*2-1
         yd[yd<0] = 0
         rotated = temp[yd,xd]
-        # print(i,sumChange*180/np.pi,sep='\t')
         top,bot,left,right = boundingBox(rotated)
         newDiff = (right-left)/(bot-top)
         if newDiff > diff:
@@ -927,6 +919,8 @@ def apply_clahe(image, clip_limit=2.0, tile_grid_size=(8, 8)):
     return result_image
 
 def removeNoise(img, size=3):
+    if size == 0:
+        return img
     img = cv2.blur(img, (size,size))
     img[img<255] = 0
     img = cv2.blur(img, (size, size))
@@ -934,21 +928,24 @@ def removeNoise(img, size=3):
     return img
 
 def compareTemplate(ref, template=template):
+    EdgeSize = 4
     oneCardWidth = template.shape[1]//len(guessIndex)
     oneCardHeight = template.shape[0]
     ref = scaleImage(ref,oneCardWidth, oneCardHeight)
     templates = len(guessIndex)
     score = []
     for i in range(templates):
-        compare = min(np.sum((ref//255 + rot90(template[:,i*oneCardWidth:(i+1)*oneCardWidth,...],2)//255)%2), np.sum((ref//255 + template[:,i*oneCardWidth:(i+1)*oneCardWidth,...]//255)%2))
+        first = removeNoise((((ref + rot90(template[:,i*oneCardWidth:(i+1)*oneCardWidth,...],2))//255)%2)*255,EdgeSize)
+        second = removeNoise((((ref + template[:,i*oneCardWidth:(i+1)*oneCardWidth,...])//255)%2)*255,EdgeSize)
+        compare = int(min(np.sum(first),np.sum(second))/255)
         score.append(compare)
-    return np.argmin(score), np.min(score)
+    return np.argmin(score), score
 
 def isolateValue(card:np.ndarray):
     # img = apply_clahe(card)
     hsv = rgb2hsv(card, 'SV')
-    saansColour = threshHold((1-hsv[...,1]), 200/255)
-    white = threshHold(hsv[...,2],100/255)
+    saansColour = threshHold((1-hsv[...,1]), 150/255)
+    white = threshHold(hsv[...,2],150/255)
     img = (saansColour*white)/255
     img = removeNoise(img, size= 3)
 

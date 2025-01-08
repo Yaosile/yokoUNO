@@ -20,16 +20,33 @@ import unoLogic
 
 import MelMyBoy as audio
 
-np.random.seed(0)
+template = ana(Image.open('templates/templateOG.png')).copy()
+cut = ana(Image.open('templates/templateCut.png')).copy()
+oneCardWidth = template.shape[1]//13
+oneCardHeight = template.shape[0]
 
-drawDeck = myJazz.deck.copy()
-np.random.shuffle(drawDeck)
+cards = []
+for i in range(13):
+    card = template[:,i*oneCardWidth:(i+1)*oneCardWidth] - cut
+    card[card < 255] = 0
+    cards.append(card)
 
-robotHand = [drawDeck.pop() for i in range(7)]
-playerHand = [drawDeck.pop() for i in range(7)]
-discard = [drawDeck.pop()]
+cards = np.hstack(cards)
 
-print(unoLogic.getPlayableCards([playerHand,[]], discard[0]))
+template = Image.fromarray(cards.astype(np.uint8))
+template.save('templates/template.png')
+
+
+# np.random.seed(0)
+
+# drawDeck = myJazz.deck.copy()
+# np.random.shuffle(drawDeck)
+
+# robotHand = [drawDeck.pop() for i in range(7)]
+# playerHand = [drawDeck.pop() for i in range(7)]
+# discard = [drawDeck.pop()]
+
+# print(unoLogic.getPlayableCards([playerHand,[]], discard[0]))
 
 
 # x,y = 0, 400

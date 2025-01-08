@@ -78,13 +78,32 @@ playerDeck = [
 cap = cv2.VideoCapture(0)
 time.sleep(5)
 
+coords = [
+    (846, 667),
+    (1037, 675),
+    (1039, 555),
+    (847, 550)
+]
+
+yu,xu = myJazz.unwarpMap(coords, 157, 256 ,3264, 2464)
+template = myJazz.template
+oneCardWidth = template.shape[1]//13
+oneCardHeight = template.shape[0]
+face = 0
 if cap.isOpened():
     try:
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         while True:
             ret,frame = cap.read()
-
+            frame = frame[yu,xu]
             frame = myJazz.normaliseLAB(frame)
+            guess, score, _ = myJazz.getCardValue(frame)
+            frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
+            frame = myJazz.removeNoise(frame, 4)
+            print(guess,score)
+            face += 1
+            if face == 13:
+                face = 0
             cv2.imshow('card',frame.astype(np.uint8))
 
             key = cv2.waitKey(1) & 0xFF
