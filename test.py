@@ -16,18 +16,31 @@ import matplotlib.gridspec as gridspec
 import feedForwardybackwards as cnn
 import os
 import cv2
+import unoLogic
 
 import MelMyBoy as audio
 
-x,y = 0, 400
-# x,y = myJazz.pixelToCartesian(x, y, 517, 605)
+np.random.seed(0)
 
-l1, r1 = myJazz.cartesianToScara(x,y)
+drawDeck = myJazz.deck.copy()
+np.random.shuffle(drawDeck)
 
-l1,r1 = np.rad2deg(l1)+45, np.rad2deg(r1)+45
-print()
-print(f's{int(l1*1000)} {int(r1*1000)}')
-print()
+robotHand = [drawDeck.pop() for i in range(7)]
+playerHand = [drawDeck.pop() for i in range(7)]
+discard = [drawDeck.pop()]
+
+print(unoLogic.getPlayableCards([playerHand,[]], discard[0]))
+
+
+# x,y = 0, 400
+# # x,y = myJazz.pixelToCartesian(x, y, 517, 605)
+
+# l1, r1 = myJazz.cartesianToScara(x,y)
+
+# l1,r1 = np.rad2deg(l1)+45, np.rad2deg(r1)+45
+# print()
+# print(f's{int(l1*1000)} {int(r1*1000)}')
+# print()
 
 
 

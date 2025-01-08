@@ -279,16 +279,16 @@ if __name__ == '__main__':
 
 
     # getSamples()
-    # trainCNN(LAYERS, epochs=100, lr = 0.001)
     # generateConfusion()
-    # classify()
+    classify()
     # now = time.time_ns()
     # trainCNN(epochs=5000, layersN=LAYERS, lr = 0.001)
     # print((time.time_ns() - now)/1e9)
 
+    # trainCNN(LAYERS, epochs=100, lr = 0.0001)
     # error = np.load('error.npy')
     # plt.plot(error)
     # plt.show()
 
-    checkHealth()
+    # checkHealth()
     # doOnline()

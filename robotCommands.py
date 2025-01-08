@@ -3,201 +3,116 @@ import time
 import myOwnLibrary as myJazz
 
 commands = {
-    'draw': 's210000 60000',
-    'hand1': 's240000 100000',
-    'hand2': 's220000 110000',
-    'discard': 's185000 85000',
-    'playerDeal': 's200000 120000',
-    'zd': 'zd',
-    'zs': 'zs',
-    'zu': 'zu',
+    'draw': 's215000 65000'.encode(),
+    'hand0': 's185000 30000'.encode(),
+    'hand1': 's260000 100000'.encode(),
+    'rotator': 's170000 56000'.encode(),
+    'player': 's215000 110000'.encode(),
+    'zd': 'zd'.encode(),
+    'zs': 'zs'.encode(),
+    'zu': 'zu'.encode(),
+    'ps': 'ps'.encode(),
+    'pp': 'pp'.encode(),
+    'v' : 'v'.encode()
 }
-travelTime = 2
-pickUpHands = 5
-dropHands = 4
-
-suctionTime = 3
-serialPort = '/dev/ttyUSB0'
-
-pileHeight = 64
-
-def moveTo(location):
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(5)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands[location].encode())
-    ser.close()
-    time.sleep(travelTime)
+serialPort = '/dev/tty.usbserial-0001'
+pileTop = 6#s
+pileBot = 8#s
+pileHeight = 38#cards
 
 def init():
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
+    print('initializing...')
+    ser = serial.Serial(serialPort, 115200, timeout=1)
+    ser.write(commands['zu'])
+    ser.write(commands['pp'])
     time.sleep(5)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['draw'].encode())
-    ser.close()
-    time.sleep(travelTime)
-
-def pickUpHand1():
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['hand1'].encode())
-    ser.close()
-    time.sleep(travelTime)
-    
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zd'].encode())
-    ser.close()
-    time.sleep(pickUpHands)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
-    time.sleep(suctionTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(1)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
-    time.sleep(suctionTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(pickUpHands+1)
-
-def pickUpHand2():
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['hand2'].encode())
-    ser.close()
-    time.sleep(travelTime)
-    
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zd'].encode())
-    ser.close()
-    time.sleep(pickUpHands+1)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
-    time.sleep(suctionTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(1)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
-    time.sleep(suctionTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(pickUpHands+1)
-
-def dropHand1():
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['hand1'].encode())
-    ser.close()
-    time.sleep(travelTime)
-    
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zd'].encode())
-    ser.close()
-    time.sleep(dropHands)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
-    time.sleep(suctionTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(dropHands)
-
-def dropHand2():
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['hand2'].encode())
-    ser.close()
-    time.sleep(travelTime)
-    
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zd'].encode())
-    ser.close()
-    time.sleep(dropHands)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
-    time.sleep(suctionTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(dropHands)
-
-def drawCard():
-    global pileHeight
-    pickTime = myJazz.vectorNormalise(pileHeight, 1, 98, 7.867078, 2.416013)
-    pileHeight -=1
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['draw'].encode())
-    ser.close()
-    time.sleep(travelTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zd'].encode())
-    ser.close()
-    time.sleep(pickTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
-    time.sleep(suctionTime)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
-    ser.close()
-    time.sleep(2)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
-    ser.close()
+    ser.write(commands['draw'])
     time.sleep(5)
-
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
+    print('initializing done')
     ser.close()
-    time.sleep(abs(pickTime - 1)+2)
 
-def playCard():
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['discard'].encode())
-    ser.close()
-    time.sleep(travelTime)
+def drawPlayer():
+    ser = serial.Serial(serialPort, 115200, timeout=1)
 
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zd'].encode())
-    ser.close()
-    time.sleep(dropHands)
+    ser.write(commands['ps'])
+    time.sleep(1)
+    ser.write(commands['zd'])
+    waitTime = myJazz.vectorNormalise(pileHeight, 0, 38, pileBot, pileTop)
+    time.sleep(waitTime)
+    ser.write(commands['zu'])
+    time.sleep(waitTime)
+    ser.write(commands['player'])
+    time.sleep(4)
+    ser.write(commands['pp'])
+    time.sleep(1)
+    ser.write(commands['v'])
+    time.sleep(1)
+    ser.write(commands['draw'])
+    time.sleep(4)
 
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zs'].encode())
     ser.close()
-    time.sleep(suctionTime)
 
-    ser = serial.Serial(serialPort, 115200)
-    ser.write(commands['zu'].encode())
+def drawRobot(hand):
+    ser = serial.Serial(serialPort, 115200, timeout=1)
+
+    ser.write(commands['ps'])
+    time.sleep(1)
+    ser.write(commands['zd'])
+    waitTime = myJazz.vectorNormalise(pileHeight, 0, 38, pileBot, pileTop)
+    time.sleep(waitTime)
+    ser.write(commands['zu'])
+    time.sleep(waitTime)
+    ser.write(commands[f'hand{hand}'])
+    time.sleep(3)
+    ser.write(commands['pp'])
+    time.sleep(1)
+    ser.write(commands['v'])
+    time.sleep(1)
+    ser.write(commands['draw'])
+    time.sleep(3)
+
     ser.close()
-    time.sleep(dropHands)
+
+def shuffle(hand):
+    ser = serial.Serial(serialPort, 115200, timeout=1)
+
+    ser.write(commands[f'hand{hand}'])
+    time.sleep(4)
+    ser.write(commands['ps'])
+    time.sleep(1)
+    ser.write(commands['zd'])
+    time.sleep(8)
+    ser.write(commands['zu'])
+    time.sleep(8)
+    ser.write(commands[f'hand{(hand+1)%2}'])
+    time.sleep(5)
+    ser.write(commands['pp'])
+    time.sleep(1)
+    ser.write(commands['v'])
+    time.sleep(1)
+    ser.write(commands['draw'])
+    time.sleep(4)
+
+    ser.close()
+
+def play(hand):
+    ser = serial.Serial(serialPort, 115200, timeout=1)
+
+    ser.write(commands[f'hand{hand}'])
+    time.sleep(3)
+    ser.write(commands['ps'])
+    time.sleep(1)
+    ser.write(commands['zd'])
+    time.sleep(8)
+    ser.write(commands['zu'])
+    time.sleep(8)
+    ser.write(commands['player'])
+    time.sleep(6)
+    ser.write(commands['pp'])
+    time.sleep(1)
+    ser.write(commands['v'])
+    time.sleep(1)
+    ser.write(commands['draw'])
+    time.sleep(4)
+
+    ser.close()

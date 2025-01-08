@@ -2,8 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.patches import Polygon
 import myOwnLibrary as myJazz
-import sympy as sp
-
+from sympy import symbols, Eq, solve 
 cardWidth = 55.84#mm
 step = 10#mm
 angle = 30#deg
@@ -14,21 +13,29 @@ angle = np.deg2rad(angle)
 
 x = np.arange(-100,100,step)
 plt.plot(x,np.zeros_like(x))#Plotting a ground plane
+y = np.tan(angle)*x
+plt.plot(x,y)
 
 
-y = np.tan(angle)*x#create first wall
-
-# plt.plot(x,y)
-
+x = symbols('x')
+y = np.tan(angle)*x
 
 
+delta = -cardWidth+step
+equation = Eq((x-delta)**2 + y**2, cardWidth**2)
+point = (max(solve(equation, x)), np.tan(angle)*max(solve(equation, x)))
 
 
 
-# plt.gca().set_aspect('equal', adjustable='box') 
-# plt.xlim(-100,100)
-# plt.ylim(-100,100)
-# plt.show()
+
+
+
+
+
+plt.gca().set_aspect('equal', adjustable='box') 
+plt.xlim(-100,100)
+plt.ylim(-100,100)
+plt.show()
 
 
 

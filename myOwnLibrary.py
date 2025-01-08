@@ -24,9 +24,30 @@ mtx = ana([
     [0,1.729637617052701E3,1.195682065165660E3],
     [0,0,1],
 ])
-
+deck = []
 lookUp = ['0','1','2','3','4','5','6','7','8','9','+','r','s']
 angleLookUp = np.load('angleLUT.npy')
+for i in ['r','g','b','y']:
+    for j in lookUp:
+        deck.append(f'{i}{j}')
+# deck.append('w') #Add the wild card, ignoring this shi for now
+
+
+def normaliseLAB(frame):
+    card = frame.copy()
+    lab = cv2.cvtColor(card, cv2.COLOR_BGR2LAB)
+    # Split LAB channels
+    l, a, b = cv2.split(lab)
+    # Apply CLAHE to the L channel
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    cl = clahe.apply(l)
+    # Merge channels and convert back to BGR color space
+    limg = cv2.merge((cl, a, b))
+    card = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+    card = card - card.min()
+    card = card/card.max()
+    card = card * 255
+    return card
 
 def linear_interpolate(v1, v2, fraction):
     return (1 - fraction) * v1 + fraction * v2
@@ -318,7 +339,7 @@ def isolateCard(frame):
     frame = (frame/frame.max())*255
     frame[frame>100] = 255
     frame[frame<=100] = 0
-    frame = removeNoise(frame,5)
+    frame = removeNoise(frame,10)
     t,b,l,r = boundingBox(frame)
     ratio = getRatio(t,b,l,r)
     cx,cy = midPoint(t,b,l,r)
@@ -921,7 +942,7 @@ def compareTemplate(ref, template=template):
     for i in range(templates):
         compare = min(np.sum((ref//255 + rot90(template[:,i*oneCardWidth:(i+1)*oneCardWidth,...],2)//255)%2), np.sum((ref//255 + template[:,i*oneCardWidth:(i+1)*oneCardWidth,...]//255)%2))
         score.append(compare)
-    return np.argmin(score)
+    return np.argmin(score), np.min(score)
 
 def isolateValue(card:np.ndarray):
     # img = apply_clahe(card)
