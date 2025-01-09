@@ -75,8 +75,7 @@ playerDeck = [
     'y1',
     'gs'
 ]
-# cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # 0.25 = Manual exposure, 0.75 = Auto exposure
 # Set manual exposure time (adjust based on your environment)
 # cap.set(cv2.CAP_PROP_EXPOSURE, -5)
