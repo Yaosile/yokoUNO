@@ -83,6 +83,7 @@ template = myJazz.template
 oneCardWidth = template.shape[1]//13
 oneCardHeight = template.shape[0]
 face = 0
+cardPlacedFlag = False
 if cap.isOpened():
     try:
         prev = []
@@ -94,16 +95,21 @@ if cap.isOpened():
 
             if prev == []:
                 prev = frame
-            # guess, score, _ = myJazz.getCardValue(frame)
             # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
             # frame = myJazz.removeNoise(frame, 4)
             # print(guess,score)
             # face += 1
             # if face == 13:
             #     face = 0
-            shadow = np.abs(prev-frame)
-            print(np.average(shadow))
-            cv2.imshow('card',shadow.astype(np.uint8))
+            change = np.average(np.abs(prev-frame))
+            if change > 30:
+                cardPlacedFlag = True
+            elif cardPlacedFlag:
+                cardPlacedFlag = False
+                guess, score, _ = myJazz.getCardValue(frame)
+                print(guess, score)
+
+            cv2.imshow('card',frame.astype(np.uint8))
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
