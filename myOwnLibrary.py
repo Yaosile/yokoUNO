@@ -1005,10 +1005,10 @@ def distance(point1, point2):
 
 def gstreamer_pipeline(
     sensor_id=0,
-    capture_width=cameraWidth,
-    capture_height=cameraHeight,
-    display_width=cameraWidth,
-    display_height=cameraHeight,
+    capture_width=cameraWidth//4,
+    capture_height=cameraHeight//4,
+    display_width=cameraWidth//4,
+    display_height=cameraHeight//4,
     framerate=1,
     flip_method=0,
 ):
