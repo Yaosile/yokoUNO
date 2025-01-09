@@ -127,7 +127,6 @@ def finalFootage():
                     cv2.imshow(frameName,frame[::2, ::2])
                 else:
                     break
-
                 key = cv2.waitKey(10) & 0xFF
                 if key == ord('q'):
                     break
