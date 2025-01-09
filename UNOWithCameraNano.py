@@ -91,7 +91,6 @@ oneCardHeight = template.shape[0]
 face = 0
 cardPlacedFlag = False
 if cap.isOpened():
-    cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)
     try:
         prev = []
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
