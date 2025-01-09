@@ -1021,5 +1021,5 @@ def gstreamer_pipeline(
         'video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! '
         'videoconvert ! '
         'video/x-raw, format=(string)BGR ! appsink drop=True' % (sensor_id,
-                                                               cameraWidth, cameraHeight, framerate, flip_method,
+                                                               capture_width, capture_height, framerate, flip_method,
                                                                display_width, display_height))
