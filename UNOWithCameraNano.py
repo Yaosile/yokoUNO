@@ -113,7 +113,7 @@ if cap.isOpened():
             if key == ord('q'):
                 break
 
-            # prev = frame.copy()
+            prev = frame.copy()
     finally:
         print('failed')
         cap.release()
