@@ -1020,6 +1020,6 @@ def gstreamer_pipeline(
         'nvvidconv flip-method=%d ! '
         'video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! '
         'videoconvert ! '
-        'video/x-raw, format=(string)BGR ! appsink' % (sensor_id,
+        'video/x-raw, format=(string)BGR ! appsink drop=True' % (sensor_id,
                                                                cameraWidth, cameraHeight, framerate, flip_method,
                                                                display_width, display_height))
