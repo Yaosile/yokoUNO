@@ -91,8 +91,6 @@ if cap.isOpened():
         while True:
             ret,frame = cap.read()
             frame = frame[yuw,xuw]
-            frame = frame.astype(float)
-
             if prev == []:
                 prev = frame
             # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
@@ -101,7 +99,7 @@ if cap.isOpened():
             # face += 1
             # if face == 13:
             #     face = 0
-            change = np.average(np.abs(prev-frame))
+            change = np.average(np.abs((prev-frame).astype(float)))
             if change > 30:
                 cardPlacedFlag = True
             elif cardPlacedFlag:
