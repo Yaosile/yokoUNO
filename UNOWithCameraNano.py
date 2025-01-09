@@ -102,7 +102,7 @@ if cap.isOpened():
             change = np.average(np.abs((prev-frame).astype(float)))
             if change > 30:
                 cardPlacedFlag = True
-                print('card placed')
+                print(f'card placed: {change}')
             elif cardPlacedFlag:
                 cardPlacedFlag = False
                 guess, score, _ = myJazz.getCardValue(frame)
