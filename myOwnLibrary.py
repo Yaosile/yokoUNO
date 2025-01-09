@@ -1024,7 +1024,7 @@ def gstreamer_pipeline(
             sensor_id,
             capture_width,
             capture_height,
-            framerate,
+            # framerate,
             flip_method,
             display_width,
             display_height,
