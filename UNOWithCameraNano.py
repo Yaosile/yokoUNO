@@ -114,10 +114,10 @@ if cap.isOpened():
             #     print(guess, score)
 
             cv2.imshow('card',frame)
-
-            # key = cv2.waitKey(1) & 0xFF
-            # if key == ord('q'):
-            #     break
+            print('here')
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('q'):
+                break
 
             # prev = frame.copy()
     finally:
