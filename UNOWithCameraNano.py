@@ -96,7 +96,7 @@ if cap.isOpened():
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         while True:
             ret,frame = cap.read()
-            print(cap.get(8))
+            # print(cap.get(8))
             # frame = frame[yuw,xuw]
             # if prev == []:
             #     prev = frame
@@ -115,7 +115,7 @@ if cap.isOpened():
             #     guess, score, _ = myJazz.getCardValue(frame)
             #     print(guess, score)
 
-            # cv2.imshow('card',frame)
+            cv2.imshow('card',frame)
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
