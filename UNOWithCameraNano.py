@@ -114,7 +114,6 @@ if cap.isOpened():
             #     print(guess, score)
 
             cv2.imshow('card',frame)
-            print('here')
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
