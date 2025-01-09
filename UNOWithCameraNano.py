@@ -107,8 +107,8 @@ if cap.isOpened():
                 cardPlacedFlag = False
                 guess, score, _ = myJazz.getCardValue(frame)
                 print(guess, score)
-            frame = myJazz.isolateValue(frame)
-            cv2.imshow('card',frame)
+            card = myJazz.isolateValue(frame)
+            cv2.imshow('card',card)
             key = cv2.waitKey(10) & 0xFF
             if key == ord('q'):
                 break
