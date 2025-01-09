@@ -100,8 +100,8 @@ if cap.isOpened():
             # face += 1
             # if face == 13:
             #     face = 0
-            print(np.sum(prev - frame))
-            cv2.imshow('card',frame.astype(np.uint8))
+            shadow = ((prev-frame)/2) + 128
+            cv2.imshow('card',shadow.astype(np.uint8))
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
