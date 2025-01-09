@@ -95,23 +95,23 @@ if cap.isOpened():
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         while True:
             ret,frame = cap.read()
-            frame = frame[yuw,xuw]
-            if prev == []:
-                prev = frame
-            # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
-            # frame = myJazz.removeNoise(frame, 4)
-            # print(guess,score)
-            # face += 1
-            # if face == 13:
-            #     face = 0
-            change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
-            if change > 30:
-                cardPlacedFlag = True
-                print(f'card placed: {change}')
-            elif cardPlacedFlag:
-                cardPlacedFlag = False
-                guess, score, _ = myJazz.getCardValue(frame)
-                print(guess, score)
+            # frame = frame[yuw,xuw]
+            # if prev == []:
+            #     prev = frame
+            # # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
+            # # frame = myJazz.removeNoise(frame, 4)
+            # # print(guess,score)
+            # # face += 1
+            # # if face == 13:
+            # #     face = 0
+            # change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
+            # if change > 30:
+            #     cardPlacedFlag = True
+            #     print(f'card placed: {change}')
+            # elif cardPlacedFlag:
+            #     cardPlacedFlag = False
+            #     guess, score, _ = myJazz.getCardValue(frame)
+            #     print(guess, score)
 
             cv2.imshow('card',frame.astype(np.uint8))
 
