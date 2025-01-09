@@ -102,6 +102,7 @@ if cap.isOpened():
             # if face == 13:
             #     face = 0
             shadow = np.abs(prev-frame)
+            print(np.average(shadow))
             cv2.imshow('card',shadow.astype(np.uint8))
 
             key = cv2.waitKey(1) & 0xFF
