@@ -1013,6 +1013,7 @@ def gstreamer_pipeline(
     flip_method=0,
 ):
     return (
+        # exposuretimerange=\"13001 13001\" gainrange=\"1 1\" 
         "nvarguscamerasrc sensor-id=%d ! "
         "video/x-raw(memory:NVMM), width=(int)%d, height=(int)%d, framerate=(fraction)%d/1 ! "
         "nvvidconv flip-method=%d ! "
