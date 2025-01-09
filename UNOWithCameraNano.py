@@ -99,7 +99,7 @@ if cap.isOpened():
             # face += 1
             # if face == 13:
             #     face = 0
-            change = np.average(np.abs((prev-frame).astype(float)))
+            change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
             if change > 30:
                 cardPlacedFlag = True
                 print(f'card placed: {change}')
