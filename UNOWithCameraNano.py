@@ -89,13 +89,13 @@ if cap.isOpened():
         while True:
             ret,frame = cap.read()
             frame = frame[yuw,xuw]
-            guess, score, _ = myJazz.getCardValue(frame)
-            frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
-            frame = myJazz.removeNoise(frame, 4)
-            print(guess,score)
-            face += 1
-            if face == 13:
-                face = 0
+            # guess, score, _ = myJazz.getCardValue(frame)
+            # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
+            # frame = myJazz.removeNoise(frame, 4)
+            # print(guess,score)
+            # face += 1
+            # if face == 13:
+            #     face = 0
             cv2.imshow('card',frame.astype(np.uint8))
 
             key = cv2.waitKey(1) & 0xFF
