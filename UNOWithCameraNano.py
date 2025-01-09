@@ -85,10 +85,14 @@ oneCardHeight = template.shape[0]
 face = 0
 if cap.isOpened():
     try:
+        prev = []
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         while True:
             ret,frame = cap.read()
             frame = frame[yuw,xuw]
+
+            if prev == []:
+                prev = frame
             # guess, score, _ = myJazz.getCardValue(frame)
             # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
             # frame = myJazz.removeNoise(frame, 4)
@@ -96,11 +100,14 @@ if cap.isOpened():
             # face += 1
             # if face == 13:
             #     face = 0
+            print(np.sum(prev - frame))
             cv2.imshow('card',frame.astype(np.uint8))
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break
+
+            prev = frame.copy()
     finally:
         print('failed')
         cap.release()
