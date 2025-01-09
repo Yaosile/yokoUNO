@@ -113,7 +113,7 @@ if cap.isOpened():
             #     guess, score, _ = myJazz.getCardValue(frame)
             #     print(guess, score)
 
-            cv2.imshow('card',frame.astype(np.uint8))
+            cv2.imshow('card',frame)
 
             # key = cv2.waitKey(1) & 0xFF
             # if key == ord('q'):
