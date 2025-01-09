@@ -96,7 +96,7 @@ if cap.isOpened():
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         while True:
             ret,frame = cap.read()
-            print(cap.get(3))
+            print(cap.get(5))
             # frame = frame[yuw,xuw]
             # if prev == []:
             #     prev = frame
