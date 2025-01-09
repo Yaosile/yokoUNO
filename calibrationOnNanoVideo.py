@@ -68,6 +68,8 @@ def calculatePoints(og: np.ndarray):
     ySize, xSize = og.shape[0], og.shape[1]
     windowWidth = 301
     windowHeight = 301
+    shiftX = 0
+    shiftY = 0
     frameName = 'Undistorted Frame'
     try:
         window_handle = cv2.namedWindow(frameName, cv2.WINDOW_AUTOSIZE)
@@ -75,29 +77,37 @@ def calculatePoints(og: np.ndarray):
         while True:
             scaleY, scaleX = int((ySize/windowHeight)*mouse_y), int((xSize/windowWidth)*mouse_x)
             frame = og[scaleY:scaleY+windowHeight, scaleX:scaleX+windowWidth, :].copy()
-            frame[150,:] = 255-frame[150,:]
-            frame[:,150] = 255-frame[:,150]
+            frame[150+shiftY,:] = 255-frame[150+shiftY,:]
+            frame[:,150+shiftX] = 255-frame[:,150+shiftX]
             if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
                 cv2.imshow(frameName,frame)
             else:
                 break
             key = cv2.waitKey(10) & 0xFF
             if key == ord('1'):
-                points[0] = [scaleY+150,scaleX+150][:]
+                points[0] = [scaleY+150+shiftY,scaleX+150+shiftX][:]
                 print('top left')
             elif key == ord('2'):
-                points[1] = [scaleY+150,scaleX+150][:]
+                points[1] = [scaleY+150+shiftY,scaleX+150+shiftX][:]
                 print('bottom left')
             elif key == ord('3'):
-                points[2] = [scaleY+150,scaleX+150][:]
+                points[2] = [scaleY+150+shiftY,scaleX+150+shiftX][:]
                 print('bottom right')
             elif key == ord('4'):
-                points[3] = [scaleY+150,scaleX+150][:]
+                points[3] = [scaleY+150+shiftY,scaleX+150+shiftX][:]
                 print('top right')
             elif key == ord('5'):
                 for i in range(4):
                     points[i] = points[i][::-1]
                 break
+            elif key == ord('w'):
+                shiftY -= 1
+            elif key == ord('a'):
+                shiftX -= 1
+            elif key == ord('s'):
+                shiftY += 1
+            elif key == ord('d'):
+                shiftX += 1
                 
     finally:
         cv2.destroyAllWindows()
@@ -129,6 +139,7 @@ def finalFootage():
 
 if __name__ == '__main__':
     boardSize = (int(517*3), int(605*3))
+    boardSize = (157,256)
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
     snap = unDistortedFootage()
