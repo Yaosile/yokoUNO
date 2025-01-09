@@ -75,7 +75,7 @@ playerDeck = [
     'y1',
     'gs'
 ]
-cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0,framerate=2), cv2.CAP_GSTREAMER)
+cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.75)  # 0.25 = Manual exposure, 0.75 = Auto exposure
 # cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # 0.25 = Manual exposure, 0.75 = Auto exposure
 # # Set manual exposure time (adjust based on your environment)
@@ -96,7 +96,7 @@ if cap.isOpened():
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         while True:
             ret,frame = cap.read()
-            print(cap.get(5))
+            print(cap.get(cv2.CAP_PROP_GAIN))
             # frame = frame[yuw,xuw]
             # if prev == []:
             #     prev = frame
