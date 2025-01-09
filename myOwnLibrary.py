@@ -9,7 +9,7 @@ from scipy import signal
 from PIL import Image
 # import numba
 
-scaling = 4
+scaling = 1
 cameraWidth = 3264//scaling
 cameraHeight = 2464//scaling
 

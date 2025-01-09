@@ -76,14 +76,7 @@ playerDeck = [
     'gs'
 ]
 cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0, framerate=1), cv2.CAP_GSTREAMER)
-# cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.75)  # 0.25 = Manual exposure, 0.75 = Auto exposure
-# cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0.25)  # 0.25 = Manual exposure, 0.75 = Auto exposure
-# # Set manual exposure time (adjust based on your environment)
-# cap.set(cv2.CAP_PROP_EXPOSURE, -5)
-# # Disable auto white balance
-# cap.set(cv2.CAP_PROP_AUTO_WB, 0)
-
-# yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
+yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
 
 template = myJazz.template
 oneCardWidth = template.shape[1]//13
@@ -97,23 +90,23 @@ if cap.isOpened():
         while True:
             ret,frame = cap.read()
             # print(cap.get(8))
-            # frame = frame[yuw,xuw]
-            # if prev == []:
-            #     prev = frame
+            frame = frame[yuw,xuw]
+            if prev == []:
+                prev = frame
             # # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
             # # frame = myJazz.removeNoise(frame, 4)
             # # print(guess,score)
             # # face += 1
             # # if face == 13:
             # #     face = 0
-            # change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
-            # if change > 30:
-            #     cardPlacedFlag = True
-            #     print(f'card placed: {change}')
-            # elif cardPlacedFlag:
-            #     cardPlacedFlag = False
-            #     guess, score, _ = myJazz.getCardValue(frame)
-            #     print(guess, score)
+            change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
+            if change > 30:
+                cardPlacedFlag = True
+                print(f'card placed: {change}')
+            elif cardPlacedFlag:
+                cardPlacedFlag = False
+                guess, score, _ = myJazz.getCardValue(frame)
+                print(guess, score)
 
             cv2.imshow('card',frame)
             key = cv2.waitKey(10) & 0xFF
