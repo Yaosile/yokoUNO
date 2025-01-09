@@ -100,7 +100,7 @@ if cap.isOpened():
             # face += 1
             # if face == 13:
             #     face = 0
-            shadow = ((prev-frame)/2) + 128
+            shadow = ((prev-frame+255)/2)
             cv2.imshow('card',shadow.astype(np.uint8))
 
             key = cv2.waitKey(1) & 0xFF
