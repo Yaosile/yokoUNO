@@ -115,11 +115,11 @@ if cap.isOpened():
 
             cv2.imshow('card',frame.astype(np.uint8))
 
-            key = cv2.waitKey(1) & 0xFF
-            if key == ord('q'):
-                break
+            # key = cv2.waitKey(1) & 0xFF
+            # if key == ord('q'):
+            #     break
 
-            prev = frame.copy()
+            # prev = frame.copy()
     finally:
         print('failed')
         cap.release()
