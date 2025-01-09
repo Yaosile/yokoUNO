@@ -276,11 +276,12 @@ if __name__ == '__main__':
     # data = convertToMFCC(data)
     # plt.imshow(data)
     # plt.show()
+    while True:
+        classify()
 
 
     # getSamples()
     # generateConfusion()
-    classify()
     # now = time.time_ns()
     # trainCNN(epochs=5000, layersN=LAYERS, lr = 0.001)
     # print((time.time_ns() - now)/1e9)

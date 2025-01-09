@@ -464,6 +464,7 @@ def getCardColour(card:np.ndarray):
     return colour
 
 def getCardValue(card:np.ndarray):
+    card = normaliseLAB(card)
     colour = getCardColour(card)
     if colour == 'w':
         return 'w', 0, 'w'
@@ -984,6 +985,7 @@ def histogram_equalization(image):
 
 def distance(point1, point2):
     return np.sqrt((point1[0]-point2[0])**2 + (point1[1]-point2[1])**2)
+
 # def IFFT(X: np.ndarray):
 #     '''MY OWN'''
 #     N = X.shape[0]
@@ -1000,6 +1002,7 @@ def distance(point1, point2):
 #         terms = np.exp(1j * np.pi * np.arange(X.shape[0])/X.shape[0])[:, np.newaxis]
 #         X = np.vstack([X_even + terms * X_odd, X_even - terms * X_odd])
 #     return X.ravel()
+
 def gstreamer_pipeline(
     sensor_id=0,
     capture_width=cameraWidth,

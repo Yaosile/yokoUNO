@@ -52,6 +52,8 @@ def getPlayableCards(hand, discardTopCard):
     return playableCards
 
 def getBestMove(playAbleCards):
+    if 'w' in playAbleCards[0]:
+        return playAbleCards[1]
     return playAbleCards[0]
 
 def playCard(card, hand):

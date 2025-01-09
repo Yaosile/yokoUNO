@@ -6,29 +6,33 @@ commands = {
     'draw': 's215000 65000'.encode(),
     'hand0': 's185000 30000'.encode(),
     'hand1': 's260000 100000'.encode(),
-    'rotator': 's170000 56000'.encode(),
-    'player': 's215000 110000'.encode(),
+    'rotator': 's215000 95000'.encode(),
+    'player': 's170000 55000'.encode(),
     'zd': 'zd'.encode(),
     'zs': 'zs'.encode(),
     'zu': 'zu'.encode(),
     'ps': 'ps'.encode(),
     'pp': 'pp'.encode(),
-    'v' : 'v'.encode()
+    'v' : 'v'.encode(),
+    'flip': 'r400000'.encode(),
+    'play': 'r-400000'.encode(),
 }
+
 serialPort = '/dev/tty.usbserial-0001'
 pileTop = 6#s
 pileBot = 8#s
 pileHeight = 38#cards
 
 def init():
-    print('initializing...')
+    print('initialising...')
     ser = serial.Serial(serialPort, 115200, timeout=1)
     ser.write(commands['zu'])
+    time.sleep(1)
     ser.write(commands['pp'])
     time.sleep(5)
     ser.write(commands['draw'])
     time.sleep(5)
-    print('initializing done')
+    print('initialising done')
     ser.close()
 
 def drawPlayer():
@@ -38,6 +42,7 @@ def drawPlayer():
     time.sleep(1)
     ser.write(commands['zd'])
     waitTime = myJazz.vectorNormalise(pileHeight, 0, 38, pileBot, pileTop)
+    pileHeight -= 1
     time.sleep(waitTime)
     ser.write(commands['zu'])
     time.sleep(waitTime)
@@ -59,6 +64,7 @@ def drawRobot(hand):
     time.sleep(1)
     ser.write(commands['zd'])
     waitTime = myJazz.vectorNormalise(pileHeight, 0, 38, pileBot, pileTop)
+    pileHeight -= 1
     time.sleep(waitTime)
     ser.write(commands['zu'])
     time.sleep(waitTime)
@@ -106,13 +112,16 @@ def play(hand):
     time.sleep(8)
     ser.write(commands['zu'])
     time.sleep(8)
-    ser.write(commands['player'])
+    ser.write(commands['rotator'])
     time.sleep(6)
     ser.write(commands['pp'])
     time.sleep(1)
     ser.write(commands['v'])
     time.sleep(1)
     ser.write(commands['draw'])
-    time.sleep(4)
-
+    time.sleep(5)
+    ser.write(commands['flip'])
+    time.sleep(6)
+    ser.write(commands['play'])
+    time.sleep(6)
     ser.close()

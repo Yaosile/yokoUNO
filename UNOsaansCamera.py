@@ -63,6 +63,15 @@ handDeck = [hand0Deck, hand1Deck]
 discardDeck = [
     'g8'
 ]
+playerDeck = [
+    'y5',
+    'b8',
+    'w',
+    'r8',
+    'y+',
+    'y1',
+    'gs'
+]
 
 #Global state reference, 0 is Human turn, 1 is Robot turn
 turnState = 0
@@ -92,9 +101,9 @@ while True:
         elif action == 'draw2':
             print('The player has to draw 2 cards and loses a turn!')
             
-            drawDeck.pop(0)
+            playerDeck.append(drawDeck.pop(0))
             robotCommands.drawPlayer()
-            drawDeck.pop(0)
+            playerDeck.append(drawDeck.pop(0))
             robotCommands.drawPlayer()
 
             turnState = 1
@@ -104,11 +113,14 @@ while True:
         elif action == 'normal':
             print(f'The player has to play a card of the same colour or value as {discardDeck[0]}!')
 
-
-        playedCard = input("What card are you going to play?: ")
+        playedCard = unoLogic.getPlayableCards([playerDeck, []], discardDeck[0])
+        if playedCard != 'draw':
+            playedCard = input("What card are you going to play?: ")
         if playedCard == 'draw':
             print('The player has chosen to draw a card!')
-            print(drawDeck.pop(0))
+            print(drawDeck[0])
+            playerDeck.append(drawDeck.pop(0))
+
             robotCommands.drawPlayer()
 
             turnState = 1

@@ -75,17 +75,10 @@ playerDeck = [
     'y1',
     'gs'
 ]
-cap = cv2.VideoCapture(0)
-time.sleep(5)
+cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0), cv2.CAP_GSTREAMER)
 
-coords = [
-    (846, 667),
-    (1037, 675),
-    (1039, 555),
-    (847, 550)
-]
+yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
 
-yu,xu = myJazz.unwarpMap(coords, 157, 256 ,3264, 2464)
 template = myJazz.template
 oneCardWidth = template.shape[1]//13
 oneCardHeight = template.shape[0]
@@ -95,7 +88,7 @@ if cap.isOpened():
         cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         while True:
             ret,frame = cap.read()
-            frame = frame[yu,xu]
+            frame = frame[yuw,xuw]
             guess, score, _ = myJazz.getCardValue(frame)
             frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
             frame = myJazz.removeNoise(frame, 4)
