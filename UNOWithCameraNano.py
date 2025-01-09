@@ -90,6 +90,7 @@ if cap.isOpened():
         while True:
             ret,frame = cap.read()
             frame = frame[yuw,xuw]
+            frame = frame.astype(float)
 
             if prev == []:
                 prev = frame
