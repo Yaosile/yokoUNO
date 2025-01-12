@@ -120,10 +120,13 @@ while True:
 
         playedCard = unoLogic.getPlayableCards([playerDeck, []], discardDeck[0])
         if playedCard != 'draw':
+            print('Camera now')
             cardPlacedFlag = False
             prev = []
+            change = 0
             if cap.isOpened():
                 try:
+                    ret,frame = cap.read()
                     time.sleep(3)
                     cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
                     while True:
@@ -145,7 +148,6 @@ while True:
                         
                         if trueCard != 0:
                             playedCard = trueCard
-                            prev = []
                             break
 
                         cv2.imshow('card',frame)
