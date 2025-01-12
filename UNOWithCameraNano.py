@@ -60,9 +60,9 @@ hand0Deck = [
     'g8'
 ]
 hand1Deck = [
+    'y8',
     'r2',
-    'g9',
-    'y8'
+    'g9'
 ]
 handDeck = [hand0Deck, hand1Deck]
 discardDeck = [
