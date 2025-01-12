@@ -120,7 +120,6 @@ while True:
 
         playedCard = unoLogic.getPlayableCards([playerDeck, []], discardDeck[0])
         if playedCard != 'draw':
-            print('Camera now')
             cardPlacedFlag = False
             prev = []
             change = 0
@@ -154,8 +153,6 @@ while True:
                         prev = frame.copy()
                 finally:
                     print('found the card played')
-                    cap.release()
-                    cv2.destroyAllWindows()
         if type(playedCard) == type([]):
             playedCard = playedCard[0]
         if playedCard == 'draw':
