@@ -128,6 +128,7 @@ while True:
                     while True:
                         ret,frame = cap.read()
                         frame = frame[yuw,xuw]
+                        trueCard = 0
                         if prev == []:
                             prev = frame
                         change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
