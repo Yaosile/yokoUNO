@@ -4,7 +4,7 @@ import myOwnLibrary as myJazz
 
 commands = {
     'draw': 's215000 65000'.encode(),
-    'hand0': 's185000 30000'.encode(),
+    'hand0': 's175000 30000'.encode(),
     'hand1': 's260000 100000'.encode(),
     'rotator': 's215000 95000'.encode(),
     'player': 's170000 55000'.encode(),
@@ -14,8 +14,8 @@ commands = {
     'ps': 'ps'.encode(),
     'pp': 'pp'.encode(),
     'v' : 'v'.encode(),
-    'flip': 'r400000'.encode(),
-    'play': 'r-400000'.encode(),
+    'flip': 'r260000'.encode(),
+    'play': 'r-260000'.encode(),
 }
 
 serialPort = '/dev/tty.usbserial-0001'
@@ -36,12 +36,13 @@ def init():
     ser.close()
 
 def drawPlayer():
+    global pileHeight
     ser = serial.Serial(serialPort, 115200, timeout=1)
 
     ser.write(commands['ps'])
     time.sleep(1)
-    ser.write(commands['zd'])
     waitTime = myJazz.vectorNormalise(pileHeight, 0, 38, pileBot, pileTop)
+    ser.write(commands['zd'])
     pileHeight -= 1
     time.sleep(waitTime)
     ser.write(commands['zu'])
@@ -51,19 +52,21 @@ def drawPlayer():
     ser.write(commands['pp'])
     time.sleep(1)
     ser.write(commands['v'])
-    time.sleep(1)
+    time.sleep(1.5)
     ser.write(commands['draw'])
     time.sleep(4)
 
     ser.close()
 
 def drawRobot(hand):
+    global pileHeight
     ser = serial.Serial(serialPort, 115200, timeout=1)
 
     ser.write(commands['ps'])
     time.sleep(1)
-    ser.write(commands['zd'])
     waitTime = myJazz.vectorNormalise(pileHeight, 0, 38, pileBot, pileTop)
+    ser.write(commands['zd'])
+    print(waitTime)
     pileHeight -= 1
     time.sleep(waitTime)
     ser.write(commands['zu'])
@@ -73,7 +76,7 @@ def drawRobot(hand):
     ser.write(commands['pp'])
     time.sleep(1)
     ser.write(commands['v'])
-    time.sleep(1)
+    time.sleep(1.5)
     ser.write(commands['draw'])
     time.sleep(3)
 
@@ -95,7 +98,7 @@ def shuffle(hand):
     ser.write(commands['pp'])
     time.sleep(1)
     ser.write(commands['v'])
-    time.sleep(1)
+    time.sleep(1.5)
     ser.write(commands['draw'])
     time.sleep(4)
 
@@ -112,14 +115,22 @@ def play(hand):
     time.sleep(8)
     ser.write(commands['zu'])
     time.sleep(8)
+    ser.write(commands['draw'])
+    time.sleep(3)
     ser.write(commands['rotator'])
-    time.sleep(6)
+    time.sleep(4)
     ser.write(commands['pp'])
     time.sleep(1)
-    ser.write(commands['v'])
+    ser.write(commands['zd'])
     time.sleep(1)
+    ser.write(commands['zs'])
+    time.sleep(1)
+    ser.write(commands['v'])
+    time.sleep(1.5)
+    ser.write(commands['zu'])
+    time.sleep(2)
     ser.write(commands['draw'])
-    time.sleep(5)
+    time.sleep(3)
     ser.write(commands['flip'])
     time.sleep(6)
     ser.write(commands['play'])

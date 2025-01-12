@@ -9,68 +9,62 @@ import time
 import sys
 
 drawDeck = [
-    'r6',
-    'y6',
-    'b4',
-    'y2',
-    'b0',
-    'r0',
-    'b+',
-    'r3',
-    'b3',
-    'g4',
-    'b7',
+    'b8',
+    'y5',
     'b5',
-    'b1',
-    'g5',
-    'r5',
-    'r1',
-    'y9',
-    'g3',
-    'y0',
-    'r4',
-    'y4',
-    'r2',
-    'g9',
-    'g7',
-    'gr',
-    'g2',
+    'b7',
+    'g4',
     'ys',
     'rr',
     'g+',
     'b9',
+    'b3',
+    'r3',
     'g0',
-    'y3',
-    'b2',
-    'b6',
+    'y1',
+    'y+',
+    'g2',
+    'b0',
+    'r4',
+    'gs',
+    'r6',
+    'g7',
+    'y2',
+    'r1',
+    'r2',
+    'b4',
+    'g9',
+    'gr',
     'rs',
-    'yr',
-    'bs',
-    'g6'
+    'y3',
+    'r5',
+    'y4',
+    'r8',
+    'y0',
+    'g3',
+    'y9',
+    'r9',
+    'y7',
+    'b+',
+    'w'
 ]
 hand0Deck = [
     'br',
-    'r+',
+    'y8',
     'g1',
     'r7'
 ]
 hand1Deck = [
-    'r9',
-    'y7',
-    'y8'
+    'r+',
+    'g8',
+    'b6'
 ]
 handDeck = [hand0Deck, hand1Deck]
 discardDeck = [
-    'g8'
+    'b2'
 ]
 playerDeck = [
-    'y5',
-    'b8',
-    'w',
-    'r8',
-    'y+',
-    'y1',
-    'gs'
+    'bs'
 ]
 
 #Global state reference, 0 is Human turn, 1 is Robot turn

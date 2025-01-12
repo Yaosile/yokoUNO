@@ -93,12 +93,6 @@ if cap.isOpened():
             frame = frame[yuw,xuw]
             if prev == []:
                 prev = frame
-            # # frame = (((myJazz.isolateValue(frame) + template[:, face*oneCardWidth:(face+1)*oneCardWidth])//255)%2)*255
-            # # frame = myJazz.removeNoise(frame, 4)
-            # # print(guess,score)
-            # # face += 1
-            # # if face == 13:
-            # #     face = 0
             change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
             if change > 30:
                 cardPlacedFlag = True
