@@ -18,7 +18,7 @@ commands = {
     'play': 'r-260000'.encode(),
 }
 
-serialPort = '/dev/tty.usbserial-0001'
+serialPort = '/dev/ttyUSB0'
 pileTop = 6#s
 pileBot = 8#s
 pileHeight = 38#cards
