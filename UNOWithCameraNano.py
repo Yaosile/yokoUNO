@@ -10,212 +10,207 @@ import MelMyBoy as audio
 import time
 import sys
 from PIL import Image
+cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0, framerate=1), cv2.CAP_GSTREAMER)
+yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
 
 drawDeck = [
-    'r6',
-    'y6',
-    'b4',
-    'y2',
-    'b0',
-    'r0',
-    'b+',
-    'r3',
-    'b3',
-    'g4',
-    'b7',
+    'b8',
+    'y5',
     'b5',
-    'b1',
-    'g5',
-    'r5',
-    'r1',
-    'y9',
-    'g3',
-    'y0',
-    'r4',
-    'y4',
-    'r2',
-    'g9',
-    'g7',
-    'gr',
-    'g2',
+    'b7',
+    'g4',
     'ys',
     'rr',
     'g+',
     'b9',
+    'b3',
+    'r3',
     'g0',
-    'y3',
-    'b2',
-    'b6',
+    'y1',
+    'y+',
+    'g2',
+    'b0',
+    'r4',
+    'gs',
+    'r6',
+    'g7',
+    'y2',
+    'r1',
+    'r2',
+    'b4',
+    'g9',
+    'gr',
     'rs',
-    'yr',
-    'bs',
-    'g6'
+    'y3',
+    'r5',
+    'y4',
+    'r8',
+    'y0',
+    'g3',
+    'y9',
+    'r9',
+    'y7',
+    'b+',
+    'w'
 ]
 hand0Deck = [
     'br',
-    'r+',
+    'y8',
     'g1',
     'r7'
 ]
 hand1Deck = [
-    'r9',
-    'y7',
-    'y8'
+    'r+',
+    'g8',
+    'b6'
 ]
 handDeck = [hand0Deck, hand1Deck]
 discardDeck = [
-    'g8'
+    'b2'
 ]
 playerDeck = [
-    'y5',
-    'b8',
-    'w',
-    'r8',
-    'y+',
-    'y1',
-    'gs'
+    'bs'
 ]
-cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0, framerate=1), cv2.CAP_GSTREAMER)
-yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
 
-template = myJazz.template
-oneCardWidth = template.shape[1]//13
-oneCardHeight = template.shape[0]
-face = 0
-cardPlacedFlag = False
-if cap.isOpened():
-    try:
-        prev = []
-        cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
-        while True:
-            ret,frame = cap.read()
-            # print(cap.get(8))
-            frame = frame[yuw,xuw]
-            if prev == []:
-                prev = frame
-            change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
-            if change > 30:
-                cardPlacedFlag = True
-                print(f'card placed: {change}')
-            elif cardPlacedFlag:
-                cardPlacedFlag = False
-                guess, score, _ = myJazz.getCardValue(frame)
-                print(guess, score)
-            card = myJazz.isolateValue(frame)
-            cv2.imshow('card',card)
-            key = cv2.waitKey(10) & 0xFF
-            if key == ord('q'):
-                break
+#Global state reference, 0 is Human turn, 1 is Robot turn
+turnState = 0
+action = 'normal'
 
-            prev = frame.copy()
-    finally:
-        print('failed')
-        cap.release()
-        cv2.destroyAllWindows()
+robotCommands.init()
+print('You can turn on the robot now!')
 
+#Creating a state machine
+print("Let's play UNO!")
+while True:
+    if turnState == 0:
+        #Human turn
+        print()
+        print("Your turn!")
+        if action in ['r','y','g','b']:
+            print(f'The colour has been changed to {unoLogic.colours[action]}')
+            discardDeck[0] = f'{action}{discardDeck[0]}'
 
+        elif action == 'skip':
+            print('Your turn has been skipped!')
 
-# #Global state reference, 0 is Human turn, 1 is Robot turn
-# turnState = 0
-# action = 'normal'
+            turnState = 1
+            action = 'normal'
+            continue
 
-# #Creating a state machine
-# print("Let's play UNO!")
-# while True:
-#     if turnState == 0:
-#         #Human turn
-#         print()
-#         print("Your turn!")
-#         if action in ['r','y','g','b']:
-#             print(f'The colour has been changed to {unoLogic.colours[action]}')
-#             discardDeck[0] = f'{action}{discardDeck[0]}'
-
-#         elif action == 'skip':
-#             print('Your turn has been skipped!')
-
-#             turnState = 1
-#             action = 'normal'
-#             continue
-
-#         elif action == 'draw2':
-#             print('The player has to draw 2 cards and loses a turn!')
+        elif action == 'draw2':
+            print('The player has to draw 2 cards and loses a turn!')
             
-#             drawDeck.pop(0)
-#             robotCommands.drawPlayer()
-#             drawDeck.pop(0)
-#             robotCommands.drawPlayer()
+            playerDeck.append(drawDeck.pop(0))
+            robotCommands.drawPlayer()
+            playerDeck.append(drawDeck.pop(0))
+            robotCommands.drawPlayer()
 
-#             turnState = 1
-#             action = 'normal'
-#             continue
+            turnState = 1
+            action = 'normal'
+            continue
 
-#         elif action == 'normal':
-#             print(f'The player has to play a card of the same colour or value as {discardDeck[0]}!')
+        elif action == 'normal':
+            print(f'The player has to play a card of the same colour or value as {discardDeck[0]}!')
 
+        playedCard = unoLogic.getPlayableCards([playerDeck, []], discardDeck[0])
+        if playedCard != 'draw':
+            cardPlacedFlag = False
+            prev = []
+            if cap.isOpened():
+                try:
+                    cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
+                    while True:
+                        ret,frame = cap.read()
+                        frame = frame[yuw,xuw]
+                        if prev == []:
+                            prev = frame
+                        change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
+                        if change > 30:
+                            cardPlacedFlag = True
+                            print(f'card placed: {change}')
+                        elif cardPlacedFlag:
+                            cardPlacedFlag = False
+                            guess, score, _ = myJazz.getCardValue(frame)
+                            trueCard = unoLogic.getMostLikelyPlayedCard(guess, score, playerDeck)
+                            if trueCard == 0:
+                                cardPlacedFlag = True
+                        
+                        if trueCard != 0:
+                            playedCard = trueCard
+                            break
 
-#         playedCard = input("What card are you going to play?: ")
-#         if playedCard == 'draw':
-#             print('The player has chosen to draw a card!')
-#             print(drawDeck.pop(0))
-#             robotCommands.drawPlayer()
-
-#             turnState = 1
-#             action = 'normal'
-#             continue
-
-#         print(f'You played {playedCard}')
-#         if unoLogic.moveValid(playedCard, discardDeck[0]):
-#             #The player has played a valid move
-#             print('This move is valid!')
-#             discardDeck.insert(0, playedCard) # Add the played card to the discard deck
-#             action = unoLogic.getAction(playedCard)
-#             turnState = 1
-#         else:
-#             #The player has played an invalid move
-#             print('This move is not valid, please remove the card and try again!')
-
-#     elif turnState == 1:
-#         #Robot turn
-#         print()
-#         print('Robot turn!')
-#         if action in ['r','y','g','b']:
-#             print(f'The colour has been changed to {unoLogic.colours[action]}')
-#             discardDeck[0] = f'{action}{discardDeck[0]}'
-
-#         elif action == 'skip':
-#             print('The robot has been skipped!')
-            
-#             turnState = 0
-#             action = 'normal'
-#             continue
-
-#         elif action == 'draw2':
-#             print('The robot has to draw 2 cards and loses a turn!')
-#             for i in range(2):
-#                 unoLogic.drawCard(handDeck, drawDeck)
-#             turnState = 0
-#             action = 'normal'
-#             continue
-
-#         elif action == 'normal':
-#             print(f'The robot has to play a card of the same colour or value as {discardDeck[0]}!')
+                        cv2.imshow('card',frame)
+                        prev = frame.copy()
+                finally:
+                    print('found the card played')
+                    cap.release()
+                    cv2.destroyAllWindows()
         
-#         playableCards = unoLogic.getPlayableCards(handDeck, discardDeck[0])
-#         #Now for robot response
-#         if playableCards == 'draw':
-#             print('The robot has to draw a card!')
-#             unoLogic.drawCard(handDeck, drawDeck)
-            
-#             turnState = 0
-#             action = 'normal'
-#             continue
-#         else:
-#             print('The robot can play the following cards:')
-#             print(playableCards)
-#             bestMove = unoLogic.getBestMove(playableCards)
-#             playedCard = unoLogic.playCard(bestMove, handDeck)
-#             discardDeck.insert(0, playedCard)
+        if playedCard == 'draw':
+            print('The player has to draw a card!')
+            print(drawDeck[0])
+            playerDeck.append(drawDeck.pop(0))
 
-#             turnState = 0
-#             action = unoLogic.getAction(playedCard)
-#             continue
+            robotCommands.drawPlayer()
+
+            turnState = 1
+            action = 'normal'
+            continue
+
+        print(f'You played {playedCard}')
+        if unoLogic.moveValid(playedCard, discardDeck[0]):
+            #The player has played a valid move
+            print('This move is valid!')
+            discardDeck.insert(0, playedCard) # Add the played card to the discard deck
+            playerDeck.remove(playedCard)
+            action = unoLogic.getAction(playedCard)
+            turnState = 1
+        else:
+            #The player has played an invalid move
+            print('This move is not valid, please remove the card and try again!')
+
+    elif turnState == 1:
+        #Robot turn
+        print()
+        print('Robot turn!')
+        if action in ['r','y','g','b']:
+            print(f'The colour has been changed to {unoLogic.colours[action]}')
+            discardDeck[0] = f'{action}{discardDeck[0]}'
+
+        elif action == 'skip':
+            print('The robot has been skipped!')
+            
+            turnState = 0
+            action = 'normal'
+            continue
+
+        elif action == 'draw2':
+            print('The robot has to draw 2 cards and loses a turn!')
+            for i in range(2):
+                unoLogic.drawCard(handDeck, drawDeck)
+            turnState = 0
+            action = 'normal'
+            continue
+
+        elif action == 'normal':
+            print(f'The robot has to play a card of the same colour or value as {discardDeck[0]}!')
+        
+        playableCards = unoLogic.getPlayableCards(handDeck, discardDeck[0])
+        #Now for robot response
+        if playableCards == 'draw':
+            print('The robot has to draw a card!')
+            unoLogic.drawCard(handDeck, drawDeck)
+            
+            turnState = 0
+            action = 'normal'
+            continue
+        else:
+            print('The robot can play the following cards:')
+            print(playableCards)
+            bestMove = unoLogic.getBestMove(playableCards)
+            playedCard = unoLogic.playCard(bestMove, handDeck)
+            discardDeck.insert(0, playedCard)
+
+            turnState = 0
+            action = unoLogic.getAction(playedCard)
+            continue

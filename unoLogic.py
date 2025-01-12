@@ -78,3 +78,24 @@ def drawCard(hand, drawDeck):
         print('The robot has drawn a card and placed it in deck 0!')
         hand[0].insert(0,drawDeck.pop(0))
         rc.drawRobot(0)
+
+def getMostLikelyPlayedCard(guess ,score, playerDeck):
+    if guess == 'w':
+        if guess in playerDeck:
+            return 'w'
+        else:
+            print('try again')
+            return 0
+    
+    if guess in playerDeck:
+        return guess
+    
+    colour = guess[0]
+    sameColourCards = [i[1] for i in playerDeck if i[0] == colour]
+    if len(sameColourCards) == 0:
+        return 0
+    print(sameColourCards)
+    for i in range(len(myJazz.guessIndex)):
+        if myJazz.guessIndex[i] not in sameColourCards:
+            score[i] = int(np.max(score))
+    return f'{colour}{myJazz.guessIndex[np.argmin(score)]}'
