@@ -14,62 +14,68 @@ cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0, framerate=1), cv
 yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
 
 drawDeck = [
-    'b8',
-    'y5',
-    'b5',
-    'b7',
-    'g4',
     'ys',
-    'rr',
-    'g+',
-    'b9',
-    'b3',
-    'r3',
-    'g0',
-    'y1',
     'y+',
-    'g2',
     'b0',
-    'r4',
-    'gs',
-    'r6',
-    'g7',
-    'y2',
-    'r1',
-    'r2',
-    'b4',
-    'g9',
-    'gr',
-    'rs',
+    'y1',
+    'g0',
     'y3',
-    'r5',
-    'y4',
+    'y2',
     'r8',
-    'y0',
-    'g3',
-    'y9',
-    'r9',
+    'r5',
     'y7',
+    'r7',
+    'r0',
     'b+',
-    'w'
+    'b6',
+    'g+',
+    'g4',
+    'rs',
+    'y4',
+    'b4',
+    'g1',
+    'b7',
+    'g3',
+    'r+',
+    'r3',
+    'rr',
+    'yr',
+    'y0',
+    'b3',
+    'y9',
+    'br',
+    'g5',
+    'g6',
+    'bs',
+    'r4',
+    'b1',
+    'g7',
+    'b8',
+    'gs'
 ]
 hand0Deck = [
-    'br',
-    'y8',
-    'g1',
-    'r7'
+    'b2',
+    'r9',
+    'b9',
+    'g8'
 ]
 hand1Deck = [
-    'r+',
-    'g8',
-    'b6'
+    'r2',
+    'g9',
+    'y8'
 ]
 handDeck = [hand0Deck, hand1Deck]
 discardDeck = [
-    'b2'
+    'y6'
 ]
 playerDeck = [
-    'bs'
+    'gr',
+    'r6',
+    'g2',
+    'y5',
+    'r1',
+    'b5',
+    'w'
 ]
 
 #Global state reference, 0 is Human turn, 1 is Robot turn
