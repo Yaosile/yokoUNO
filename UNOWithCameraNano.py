@@ -153,7 +153,8 @@ while True:
                     print('found the card played')
                     cap.release()
                     cv2.destroyAllWindows()
-        
+        if type(playedCard) == type([]):
+            playedCard = playedCard[0]
         if playedCard == 'draw':
             print('The player has to draw a card!')
             print(drawDeck[0])
