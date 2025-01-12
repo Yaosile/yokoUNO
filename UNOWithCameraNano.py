@@ -126,11 +126,12 @@ while True:
                             prev = frame
                         change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
                         if change > 30:
+                            time.sleep(1)
                             cardPlacedFlag = True
                             print(f'card placed: {change}')
                         elif cardPlacedFlag:
                             cardPlacedFlag = False
-                            guess, score, _ = myJazz.getCardValue(frame)
+                            guess, score, _ = myJazz.getCardValue(cap.read()[1][yuw,xuw])
                             trueCard = unoLogic.getMostLikelyPlayedCard(guess, score, playerDeck)
                             if trueCard == 0:
                                 cardPlacedFlag = True
