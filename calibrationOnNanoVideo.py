@@ -124,7 +124,7 @@ def finalFootage():
                 ret_val, frame = video_capture.read()
                 frame = frame[yuw,xuw]
                 if cv2.getWindowProperty(frameName, cv2.WND_PROP_AUTOSIZE) >= 0:
-                    cv2.imshow(frameName,frame[::2, ::2])
+                    cv2.imshow(frameName,frame)
                 else:
                     break
                 key = cv2.waitKey(10) & 0xFF
