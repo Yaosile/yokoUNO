@@ -124,6 +124,7 @@ while True:
             prev = []
             if cap.isOpened():
                 try:
+                    time.sleep(3)
                     cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
                     while True:
                         ret,frame = cap.read()
@@ -133,7 +134,6 @@ while True:
                             prev = frame
                         change = np.average(np.abs((prev.astype(float)-frame.astype(float))))
                         if change > 30:
-                            time.sleep(1)
                             cardPlacedFlag = True
                             print(f'card placed: {change}')
                         elif cardPlacedFlag:

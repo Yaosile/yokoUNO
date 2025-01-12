@@ -14,8 +14,8 @@ commands = {
     'ps': 'ps'.encode(),
     'pp': 'pp'.encode(),
     'v' : 'v'.encode(),
-    'flip': 'r260000'.encode(),
-    'play': 'r-260000'.encode(),
+    'flip': 'r290000'.encode(),
+    'play': 'r-290000'.encode(),
 }
 
 serialPort = '/dev/ttyUSB0'
