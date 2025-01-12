@@ -145,6 +145,7 @@ while True:
                         
                         if trueCard != 0:
                             playedCard = trueCard
+                            prev = []
                             break
 
                         cv2.imshow('card',frame)
