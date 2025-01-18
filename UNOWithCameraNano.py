@@ -14,68 +14,67 @@ cap = cv2.VideoCapture(myJazz.gstreamer_pipeline(flip_method=0, framerate=1), cv
 yuw, xuw = np.load('yMap.npy'), np.load('xMap.npy')
 
 drawDeck = [
-    'ys',
+    'b5',
+    'y6',
+    'r9',
+    'g9',
+    'b2',
     'y+',
-    'b0',
-    'y1',
-    'g0',
-    'y3',
-    'y2',
-    'r8',
-    'r5',
-    'y7',
-    'r7',
     'r0',
-    'b+',
-    'b6',
-    'g+',
-    'g4',
-    'rs',
-    'y4',
-    'b4',
-    'g1',
-    'b7',
-    'g3',
-    'r+',
-    'r3',
-    'rr',
-    'yr',
-    'y0',
-    'b3',
     'y9',
-    'br',
-    'g5',
-    'g6',
-    'bs',
-    'r4',
-    'b1',
-    'g7',
-    'b8',
-    'gs'
+    'gr',
+    'b4',
+    'y2',
+    'r7',
+    'g2',
+    'b9',
+    'y3',
+    'r8',
+    'g+',
+    'b0',
+    'ys',
+    'r3',
+    'g0',
+    'b+',
+    'y7',
+    'r1',
+    'g1',
+    'b3',
+    'y4',
+    'r2',
+    'g4',
+    'b6',
+    'y1',
+    'r5',
+    'g3',
+    'b7',
+    'y8',
+    'rs',
+    'g8',
+    'yr'
 ]
 hand0Deck = [
-    'b2',
-    'r9',
-    'b9',
-    'g8'
+    'g7',
+    'r4',
+    'g6',
+    'rr'
 ]
 hand1Deck = [
-    'y8',
-    'r2',
-    'g9'
+    'bs',
+    'y0',
+    'br'
 ]
 handDeck = [hand0Deck, hand1Deck]
 discardDeck = [
-    'y6'
+    'r6'
 ]
 playerDeck = [
-    'gr',
-    'r6',
-    'g2',
+    'gs',
+    'r+',
     'y5',
-    'r1',
-    'b5',
-    'w'
+    'b8',
+    'b1',
+    'g5'
 ]
 
 #Global state reference, 0 is Human turn, 1 is Robot turn
@@ -177,6 +176,7 @@ while True:
         else:
             #The player has played an invalid move
             print('This move is not valid, please remove the card and try again!')
+            turnState = 0
 
     elif turnState == 1:
         #Robot turn

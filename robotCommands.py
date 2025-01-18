@@ -14,11 +14,11 @@ commands = {
     'ps': 'ps'.encode(),
     'pp': 'pp'.encode(),
     'v' : 'v'.encode(),
-    'flip': 'r290000'.encode(),
-    'play': 'r-290000'.encode(),
+    'flip': 'r300000'.encode(),
+    'play': 'r-300000'.encode(),
 }
 
-serialPort = '/dev/ttyUSB0'
+serialPort = '/dev/tty.usbserial-0001'
 pileTop = 6#s
 pileBot = 8#s
 pileHeight = 38#cards
