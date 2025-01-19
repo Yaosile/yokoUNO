@@ -94,6 +94,7 @@ gui.updateTopCard(discardDeck[-1])
 print("Let's play UNO!")
 while True:
     if turnState == 0:
+        gui.updateTurn("Human's")
         if len(hand0Deck) + len(hand1Deck) == 0:
             print('Robot has won :)')
         #Human turn
@@ -190,6 +191,7 @@ while True:
             turnState = 0
 
     elif turnState == 1:
+        gui.updateTurn("Robot's")
         if len(playerDeck) == 0:
             print('Player has won :)')
         #Robot turn
