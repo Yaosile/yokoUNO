@@ -466,7 +466,7 @@ def getCardColour(card:np.ndarray):
     return colour
 
 def getCardValue(card:np.ndarray):
-    card = normaliseLAB(card)
+    # card = normaliseLAB(card)
     colour = getCardColour(card)
     if colour == 'w':
         return 'w', 0, 'w'
