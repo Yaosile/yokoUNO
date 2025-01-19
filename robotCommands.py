@@ -31,9 +31,9 @@ def init():
     ser.write(commands['zu'])
     time.sleep(1)
     ser.write(commands['pp'])
-    time.sleep(5)
+    time.sleep(1.5)
     ser.write(commands['draw'])
-    time.sleep(5)
+    time.sleep(1.5)
     print('initialising done')
     ser.close()
 

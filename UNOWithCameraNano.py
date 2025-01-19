@@ -147,6 +147,7 @@ while True:
                             cardPlacedFlag = True
                             print(f'card placed: {change}')
                         elif cardPlacedFlag:
+                            time.sleep(1)
                             cardPlacedFlag = False
                             guess, score, _ = myJazz.getCardValue(myJazz.isolateValue(cap.read()[1][yuw,xuw]))
                             trueCard = unoLogic.getMostLikelyPlayedCard(guess, score, playerDeck)
