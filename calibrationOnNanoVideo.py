@@ -138,7 +138,7 @@ def finalFootage():
 
 if __name__ == '__main__':
     boardSize = (int(517*3), int(605*3))
-    boardSize = (157,256)
+    boardSize = (157+90,256+90)
     print(myJazz.gstreamer_pipeline(flip_method=0))
     rawFootage()
     snap = unDistortedFootage()

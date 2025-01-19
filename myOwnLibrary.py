@@ -350,41 +350,41 @@ def isolateCard(frame):
     og = rotate(og, np.deg2rad(angle))
     return og[t:b,l:r]
 
-# def isolateCard(frame, originalImage, thresh = 50):
-#     '''MY OWN'''
-#     blur = np.ones((5,5))
-#     blur /= blur.sum()
-#     # frame = frame.copy()
-#     # originalImage = originalImage.copy()
-#     output = frame.astype(float)
-#     output = rgb2hsv(output,Calculations='SV')
-#     output = (output[:,:,1])*output[:,:,2]*255
-#     output = threshHold(output, thresh)
-#     output = convolveMultiplication(output, blur)
-#     output = threshHold(output, 254)
-#     frame = output.copy()
-#     t,b,l,right = boundingBox(frame)
-#     cx,cy = midPoint(t,b,l,right)
-#     r = getRadius(frame, cx,cy)
-#     theta = getRotation(frame, cx,cy,r)
-#     temp = rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
-#     t,b,l,right = boundingBox(temp)
-#     r = 100
-#     temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
-#     # temp[t,:] = [255,0,0]
-#     # temp[b,:] = [255,0,0]
-#     # temp[:,l] = [255,0,0]
-#     # temp[:,r] = [255,0,0]
-#     # temp[t,:] = 255
-#     # temp[b,:] = 255
-#     # temp[:,l] = 255
-#     # temp[:,r] = 255
-#     # return temp[t-4:b-4,l-4:right-4]
-#     # yThick = 80
-#     # xThick = 60
-#     # temp = temp[r-yThick:r+yThick, r-xThick:r+xThick]
-#     # return temp, cx, cy
-#     return temp[t:b,l:right]
+def isolateCard(frame, originalImage, thresh = 50):
+    '''MY OWN'''
+    blur = np.ones((5,5))
+    blur /= blur.sum()
+    # frame = frame.copy()
+    # originalImage = originalImage.copy()
+    output = frame.astype(float)
+    output = rgb2hsv(output,Calculations='SV')
+    output = (output[:,:,1])*output[:,:,2]*255
+    output = threshHold(output, thresh)
+    output = convolveMultiplication(output, blur)
+    output = threshHold(output, 254)
+    frame = output.copy()
+    t,b,l,right = boundingBox(frame)
+    cx,cy = midPoint(t,b,l,right)
+    r = getRadius(frame, cx,cy)
+    theta = getRotation(frame, cx,cy,r)
+    temp = rotate(frame[-r+cy:r+cy, -r+cx:r+cx], theta)
+    t,b,l,right = boundingBox(temp)
+    r = 100
+    temp = rotate(originalImage[-r+cy:r+cy, -r+cx:r+cx], theta)
+    # temp[t,:] = [255,0,0]
+    # temp[b,:] = [255,0,0]
+    # temp[:,l] = [255,0,0]
+    # temp[:,r] = [255,0,0]
+    # temp[t,:] = 255
+    # temp[b,:] = 255
+    # temp[:,l] = 255
+    # temp[:,r] = 255
+    # return temp[t-4:b-4,l-4:right-4]
+    # yThick = 80
+    # xThick = 60
+    # temp = temp[r-yThick:r+yThick, r-xThick:r+xThick]
+    # return temp, cx, cy
+    return temp[t:b,l:right]
 
 def adjust_contrast(image, alpha, beta):
     """
