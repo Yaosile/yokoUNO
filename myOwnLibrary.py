@@ -16,7 +16,9 @@ cameraHeight = 2464//scaling
 boardSize = ()
 
 guessIndex = ['+', *[f'{i}' for i in range(10)], 'r', 's']
-template = ana(Image.open('templates/template.png'))[::8,::8]
+template = ana(Image.open('templates/templateReal.png'))[::8,::8]
+templateCut = ana(Image.open('templates/templateCutReal.png'))[::8,::8]
+templateCut = np.where(templateCut > 200)
 
 dist = ana([-0.0639733628476694, -0.059022840140777, 0, 0, 0.0238818089164303])
 mtx = ana([
@@ -935,6 +937,7 @@ def compareTemplate(ref, template=template):
     oneCardWidth = template.shape[1]//len(guessIndex)
     oneCardHeight = template.shape[0]
     ref = scaleImage(ref,oneCardWidth, oneCardHeight)
+    ref[templateCut] = 0
     templates = len(guessIndex)
     score = []
     for i in range(templates):
