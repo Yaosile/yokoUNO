@@ -34,7 +34,7 @@ if cap.isOpened():
             ret,frame = cap.read()
             frame = frame[yuw,xuw]
 
-            # frame = myJazz.isolateCard(frame)
+            frame = myJazz.isolateCard(frame)
 
             if cv2.getWindowProperty('card', cv2.WND_PROP_AUTOSIZE) >= 0:
                 print('displaying')
