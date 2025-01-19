@@ -273,7 +273,7 @@ def boundingBox(frame):
     frame = frame.copy()
     valid = np.where(frame > 254)
     if valid == ():
-        return 0,0,0,0
+        return 0,1,0,1
     t = valid[0][0]
     b = valid[0][-1]
     l = np.min(valid[1])

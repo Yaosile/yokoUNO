@@ -2,6 +2,8 @@ import myOwnLibrary as myJazz
 import numpy as np
 
 import cv2 
+import GUI
+import tkinter as tk
 
 import unoLogic
 import robotCommands
@@ -74,7 +76,8 @@ playerDeck = [
     'y5',
     'b8',
     'b1',
-    'g5'
+    'g5',
+    'w'
 ]
 
 #Global state reference, 0 is Human turn, 1 is Robot turn
@@ -83,11 +86,16 @@ action = 'normal'
 
 robotCommands.init()
 print('You can turn on the robot now!')
+root = tk.Tk()
+gui = GUI(root)
+gui.updateTopCard(discardDeck[-1])
 
 #Creating a state machine
 print("Let's play UNO!")
 while True:
     if turnState == 0:
+        if len(hand0Deck) + len(hand1Deck) == 0:
+            print('Robot has won :)')
         #Human turn
         print()
         print("Your turn!")
@@ -130,6 +138,7 @@ while True:
                     while True:
                         ret,frame = cap.read()
                         frame = frame[yuw,xuw]
+                        frame = myJazz.isolateCard(frame)
                         trueCard = 0
                         if prev == []:
                             prev = frame
@@ -139,7 +148,7 @@ while True:
                             print(f'card placed: {change}')
                         elif cardPlacedFlag:
                             cardPlacedFlag = False
-                            guess, score, _ = myJazz.getCardValue(cap.read()[1][yuw,xuw])
+                            guess, score, _ = myJazz.getCardValue(myJazz.isolateValue(cap.read()[1][yuw,xuw]))
                             trueCard = unoLogic.getMostLikelyPlayedCard(guess, score, playerDeck)
                             if trueCard == 0:
                                 cardPlacedFlag = True
@@ -148,7 +157,7 @@ while True:
                             playedCard = trueCard
                             break
 
-                        cv2.imshow('card',frame)
+                        gui.updateCard(frame)
                         prev = frame.copy()
                 finally:
                     print('found the card played')
@@ -179,6 +188,8 @@ while True:
             turnState = 0
 
     elif turnState == 1:
+        if len(playerDeck) == 0:
+            print('Player has won :)')
         #Robot turn
         print()
         print('Robot turn!')
