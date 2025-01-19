@@ -156,6 +156,7 @@ while True:
                         
                         if trueCard != 0:
                             playedCard = trueCard
+                            gui.updateTopCard(playedCard)
                             break
 
                         gui.updateImage(frame)
