@@ -35,9 +35,8 @@ if cap.isOpened():
             frame = frame[yuw,xuw]
 
             frame = myJazz.isolateCard(frame)
-            frame = myJazz.isolateValue(frame)
-            # guess, score, _ = myJazz.getCardValue(frame)
-            # print(guess)
+            guess, score, _ = myJazz.getCardValue(frame)
+            print(guess)
             if cv2.getWindowProperty('card', cv2.WND_PROP_AUTOSIZE) >= 0:
                 cv2.imshow('card',frame.astype(np.uint8))
             else:
