@@ -178,7 +178,7 @@ def doOnline():
         np.save(f'audioRecordings/{word}{n}.npy', now)
         # data.append(np.load(f'audioRecordings/{word}{n}.npy'))
 
-def classify():
+def classify(wait = False):
     weights = []
     for i in range(LAYERS - 1):
         weights.append(np.load(f'audioWeights/{i}.npy'))
@@ -189,6 +189,8 @@ def classify():
     print(guess)
     print(np.std(guess))
     print(f'Guessed: {WORDS[np.argmax(guess[:-1])]}')
+    if wait:
+        time.sleep(1)
     return WORDS[np.argmax(guess[:-1])]
 
 def checkHealth():
@@ -277,7 +279,7 @@ if __name__ == '__main__':
     # plt.imshow(data)
     # plt.show()
     while True:
-        classify()
+        classify(wait=True)
 
 
     # getSamples()
