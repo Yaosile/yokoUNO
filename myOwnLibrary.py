@@ -459,6 +459,7 @@ def getCardColour(card:np.ndarray):
                 values[3] += 1
     values = ana(values)
     values = values/values.sum()
+    print(values)
     if values.max() > 0.9:
         colour = colours[np.argmax(values)]
     elif values.max() < 0.28:
