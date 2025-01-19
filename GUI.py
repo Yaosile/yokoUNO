@@ -21,12 +21,12 @@ class RobotGUI:
         self.turn.grid(row=2, column=0, sticky="w", padx=10, pady=5)
 
         # Image Placeholder
-        self.image_label = tk.Label(root, text="Card Image", font=("Arial", 15), width=20, height=10, bg="gray")
+        self.image_label = tk.Label(root, text="Card Image", font=("Arial", 15), width=300, height=300, bg="gray")
         self.image_label.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
     def updateImage(self, card):
         try:
-            photo = ImageTk.PhotoImage(Image.fromarray(card.astype(np.uint8)))
+            photo = ImageTk.PhotoImage(Image.fromarray(card.astype(np.uint8)[...,::-1]))
             self.image_label.config(image=photo, text="")  # Remove text
             self.image_label.image = photo  # Keep reference
             self.root.update()
