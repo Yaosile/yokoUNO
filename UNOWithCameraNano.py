@@ -2,7 +2,7 @@ import myOwnLibrary as myJazz
 import numpy as np
 
 import cv2 
-import GUI
+from GUI import GUI
 import tkinter as tk
 
 import unoLogic
