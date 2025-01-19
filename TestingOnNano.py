@@ -38,7 +38,7 @@ if cap.isOpened():
 
             if cv2.getWindowProperty('card', cv2.WND_PROP_AUTOSIZE) >= 0:
                 print('displaying')
-                cv2.imshow('card',frame)
+                cv2.imshow('card',frame.astype(np.uint8))
             else:
                 break
             key = cv2.waitKey(10) & 0xFF
