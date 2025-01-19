@@ -350,6 +350,7 @@ def isolateCard(frame):
     # # frame = rotate(frame, np.deg2rad(angle)) #card is now correct orientation
     # t,b,l,r = boundingBox(frame)
     # og = rotate(og, np.deg2rad(angle))
+    print(t-b, l-r)
     return og[t:b,l:r]
 
 # def isolateCard(frame, originalImage, thresh = 50):
