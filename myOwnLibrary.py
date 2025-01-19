@@ -332,6 +332,7 @@ def angleLUT(ratio):
 
 def isolateCard(frame):
     '''Takes in colour image of card'''
+    frame = normaliseLAB(frame)
     og = frame.copy()
     frame = rgb2hsv(frame, 'SV')
     frame = frame[...,1]*frame[...,2]*255
