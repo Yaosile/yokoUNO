@@ -338,9 +338,9 @@ def isolateCard(frame):
     frame = frame[...,1]*frame[...,2]*255
     frame = frame-frame.min()
     frame = (frame/frame.max())*255
-    frame[frame>50] = 255
-    frame[frame<=50] = 0
-    frame = removeNoise(frame,5)
+    frame[frame>70] = 255
+    frame[frame<=70] = 0
+    frame = removeNoise(frame,10)
     # return frame
     t,b,l,r = boundingBox(frame)
     # ratio = getRatio(t,b,l,r)
