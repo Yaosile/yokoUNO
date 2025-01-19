@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import numpy as np
 
-class GUI:
+class RobotGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Robot UNO Interface")

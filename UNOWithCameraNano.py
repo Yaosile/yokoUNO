@@ -87,7 +87,7 @@ action = 'normal'
 robotCommands.init()
 print('You can turn on the robot now!')
 root = tk.Tk()
-gui = GUI(root)
+gui = RobotGUI(root)
 gui.updateTopCard(discardDeck[-1])
 
 #Creating a state machine
@@ -157,7 +157,7 @@ while True:
                             playedCard = trueCard
                             break
 
-                        gui.updateCard(frame)
+                        gui.updateImage(frame)
                         prev = frame.copy()
                 finally:
                     print('found the card played')
