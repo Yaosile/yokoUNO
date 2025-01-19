@@ -341,15 +341,15 @@ def isolateCard(frame):
     frame[frame>80] = 255
     frame[frame<=80] = 0
     frame = removeNoise(frame,5)
-    return frame
+    # return frame
     t,b,l,r = boundingBox(frame)
-    ratio = getRatio(t,b,l,r)
-    cx,cy = midPoint(t,b,l,r)
-    radius = getRadius(frame, cx, cy)
-    angle = -np.rad2deg(getRotation(frame, cx, cy, radius))
-    frame = rotate(frame, np.deg2rad(angle)) #card is now correct orientation
-    t,b,l,r = boundingBox(frame)
-    og = rotate(og, np.deg2rad(angle))
+    # ratio = getRatio(t,b,l,r)
+    # cx,cy = midPoint(t,b,l,r)
+    # radius = getRadius(frame, cx, cy)
+    # # angle = -np.rad2deg(getRotation(frame, cx, cy, radius))
+    # # frame = rotate(frame, np.deg2rad(angle)) #card is now correct orientation
+    # t,b,l,r = boundingBox(frame)
+    # og = rotate(og, np.deg2rad(angle))
     return og[t:b,l:r]
 
 # def isolateCard(frame, originalImage, thresh = 50):
