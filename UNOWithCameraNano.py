@@ -119,6 +119,8 @@ while True:
             playerDeck.append(drawDeck.pop(0))
             robotCommands.drawPlayer()
 
+            gui.updateMove('Drawing for player')
+
             turnState = 1
             action = 'normal'
             continue
@@ -205,7 +207,7 @@ while True:
 
         elif action == 'skip':
             print('The robot has been skipped!')
-            
+            gui.updateMove('Turn skipped')
             turnState = 0
             action = 'normal'
             continue
@@ -216,6 +218,7 @@ while True:
                 unoLogic.drawCard(handDeck, drawDeck)
             turnState = 0
             action = 'normal'
+            gui.updateMove('Drawing 2 cards')
             continue
 
         elif action == 'normal':
@@ -225,6 +228,7 @@ while True:
         #Now for robot response
         if playableCards == 'draw':
             print('The robot has to draw a card!')
+            gui.updateMove('Drawing a card')
             unoLogic.drawCard(handDeck, drawDeck)
             
             turnState = 0
@@ -235,6 +239,8 @@ while True:
             print(playableCards)
             bestMove = unoLogic.getBestMove(playableCards)
             playedCard = unoLogic.playCard(bestMove, handDeck)
+            gui.updateTopCard(playedCard)
+            gui.updateMove('Playing a card')
             discardDeck.insert(0, playedCard)
 
             turnState = 0
