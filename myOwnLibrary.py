@@ -947,10 +947,10 @@ def compareTemplate(ref, template=template):
 def isolateValue(card:np.ndarray):
     # img = apply_clahe(card)
     hsv = rgb2hsv(card, 'SV')
-    saansColour = threshHold((1-hsv[...,1]), 150/255)
-    white = threshHold(hsv[...,2],150/255)
+    saansColour = threshHold((1-hsv[...,1]), 200/255)
+    white = threshHold(hsv[...,2],200/255)
     img = (saansColour*white)/255
-    img = removeNoise(img, size= 5)
+    img = removeNoise(img, size= 3)
 
     return img
     # img = (255-adaptiveThreshold(img)*hsv[...,2])
