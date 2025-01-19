@@ -950,7 +950,7 @@ def isolateValue(card:np.ndarray):
     saansColour = threshHold((1-hsv[...,1]), 150/255)
     white = threshHold(hsv[...,2],150/255)
     img = (saansColour*white)/255
-    img = removeNoise(img, size= 3)
+    img = removeNoise(img, size= 5)
 
     return img
     # img = (255-adaptiveThreshold(img)*hsv[...,2])
