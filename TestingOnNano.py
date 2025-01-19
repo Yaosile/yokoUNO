@@ -28,13 +28,19 @@ if cap.isOpened():
     try:
         ret,frame = cap.read()
         time.sleep(3)
-        cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
+        window_handle = cv2.namedWindow('card', cv2.WINDOW_AUTOSIZE)
         prev = []
         while True:
             ret,frame = cap.read()
             frame = frame[yuw,xuw]
             if cv2.getWindowProperty('card', cv2.WND_PROP_AUTOSIZE) >= 0:
+                print('displaying')
                 cv2.imshow('card',frame)
+            else:
+                break
+            key = cv2.waitKey(10) & 0xFF
+            if key == ord('q'):
+                break
             prev = frame.copy()
     finally:
         print('found the card played')
