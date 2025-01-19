@@ -128,6 +128,7 @@ while True:
 
         playedCard = unoLogic.getPlayableCards([playerDeck, []], discardDeck[0])
         if playedCard != 'draw':
+            print('Place a card please')
             cardPlacedFlag = False
             prev = []
             change = 0
@@ -188,6 +189,7 @@ while True:
         else:
             #The player has played an invalid move
             print('This move is not valid, please remove the card and try again!')
+            time.sleep(5)
             turnState = 0
 
     elif turnState == 1:
