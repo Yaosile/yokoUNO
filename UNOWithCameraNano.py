@@ -113,13 +113,12 @@ while True:
 
         elif action == 'draw2':
             print('The player has to draw 2 cards and loses a turn!')
-            
+            gui.updateMove('Drawing for player')
             playerDeck.append(drawDeck.pop(0))
             robotCommands.drawPlayer()
             playerDeck.append(drawDeck.pop(0))
             robotCommands.drawPlayer()
 
-            gui.updateMove('Drawing for player')
 
             turnState = 1
             action = 'normal'
