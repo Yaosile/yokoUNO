@@ -21,25 +21,25 @@ import robotCommands
 
 import MelMyBoy as audio
 
-template = myJazz.template
+# template = myJazz.template
 
-oneCardWidth = template.shape[1]//13
-oneCardHeight = template.shape[0]
-card8 = template[:,oneCardWidth*9-1:oneCardWidth*10-1]
-final = []
-for i in range(13):
-    final.append(((card8/255 + template[:,i*oneCardWidth:(i+1)*oneCardWidth]/255)%2)*255)
-    print(np.sum(final[-1]))
-final = np.hstack(final)
-final = Image.fromarray(final.astype(np.uint8))
-final.show()
-# # robotCommands.init()
-# input('ready? (press enter)')
-# for i in range(10):
-#     robotCommands.drawRobot(0)
-#     robotCommands.play(0)    
-#     robotCommands.drawRobot(1)
-#     robotCommands.play(1)
+# oneCardWidth = template.shape[1]//13
+# oneCardHeight = template.shape[0]
+# card8 = template[:,oneCardWidth*9-1:oneCardWidth*10-1]
+# final = []
+# for i in range(13):
+#     final.append(((card8/255 + template[:,i*oneCardWidth:(i+1)*oneCardWidth]/255)%2)*255)
+#     print(np.sum(final[-1]))
+# final = np.hstack(final)
+# final = Image.fromarray(final.astype(np.uint8))
+# final.show()
+robotCommands.init()
+input('ready? (press enter)')
+for i in range(10):
+    robotCommands.drawRobot(0)
+    robotCommands.play(0)    
+    robotCommands.drawRobot(1)
+    robotCommands.play(1)
 
 # # template = ana(Image.open('templates/templateOG.png')).copy()
 # # cut = ana(Image.open('templates/templateCut.png')).copy()
