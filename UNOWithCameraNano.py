@@ -52,8 +52,8 @@ drawDeck = [
     'b7',
     'y8',
     'rs',
-    'g8',
-    'yr'
+    'yr',
+    'br'
 ]
 hand0Deck = [
     'g7',
@@ -64,7 +64,7 @@ hand0Deck = [
 hand1Deck = [
     'bs',
     'y0',
-    'br'
+    'g8'
 ]
 handDeck = [hand0Deck, hand1Deck]
 discardDeck = [
