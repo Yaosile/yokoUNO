@@ -201,6 +201,7 @@ while True:
         print()
         print('Robot turn!')
         if action in ['r','y','g','b']:
+            action = 'r'
             print(f'The colour has been changed to {unoLogic.colours[action]}')
             discardDeck[0] = f'{action}{discardDeck[0]}'
 
